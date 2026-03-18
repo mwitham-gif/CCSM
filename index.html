@@ -644,7 +644,7 @@ function renderCards() {
 
   grid.innerHTML = filtered.map((r, i) => {
     const cat = r.category || r.Category || 'Other';
-    const catKey = cat.charAt(0).toUpperCase() + cat.slice(1).split(' ')[0];
+   const catKey = cat.trim();
     const name = lang === 'es' && r.name_es ? r.name_es : r.name || r.Name || '';
     const desc = lang === 'es' && r.description_es ? r.description_es : r.description || r.Description || '';
     const notes = lang === 'es' && r.notes_es ? r.notes_es : r.notes || r.Notes || '';
