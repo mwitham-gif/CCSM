@@ -177,18 +177,6 @@
     padding-bottom: 4px;
   }
 
-  @media (max-width: 480px) {
-    .filters {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      padding-bottom: 8px;
-    }
-    .filters::-webkit-scrollbar { display: none; }
-    .filter-btn { flex-shrink: 0; }
-  }
-
   .filter-btn {
     border: 2px solid #b0bec5;
     background: white;
@@ -248,15 +236,6 @@
     padding: 0 16px 60px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (max-width: 750px) {
-    .grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  @media (max-width: 480px) {
-    .grid { grid-template-columns: 1fr; }
-    gap: 18px;
   }
 
   /* ── CARD ── */
@@ -448,8 +427,56 @@
 
   .notice.show { display: block; }
 
-  @media (max-width: 500px) {
-    h1 { font-size: 1.35rem; }
+  @media (max-width: 750px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 1.1rem; }
+    h1 .sub { font-size: 0.6em; }
+
+    .header-inner { padding: 10px 12px; }
+    .header-logo { height: 32px; }
+    .lang-toggle button { padding: 5px 10px; font-size: 12px; }
+
+    .controls { margin-top: 14px; padding: 0 12px; }
+
+    .search-wrap input {
+      font-size: 16px;
+      padding: 11px 12px 11px 40px;
+      border-radius: 10px;
+    }
+
+    .filters {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 6px;
+    }
+    .filters::-webkit-scrollbar { display: none; }
+    .filter-btn {
+      flex-shrink: 0;
+      font-size: 12px;
+      padding: 8px 13px;
+    }
+
+    .results-info { padding: 0 12px; }
+
+    .grid {
+      grid-template-columns: 1fr;
+      padding: 0 12px 48px;
+      gap: 12px;
+    }
+
+    .card { padding: 16px 14px; }
+    .card-name { font-size: 0.98rem; }
+    .card-desc { font-size: 13px; }
+
+    .btn-call, .btn-web {
+      font-size: 12px;
+      padding: 7px 11px;
+    }
   }
 </style>
 </head>
