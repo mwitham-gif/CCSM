@@ -177,6 +177,18 @@
     padding-bottom: 4px;
   }
 
+  @media (max-width: 480px) {
+    .filters {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 8px;
+    }
+    .filters::-webkit-scrollbar { display: none; }
+    .filter-btn { flex-shrink: 0; }
+  }
+
   .filter-btn {
     border: 2px solid #b0bec5;
     background: white;
@@ -236,6 +248,14 @@
     padding: 0 16px 60px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 750px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
     gap: 18px;
   }
 
