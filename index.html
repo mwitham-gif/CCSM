@@ -9,7 +9,7 @@
   :root {
     --ocean: #1a5276;
     --sky: #2e86c1;
-    --sand: #fdf6ec;
+    --sand: #eef2f7;
     --sun: #f0a500;
     --coral: #e05c3a;
     --mint: #d4efdf;
@@ -17,6 +17,23 @@
     --muted: #6b7280;
     --card: #ffffff;
     --border: #e5e7eb;
+
+    /* Category accent colors */
+    --c-Food:    #e05c3a;
+    --c-Mental:  #7b5ea7;
+    --c-Rental:  #2e86c1;
+    --c-Legal:   #1a5276;
+    --c-Benefits:#d48e00;
+    --c-Other:   #6b7280;
+    --c-Transportation: #2a9d8f;
+    --c-Education: #457b9d;
+    --c-Employment: #e76f51;
+    --c-Childcare: #e9c46a;
+    --c-Youth: #06d6a0;
+    --c-Seniors: #118ab2;
+    --c-Housing: #2e86c1;
+    --c-Disability: #9b5de5;
+    --c-Medical: #e63946;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -78,7 +95,6 @@
     letter-spacing: 0.02em;
   }
 
-
   .header-logo {
     height: 52px;
     width: auto;
@@ -90,6 +106,7 @@
   @media (max-width: 500px) {
     .header-logo { height: 40px; }
   }
+
   .lang-toggle {
     display: flex;
     background: rgba(255,255,255,0.12);
@@ -139,6 +156,7 @@
     outline: none;
     transition: border-color 0.2s;
     color: var(--text);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   }
 
   .search-wrap input:focus { border-color: var(--sky); }
@@ -181,22 +199,7 @@
     color: white;
   }
 
-  /* ── CATEGORY DOTS ── */
-  .cat-dot {
-    display: inline-block;
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    margin-right: 6px;
-    flex-shrink: 0;
-  }
-  .cat-Food { background: #e05c3a; }
-  .cat-Mental { background: #7b5ea7; }
-  .cat-Rental { background: #2e86c1; }
-  .cat-Legal { background: #1a5276; }
-  .cat-Benefits { background: #f0a500; }
-  .cat-Other { background: #6b7280; }
-
-  /* ── RESOURCE GRID ── */
+  /* ── RESULTS INFO ── */
   .results-info {
     max-width: 900px;
     margin: 20px auto 10px;
@@ -205,35 +208,37 @@
     color: var(--muted);
   }
 
+  /* ── RESOURCE GRID ── */
   .grid {
     max-width: 900px;
     margin: 0 auto;
     padding: 0 16px 60px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
   }
 
   /* ── CARD ── */
   .card {
     background: var(--card);
     border-radius: 16px;
-    border: 1.5px solid var(--border);
+    border: 2px solid #c9d4e0;
     padding: 20px;
     transition: box-shadow 0.2s, transform 0.2s;
     animation: fadeUp 0.35s ease both;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    box-shadow: 0 4px 16px rgba(26,82,118,0.10), 0 1px 4px rgba(26,82,118,0.06);
   }
 
   .card:hover {
-    box-shadow: 0 8px 28px rgba(26,82,118,0.1);
+    box-shadow: 0 12px 36px rgba(26,82,118,0.18), 0 3px 8px rgba(26,82,118,0.10);
     transform: translateY(-2px);
   }
 
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
@@ -277,6 +282,20 @@
     text-transform: uppercase;
     color: var(--muted);
   }
+
+  .cat-dot {
+    display: inline-block;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+  .cat-Food { background: #e05c3a; }
+  .cat-Mental { background: #7b5ea7; }
+  .cat-Rental { background: #2e86c1; }
+  .cat-Legal { background: #1a5276; }
+  .cat-Benefits { background: #f0a500; }
+  .cat-Other { background: #6b7280; }
 
   .card-desc {
     font-size: 14px;
@@ -390,7 +409,6 @@
 
   @media (max-width: 500px) {
     h1 { font-size: 1.35rem; }
-    .grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -400,7 +418,8 @@
   <div class="header-inner">
     <div class="header-top">
       <div>
-<img src="ccsm_logo_web.png" alt="Community Corporation of Santa Monica" class="header-logo">        <h1 id="site-title">
+        <img src="ccsm_logo_web.png" alt="Community Corporation of Santa Monica" class="header-logo">
+        <h1 id="site-title">
           Community Resources
           <span class="sub" id="site-subtitle">Find help near you · Santa Monica</span>
         </h1>
@@ -430,20 +449,12 @@
 
 <footer>
   <div>Community Corporation of Santa Monica · Resident Services</div>
-  <div style="margin-top:6px">Questions? Call <a href="tel:+13103934ww">(310) 395-0220</a></div>
+  <div style="margin-top:6px">Questions? Call <a href="tel:+13103950220">(310) 395-0220</a></div>
 </footer>
 
 <script>
-// ─────────────────────────────────────────────
-//  CONFIGURATION — Update this URL after you
-//  publish your Google Sheet as CSV
-//  (File → Share → Publish to web → CSV)
-// ─────────────────────────────────────────────
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbAtpa7kK10yL2QtdLHRx9q2VbuEIPNG6S2uMbWhQ1GsLGoYA3NqFAlp_E_w8xUGRdcLxT4V3gbiJD/pub?output=csv'; // ← paste your Sheet CSV URL here
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbAtpa7kK10yL2QtdLHRx9q2VbuEIPNG6S2uMbWhQ1GsLGoYA3NqFAlp_E_w8xUGRdcLxT4V3gbiJD/pub?output=csv';
 
-// ─────────────────────────────────────────────
-//  TRANSLATIONS
-// ─────────────────────────────────────────────
 const T = {
   en: {
     search: 'Search resources...',
@@ -477,9 +488,6 @@ const T = {
   }
 };
 
-// ─────────────────────────────────────────────
-//  SAMPLE DATA (used when no Sheet URL set)
-// ─────────────────────────────────────────────
 const SAMPLE = [
   { name:'Westside Food Bank', name_es:'Banco de Alimentos del Oeste', category:'Food', description:'Free groceries and pantry items for Santa Monica residents. No ID required.', description_es:'Comida gratis para residentes. No se requiere identificación.', address:'1710 22nd St, Santa Monica', phone:'(310) 829-0041', website:'', hours:'Tue & Thu 10am–1pm', notes:'Bring reusable bags', notes_es:'Traiga bolsas reutilizables' },
   { name:'OPCC Mental Health Services', name_es:'Servicios de Salud Mental OPCC', category:'Mental', description:'Free counseling, crisis support, and mental health case management for low-income residents.', description_es:'Consejería gratuita y apoyo en crisis para residentes de bajos ingresos.', address:'1523 2nd St, Santa Monica', phone:'(310) 264-6646', website:'https://opcc.org', hours:'Mon–Fri 9am–5pm', notes:'Walk-ins welcome for crisis support', notes_es:'Se aceptan visitas sin cita para crisis' },
@@ -491,80 +499,60 @@ const SAMPLE = [
   { name:'Neighborhood Legal Services', name_es:'Servicios Legales del Vecindario', category:'Legal', description:'Free civil legal aid for low-income residents — housing, family law, and public benefits.', description_es:'Ayuda legal civil gratuita para residentes de bajos ingresos.', address:'Multiple locations in LA County', phone:'(800) 433-6251', website:'https://nlsla.org', hours:'Mon–Fri 9am–4pm', notes:'Remote appointments available', notes_es:'Citas remotas disponibles' },
 ];
 
-// ─────────────────────────────────────────────
-//  STATE
-// ─────────────────────────────────────────────
+// Category accent colors (must match CSS variables)
+const CAT_COLORS = {
+  Food:    '#e05c3a',
+  Mental:  '#7b5ea7',
+  Rental:  '#2e86c1',
+  Legal:   '#1a5276',
+  Benefits:'#d48e00',
+  Other:   '#6b7280',
+  Transportation: '#2a9d8f',
+  Education: '#457b9d',
+  Employment: '#e76f51',
+  Childcare: '#c59b00',
+  Youth: '#06b88a',
+  Seniors: '#118ab2',
+  Housing: '#2e86c1',
+  Disability: '#9b5de5',
+  Medical: '#e63946',
+  'Domestic Violence': '#b5338a',
+};
+
 let resources = [];
 let lang = 'en';
 let activeCategory = 'All';
 
 const ICONS = {
-  Food: '🥦',
-  Mental: '🧠',
-  Rental: '🏠',
-  Legal: '⚖️',
-  Benefits: '📋',
-  Other: '🤝',
-  Transportation: '🚗',
-  Education: '📚',
-  Employment: '⚒',
-  Childcare: '👶',
-  Youth: '🧒',
-  Seniors: '👴',
-  Housing: '🏡',
-  Disability: '🌼',
-  Medical: '⚕',
-  'Domestic Violence': '🟪',
+  Food: '🥦', Mental: '🧠', Rental: '🏠', Legal: '⚖️', Benefits: '📋', Other: '🤝',
+  Transportation: '🚌', Education: '📚', Employment: '💼', Childcare: '👶',
+  Youth: '🧒', Seniors: '👴', Housing: '🏡', Disability: '🌼', Medical: '⚕️',
+  'Domestic Violence': '🟣',
 };
 
 const CAT_LABELS = {
   en: {
-    Food: 'Food Pantries',
-    Mental: 'Mental Health',
-    Rental: 'Rental Assistance',
-    Legal: 'Legal Aid',
-    Benefits: 'Public Benefits',
-    Other: 'Other',
-    Transportation: 'Transportation',
-    Education: 'Education',
-    Employment: 'Employment',
-    Childcare: 'Childcare',
-    Youth: 'Youth',
-    Seniors: 'Seniors',
-    Housing: 'Housing',
-    Disability: 'Disability Services',
-    Medical: 'Medical Care',
-    'Domestic Violence': 'Domestic Violence'
+    Food: 'Food Pantries', Mental: 'Mental Health', Rental: 'Rental Assistance',
+    Legal: 'Legal Aid', Benefits: 'Public Benefits', Other: 'Other',
+    Transportation: 'Transportation', Education: 'Education', Employment: 'Employment',
+    Childcare: 'Childcare', Youth: 'Youth', Seniors: 'Seniors', Housing: 'Housing',
+    Disability: 'Disability Services', Medical: 'Medical Care', 'Domestic Violence': 'Domestic Violence'
   },
   es: {
-    Food: 'Despensas',
-    Mental: 'Salud Mental',
-    Rental: 'Asistencia de Renta',
-    Legal: 'Ayuda Legal',
-    Benefits: 'Beneficios Públicos',
-    Other: 'Otros',
-    Transportation: 'Transporte',
-    Education: 'Educación',
-    Employment: 'Empleo',
-    Childcare: 'Cuidado Infantil',
-    Youth: 'Juventud',
-    Seniors: 'Personas Mayores',
-    Housing: 'Vivienda',
-    Disability: 'Discapacidad',
-    Medical: 'Atención Médica',
-    'Domestic Violence': 'Violencia Domestica',
-    
+    Food: 'Despensas', Mental: 'Salud Mental', Rental: 'Asistencia de Renta',
+    Legal: 'Ayuda Legal', Benefits: 'Beneficios Públicos', Other: 'Otros',
+    Transportation: 'Transporte', Education: 'Educación', Employment: 'Empleo',
+    Childcare: 'Cuidado Infantil', Youth: 'Juventud', Seniors: 'Personas Mayores',
+    Housing: 'Vivienda', Disability: 'Discapacidad', Medical: 'Atención Médica',
+    'Domestic Violence': 'Violencia Doméstica',
   },
 };
-// ─────────────────────────────────────────────
-//  LOAD DATA
-// ─────────────────────────────────────────────
+
 async function loadData() {
   if (!SHEET_URL) {
     document.getElementById('demo-notice').classList.add('show');
     resources = SAMPLE;
-    buildFilters();
-    renderCards();
+    buildFilters(); renderCards();
     return;
   }
   showLoading();
@@ -572,13 +560,11 @@ async function loadData() {
     const res = await fetch(SHEET_URL);
     const csv = await res.text();
     resources = parseCSV(csv);
-    buildFilters();
-    renderCards();
+    buildFilters(); renderCards();
   } catch (e) {
     document.getElementById('demo-notice').classList.add('show');
     resources = SAMPLE;
-    buildFilters();
-    renderCards();
+    buildFilters(); renderCards();
   }
 }
 
@@ -588,16 +574,11 @@ function parseCSV(text) {
   return lines.slice(1).map(line => {
     const vals = line.match(/(".*?"|[^,]+|(?<=,)(?=,)|(?<=,)$|^(?=,))/g) || [];
     const obj = {};
-    headers.forEach((h, i) => {
-      obj[h] = (vals[i] || '').replace(/^"|"$/g,'').trim();
-    });
+    headers.forEach((h, i) => { obj[h] = (vals[i] || '').replace(/^"|"$/g,'').trim(); });
     return obj;
   }).filter(r => r.name || r.Name);
 }
 
-// ─────────────────────────────────────────────
-//  FILTERS
-// ─────────────────────────────────────────────
 function buildFilters() {
   const categories = ['All', ...new Set(resources.map(r => r.category || r.Category || 'Other'))];
   const container = document.getElementById('filters');
@@ -611,13 +592,9 @@ function buildFilters() {
 
 function setCategory(cat) {
   activeCategory = cat;
-  buildFilters();
-  renderCards();
+  buildFilters(); renderCards();
 }
 
-// ─────────────────────────────────────────────
-//  RENDER
-// ─────────────────────────────────────────────
 function renderCards() {
   const query = document.getElementById('search').value.toLowerCase().trim();
   const grid = document.getElementById('grid');
@@ -643,8 +620,7 @@ function renderCards() {
   }
 
   grid.innerHTML = filtered.map((r, i) => {
-    const cat = r.category || r.Category || 'Other';
-   const catKey = cat.trim();
+    const cat = (r.category || r.Category || 'Other').trim();
     const name = lang === 'es' && r.name_es ? r.name_es : r.name || r.Name || '';
     const desc = lang === 'es' && r.description_es ? r.description_es : r.description || r.Description || '';
     const notes = lang === 'es' && r.notes_es ? r.notes_es : r.notes || r.Notes || '';
@@ -656,23 +632,23 @@ function renderCards() {
     return `
     <div class="card" style="animation-delay:${i*0.04}s">
       <div class="card-header">
-        <div class="card-icon icon-${catKey}">${ICONS[catKey] || '🤝'}</div>
+        <div class="card-icon icon-${cat}">${ICONS[cat] || '🤝'}</div>
         <div>
           <div class="card-name">${name}</div>
           <div class="card-category">
-            <span class="cat-dot cat-${catKey}"></span>
-            ${CAT_LABELS[lang][catKey] || cat}
+            <span class="cat-dot cat-${cat}"></span>
+            ${CAT_LABELS[lang][cat] || cat}
           </div>
         </div>
       </div>
       ${desc ? `<div class="card-desc">${desc}</div>` : ''}
       <div class="card-details">
         ${address ? `<div class="card-detail"><span class="icon">📍</span><span>${address}</span></div>` : ''}
-        ${hours ? `<div class="card-detail"><span class="icon">🕐</span><span>${hours}</span></div>` : ''}
-        ${notes ? `<div class="card-detail"><span class="icon">ℹ️</span><span>${notes}</span></div>` : ''}
+        ${hours   ? `<div class="card-detail"><span class="icon">🕐</span><span>${hours}</span></div>` : ''}
+        ${notes   ? `<div class="card-detail"><span class="icon">ℹ️</span><span>${notes}</span></div>` : ''}
       </div>
       <div class="card-actions">
-        ${phone ? `<a class="btn-call" href="tel:${phone.replace(/\D/g,'')}">📞 ${T[lang].call} ${phone}</a>` : ''}
+        ${phone   ? `<a class="btn-call" href="tel:${phone.replace(/\D/g,'')}">📞 ${T[lang].call} ${phone}</a>` : ''}
         ${website ? `<a class="btn-web" href="${website}" target="_blank" rel="noopener">🔗 ${T[lang].website}</a>` : ''}
       </div>
     </div>`;
@@ -681,15 +657,9 @@ function renderCards() {
 
 function showLoading() {
   document.getElementById('grid').innerHTML = `
-    <div class="loading">
-      <div class="spinner"></div>
-      <div>${T[lang].loading}</div>
-    </div>`;
+    <div class="loading"><div class="spinner"></div><div>${T[lang].loading}</div></div>`;
 }
 
-// ─────────────────────────────────────────────
-//  LANGUAGE
-// ─────────────────────────────────────────────
 function setLang(l) {
   lang = l;
   document.getElementById('btn-en').classList.toggle('active', l === 'en');
@@ -697,13 +667,9 @@ function setLang(l) {
   document.getElementById('search').placeholder = T[l].search;
   document.getElementById('site-title').childNodes[0].textContent = T[l].siteTitle + ' ';
   document.getElementById('site-subtitle').textContent = T[l].siteSub;
-  buildFilters();
-  renderCards();
+  buildFilters(); renderCards();
 }
 
-// ─────────────────────────────────────────────
-//  INIT
-// ─────────────────────────────────────────────
 loadData();
 </script>
 </body>
