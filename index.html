@@ -892,7 +892,11 @@ const CATEGORY_ALIASES = {
 function getReportHref(resource) {
   const name = getLocalizedValue(resource, 'name');
   const boldName = toBoldUnicode(name);
-  return `mailto:${encodeURIComponent(REPORT_EMAIL)}?subject=${encodeURIComponent(T[lang].reportSubject(name))}&body=${encodeURIComponent(T[lang].reportBody(boldName))}`;
+  return getEmailComposeHref({
+    to: REPORT_EMAIL,
+    subject: T[lang].reportSubject(name),
+    body: T[lang].reportBody(boldName),
+  });
 }
 
 function getBasePageUrl() {
@@ -945,14 +949,40 @@ function getResourceEmailLines(resource, includeShareUrl = true) {
   return lines;
 }
 
-function getEmailComposeHref(subject, body) {
-  return `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+function isMobileEmailClientPreferred() {
+  return /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+}
+
+function getGmailComposeHref({ to = '', subject, body }) {
+  const params = new URLSearchParams({
+    view: 'cm',
+    fs: '1',
+    su: subject,
+    body,
+  });
+
+  if (to) params.set('to', to);
+  return 'https://mail.google.com/mail/?' + params.toString();
+}
+
+function getMailtoHref({ to = '', subject, body }) {
+  const prefix = to ? `mailto:${encodeURIComponent(to)}` : 'mailto:';
+  return `${prefix}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function getEmailComposeHref({ to = '', subject, body }) {
+  return isMobileEmailClientPreferred()
+    ? getMailtoHref({ to, subject, body })
+    : getGmailComposeHref({ to, subject, body });
 }
 
 function getShareEmailHref(resource) {
   const shareData = getResourceShareData(resource);
   const lines = getResourceEmailLines(resource);
-  return getEmailComposeHref(shareData.title, lines.join('\n'));
+  return getEmailComposeHref({
+    subject: shareData.title,
+    body: lines.join('\n'),
+  });
 }
 
 function getCategoryShareData(category) {
@@ -978,7 +1008,10 @@ function getCategoryShareEmailHref(category) {
     'View resources:',
     shareData.url,
   ].filter((line, index, array) => line || (index > 0 && array[index - 1] !== ''));
-  return getEmailComposeHref(shareData.title, lines.join('\n'));
+  return getEmailComposeHref({
+    subject: shareData.title,
+    body: lines.join('\n'),
+  });
 }
 
 function closeShareMenus() {
