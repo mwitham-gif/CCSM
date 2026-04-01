@@ -18,7 +18,6 @@
     --card: #ffffff;
     --border: #e5e7eb;
 
-    /* Category accent colors */
     --c-Food:    #e05c3a;
     --c-Mental:  #7b5ea7;
     --c-Rental:  #2e86c1;
@@ -69,15 +68,6 @@
     gap: 12px;
   }
 
-  .org-label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    opacity: 0.7;
-    margin-bottom: 4px;
-  }
-
   h1 {
     font-family: 'Fraunces', serif;
     font-size: clamp(1.4rem, 5vw, 2rem);
@@ -103,9 +93,7 @@
     margin-bottom: 6px;
   }
 
-  @media (max-width: 500px) {
-    .header-logo { height: 40px; }
-  }
+  @media (max-width: 500px) { .header-logo { height: 40px; } }
 
   .lang-toggle {
     display: flex;
@@ -310,12 +298,12 @@
     margin-right: 6px;
     flex-shrink: 0;
   }
-  .cat-Food { background: #e05c3a; }
-  .cat-Mental { background: #7b5ea7; }
-  .cat-Rental { background: #2e86c1; }
-  .cat-Legal { background: #1a5276; }
-  .cat-Benefits { background: #f0a500; }
-  .cat-Other { background: #6b7280; }
+  .cat-Food    { background: #e05c3a; }
+  .cat-Mental  { background: #7b5ea7; }
+  .cat-Rental  { background: #2e86c1; }
+  .cat-Legal   { background: #1a5276; }
+  .cat-Benefits{ background: #f0a500; }
+  .cat-Other   { background: #6b7280; }
 
   .card-desc {
     font-size: 14px;
@@ -340,6 +328,7 @@
 
   .card-detail span.icon { flex-shrink: 0; }
 
+  /* ── ACTION BUTTONS ROW ── */
   .card-actions {
     display: flex;
     gap: 8px;
@@ -363,8 +352,37 @@
   }
 
   .btn-call { background: var(--mint); color: #155724; }
-  .btn-web  { background: #dbeafe;    color: #1e40af; }
+  .btn-web  { background: #dbeafe; color: #1e40af; box-shadow: 0 2px 0 #93c5fd, 0 2px 6px rgba(30,64,175,0.12); }
   .btn-call:hover, .btn-web:hover { opacity: 0.8; }
+
+  /* ── REPORT BUTTON ── */
+  /*
+   * The report button opens a pre-filled mailto: link.
+   * Update REPORT_EMAIL at the top of the <script> block with the
+   * staff inbox that should receive these reports.
+   */
+  .btn-report {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 11px;
+    border-radius: 8px;
+    border: 1.5px solid #fcd34d;
+    background: transparent;
+    color: #92400e;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    width: fit-content;
+  }
+
+  .btn-report:hover {
+    background: #fef3c7;
+    border-color: #f59e0b;
+  }
 
   /* ── EMPTY STATE ── */
   .empty {
@@ -434,19 +452,11 @@
   @media (max-width: 480px) {
     h1 { font-size: 1.1rem; }
     h1 .sub { font-size: 0.6em; }
-
     .header-inner { padding: 10px 12px; }
     .header-logo { height: 32px; }
     .lang-toggle button { padding: 5px 10px; font-size: 12px; }
-
     .controls { margin-top: 14px; padding: 0 12px; }
-
-    .search-wrap input {
-      font-size: 16px;
-      padding: 11px 12px 11px 40px;
-      border-radius: 10px;
-    }
-
+    .search-wrap input { font-size: 16px; padding: 11px 12px 11px 40px; border-radius: 10px; }
     .filters {
       flex-wrap: nowrap;
       overflow-x: auto;
@@ -455,28 +465,13 @@
       padding-bottom: 6px;
     }
     .filters::-webkit-scrollbar { display: none; }
-    .filter-btn {
-      flex-shrink: 0;
-      font-size: 12px;
-      padding: 8px 13px;
-    }
-
+    .filter-btn { flex-shrink: 0; font-size: 12px; padding: 8px 13px; }
     .results-info { padding: 0 12px; }
-
-    .grid {
-      grid-template-columns: 1fr;
-      padding: 0 12px 48px;
-      gap: 12px;
-    }
-
+    .grid { grid-template-columns: 1fr; padding: 0 12px 48px; gap: 12px; }
     .card { padding: 16px 14px; }
     .card-name { font-size: 0.98rem; }
     .card-desc { font-size: 13px; }
-
-    .btn-call, .btn-web {
-      font-size: 12px;
-      padding: 7px 11px;
-    }
+    .btn-call, .btn-web { font-size: 12px; padding: 7px 11px; }
   }
 </style>
 </head>
@@ -521,6 +516,11 @@
 </footer>
 
 <script>
+// ─────────────────────────────────────────────────────────────────────────────
+// UPDATE THIS — staff inbox that receives "Report outdated info" emails
+// ─────────────────────────────────────────────────────────────────────────────
+const REPORT_EMAIL = 'mwitham@communitycorp.org';
+
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbAtpa7kK10yL2QtdLHRx9q2VbuEIPNG6S2uMbWhQ1GsLGoYA3NqFAlp_E_w8xUGRdcLxT4V3gbiJD/pub?output=csv';
 
 const T = {
@@ -538,6 +538,17 @@ const T = {
     loading: 'Loading resources...',
     siteTitle: 'Community Resources',
     siteSub: 'Find help near you · Santa Monica',
+    reportBtn: 'Report outdated info',
+    reportSubject: name => `Outdated listing: ${name}`,
+    reportBody: name =>
+`Hi,
+
+I noticed some information for "${name}" on the CCSM Community Resources page may be outdated.
+
+What's incorrect:
+[Please describe — e.g. wrong phone number, address changed, hours are different, program no longer exists]
+
+Thank you for keeping this resource up to date.`,
   },
   es: {
     search: 'Buscar recursos...',
@@ -553,6 +564,17 @@ const T = {
     loading: 'Cargando recursos...',
     siteTitle: 'Recursos Comunitarios',
     siteSub: 'Encuentra ayuda cerca · Santa Mónica',
+    reportBtn: 'Reportar información desactualizada',
+    reportSubject: name => `Información desactualizada: ${name}`,
+    reportBody: name =>
+`Hola,
+
+Noté que la información de "${name}" en la página de Recursos Comunitarios puede estar desactualizada.
+
+Qué está incorrecto:
+[Por favor describa — ej. número de teléfono incorrecto, dirección cambió, horario diferente, programa ya no existe]
+
+Gracias por mantener este recurso actualizado.`,
   }
 };
 
@@ -567,24 +589,11 @@ const SAMPLE = [
   { name:'Neighborhood Legal Services', name_es:'Servicios Legales del Vecindario', category:'Legal', description:'Free civil legal aid for low-income residents — housing, family law, and public benefits.', description_es:'Ayuda legal civil gratuita para residentes de bajos ingresos.', address:'Multiple locations in LA County', phone:'(800) 433-6251', website:'https://nlsla.org', hours:'Mon–Fri 9am–4pm', notes:'Remote appointments available', notes_es:'Citas remotas disponibles' },
 ];
 
-// Category accent colors (must match CSS variables)
 const CAT_COLORS = {
-  Food:    '#e05c3a',
-  Mental:  '#7b5ea7',
-  Rental:  '#2e86c1',
-  Legal:   '#1a5276',
-  Benefits:'#d48e00',
-  Other:   '#6b7280',
-  Transportation: '#2a9d8f',
-  Education: '#457b9d',
-  Employment: '#e76f51',
-  Childcare: '#c59b00',
-  Youth: '#06b88a',
-  Seniors: '#118ab2',
-  Housing: '#2e86c1',
-  Disability: '#9b5de5',
-  Medical: '#e63946',
-  'Domestic Violence': '#b5338a',
+  Food:'#e05c3a', Mental:'#7b5ea7', Rental:'#2e86c1', Legal:'#1a5276',
+  Benefits:'#d48e00', Other:'#6b7280', Transportation:'#2a9d8f', Education:'#457b9d',
+  Employment:'#e76f51', Childcare:'#c59b00', Youth:'#06b88a', Seniors:'#118ab2',
+  Housing:'#2e86c1', Disability:'#9b5de5', Medical:'#e63946', 'Domestic Violence':'#b5338a',
 };
 
 let resources = [];
@@ -592,29 +601,35 @@ let lang = 'en';
 let activeCategory = 'All';
 
 const ICONS = {
-  Food: '🥦', Mental: '🧠', Rental: '🏠', Legal: '⚖️', Benefits: '📋', Other: '🤝',
-  Transportation: '🚌', Education: '📚', Employment: '💼', Childcare: '👶',
-  Youth: '🧒', Seniors: '👴', Housing: '🏡', Disability: '🌼', Medical: '⚕️',
-  'Domestic Violence': '🟣',
+  Food:'🥦', Mental:'🧠', Rental:'🏠', Legal:'⚖️', Benefits:'📋', Other:'🤝',
+  Transportation:'🚌', Education:'📚', Employment:'💼', Childcare:'👶',
+  Youth:'🧒', Seniors:'👴', Housing:'🏡', Disability:'🌼', Medical:'⚕️',
+  'Domestic Violence':'🟣',
 };
 
 const CAT_LABELS = {
   en: {
-    Food: 'Food Pantries', Mental: 'Mental Health', Rental: 'Rental Assistance',
-    Legal: 'Legal Aid', Benefits: 'Public Benefits', Other: 'Other',
-    Transportation: 'Transportation', Education: 'Education', Employment: 'Employment',
-    Childcare: 'Childcare', Youth: 'Youth', Seniors: 'Seniors', Housing: 'Housing',
-    Disability: 'Disability Services', Medical: 'Medical Care', 'Domestic Violence': 'Domestic Violence'
+    Food:'Food Pantries', Mental:'Mental Health', Rental:'Rental Assistance',
+    Legal:'Legal Aid', Benefits:'Public Benefits', Other:'Other',
+    Transportation:'Transportation', Education:'Education', Employment:'Employment',
+    Childcare:'Childcare', Youth:'Youth', Seniors:'Seniors', Housing:'Housing',
+    Disability:'Disability Services', Medical:'Medical Care', 'Domestic Violence':'Domestic Violence'
   },
   es: {
-    Food: 'Despensas', Mental: 'Salud Mental', Rental: 'Asistencia de Renta',
-    Legal: 'Ayuda Legal', Benefits: 'Beneficios Públicos', Other: 'Otros',
-    Transportation: 'Transporte', Education: 'Educación', Employment: 'Empleo',
-    Childcare: 'Cuidado Infantil', Youth: 'Juventud', Seniors: 'Personas Mayores',
-    Housing: 'Vivienda', Disability: 'Discapacidad', Medical: 'Atención Médica',
-    'Domestic Violence': 'Violencia Doméstica',
+    Food:'Despensas', Mental:'Salud Mental', Rental:'Asistencia de Renta',
+    Legal:'Ayuda Legal', Benefits:'Beneficios Públicos', Other:'Otros',
+    Transportation:'Transporte', Education:'Educación', Employment:'Empleo',
+    Childcare:'Cuidado Infantil', Youth:'Juventud', Seniors:'Personas Mayores',
+    Housing:'Vivienda', Disability:'Discapacidad', Medical:'Atención Médica',
+    'Domestic Violence':'Violencia Doméstica',
   },
 };
+
+function buildReportHref(resourceName) {
+  const subject = encodeURIComponent(T[lang].reportSubject(resourceName));
+  const body    = encodeURIComponent(T[lang].reportBody(resourceName));
+  return `mailto:${REPORT_EMAIL}?subject=${subject}&body=${body}`;
+}
 
 async function loadData() {
   if (!SHEET_URL) {
@@ -665,7 +680,7 @@ function setCategory(cat) {
 
 function renderCards() {
   const query = document.getElementById('search').value.toLowerCase().trim();
-  const grid = document.getElementById('grid');
+  const grid  = document.getElementById('grid');
 
   const filtered = resources.filter(r => {
     const cat = r.category || r.Category || 'Other';
@@ -688,14 +703,14 @@ function renderCards() {
   }
 
   grid.innerHTML = filtered.map((r, i) => {
-    const cat = (r.category || r.Category || 'Other').trim();
-    const name = lang === 'es' && r.name_es ? r.name_es : r.name || r.Name || '';
-    const desc = lang === 'es' && r.description_es ? r.description_es : r.description || r.Description || '';
-    const notes = lang === 'es' && r.notes_es ? r.notes_es : r.notes || r.Notes || '';
-    const phone = r.phone || r.Phone || '';
+    const cat     = (r.category || r.Category || 'Other').trim();
+    const name    = lang === 'es' && r.name_es ? r.name_es : r.name || r.Name || '';
+    const desc    = lang === 'es' && r.description_es ? r.description_es : r.description || r.Description || '';
+    const notes   = lang === 'es' && r.notes_es ? r.notes_es : r.notes || r.Notes || '';
+    const phone   = r.phone || r.Phone || '';
     const website = r.website || r.Website || '';
     const address = r.address || r.Address || '';
-    const hours = r.hours || r.Hours || '';
+    const hours   = r.hours || r.Hours || '';
 
     return `
     <div class="card" style="animation-delay:${i*0.04}s">
@@ -719,6 +734,7 @@ function renderCards() {
         ${phone   ? `<a class="btn-call" href="tel:${phone.replace(/\D/g,'')}">📞 ${T[lang].call} ${phone}</a>` : ''}
         ${website ? `<a class="btn-web" href="${website}" target="_blank" rel="noopener">🔗 ${T[lang].website}</a>` : ''}
       </div>
+      <a class="btn-report" href="${buildReportHref(name)}">${T[lang].reportBtn}</a>
     </div>`;
   }).join('');
 }
