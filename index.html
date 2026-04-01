@@ -233,6 +233,15 @@
     flex: 1;
   }
 
+  .results-note {
+    max-width: 900px;
+    margin: 0 auto 14px;
+    padding: 0 16px;
+    font-size: 12px;
+    color: #6b7280;
+    text-align: center;
+  }
+
   .category-share {
     display: flex;
     align-items: center;
@@ -682,11 +691,13 @@
   <div class="results-info" id="results-info"></div>
   <div class="category-share" id="category-share"></div>
 </div>
+<div class="results-note" id="results-note">* Please contact providers directly to confirm current information.</div>
 <div class="grid" id="grid"></div>
 
 <footer>
   <div id="footer-title">Community Corporation of Santa Monica · Resident Services</div>
   <div id="footer-contact" style="margin-top:6px">Questions? Call <a href="tel:+13103950220">(310) 395-0220</a></div>
+  <div id="footer-note" style="margin-top:6px">Information may change. Please contact providers to confirm details.</div>
 </footer>
 
 <script>
@@ -706,6 +717,7 @@ const T = {
     search: 'Search resources...',
     all: 'All',
     showing: n => `Showing ${n} resource${n===1?'':'s'}`,
+    resultsNote: '* Please contact providers directly to confirm current information.',
     noResults: 'No resources found',
     noResultsSub: 'Try a different search or category.',
     call: 'Call',
@@ -719,6 +731,7 @@ const T = {
     demoNotice: 'Demo mode: Showing sample data. Connect your Google Sheet by updating the SHEET_URL in the code.',
     footerTitle: 'Community Corporation of Santa Monica · Resident Services',
     footerContact: 'Questions? Call',
+    footerNote: 'Information may change. Please contact providers to confirm details.',
     reportBtn: 'Report outdated info',
     share: 'Share',
     shareEmail: 'Email',
@@ -741,6 +754,7 @@ Thank you for keeping this resource up to date!`,
     search: 'Buscar recursos...',
     all: 'Todo',
     showing: n => `Mostrando ${n} recurso${n===1?'':'s'}`,
+    resultsNote: '* Por favor contacte directamente a los proveedores para confirmar la informacion actual.',
     noResults: 'No se encontraron recursos',
     noResultsSub: 'Intenta una búsqueda diferente o categoría.',
     call: 'Llamar',
@@ -754,6 +768,7 @@ Thank you for keeping this resource up to date!`,
     demoNotice: 'Modo de demostracion: Mostrando datos de ejemplo. Conecte su hoja de Google actualizando SHEET_URL en el codigo.',
     footerTitle: 'Community Corporation of Santa Monica · Servicios para Residentes',
     footerContact: 'Preguntas? Llame al',
+    footerNote: 'La informacion puede cambiar. Por favor contacte a los proveedores para confirmar detalles.',
     reportBtn: 'Reportar información desactualizada',
     share: 'Compartir',
     shareEmail: 'Correo',
@@ -1376,6 +1391,7 @@ function renderCards() {
 
   filtered_cache = filtered;
   document.getElementById('results-info').textContent = T[lang].showing(filtered.length);
+  document.getElementById('results-note').textContent = T[lang].resultsNote;
   renderCategoryShare();
 
   if (!filtered.length) {
@@ -1404,8 +1420,10 @@ function setLang(l) {
   document.getElementById('site-title').childNodes[0].textContent = T[l].siteTitle + ' ';
   document.getElementById('site-subtitle').textContent = T[l].siteSub;
   document.getElementById('demo-notice').innerHTML = `📋 <strong>${escapeHTML(T[l].demoNotice.split(':')[0])}:</strong> ${escapeHTML(T[l].demoNotice.split(':').slice(1).join(':').trim())}`;
+  document.getElementById('results-note').textContent = T[l].resultsNote;
   document.getElementById('footer-title').textContent = T[l].footerTitle;
   document.getElementById('footer-contact').innerHTML = `${escapeHTML(T[l].footerContact)} <a href="tel:+13103950220">(310) 395-0220</a>`;
+  document.getElementById('footer-note').textContent = T[l].footerNote;
   buildFilters(); renderCards();
 }
 
