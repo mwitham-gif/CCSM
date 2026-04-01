@@ -361,6 +361,12 @@
    * Update REPORT_EMAIL at the top of the <script> block with the
    * staff inbox that should receive these reports.
    */
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+  }
+
   .btn-report {
     display: inline-flex;
     align-items: center;
@@ -376,7 +382,6 @@
     text-decoration: none;
     cursor: pointer;
     transition: background 0.15s, border-color 0.15s;
-    width: fit-content;
   }
 
   .btn-report:hover {
@@ -734,7 +739,9 @@ function renderCards() {
         ${phone   ? `<a class="btn-call" href="tel:${phone.replace(/\D/g,'')}">📞 ${T[lang].call} ${phone}</a>` : ''}
         ${website ? `<a class="btn-web" href="${website}" target="_blank" rel="noopener">🔗 ${T[lang].website}</a>` : ''}
       </div>
-      <a class="btn-report" href="${buildReportHref(name)}">${T[lang].reportBtn}</a>
+      <div class="card-footer">
+        <a class="btn-report" href="${buildReportHref(name)}">${T[lang].reportBtn}</a>
+      </div>
     </div>`;
   }).join('');
 }
