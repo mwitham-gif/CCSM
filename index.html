@@ -892,14 +892,7 @@ const CATEGORY_ALIASES = {
 function getReportHref(resource) {
   const name = getLocalizedValue(resource, 'name');
   const boldName = toBoldUnicode(name);
-  const params = new URLSearchParams({
-    view: 'cm',
-    fs: '1',
-    to: REPORT_EMAIL,
-    su: T[lang].reportSubject(name),
-    body: T[lang].reportBody(boldName),
-  });
-  return 'https://mail.google.com/mail/?' + params.toString();
+  return `mailto:${encodeURIComponent(REPORT_EMAIL)}?subject=${encodeURIComponent(T[lang].reportSubject(name))}&body=${encodeURIComponent(T[lang].reportBody(boldName))}`;
 }
 
 function getBasePageUrl() {
