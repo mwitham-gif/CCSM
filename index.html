@@ -602,6 +602,7 @@ const CAT_COLORS = {
 };
 
 let resources = [];
+let filtered_cache = [];
 let lang = 'en';
 let activeCategory = 'All';
 
@@ -630,12 +631,13 @@ const CAT_LABELS = {
   },
 };
 
-function openReport(resourceName) {
-  const subject = encodeURIComponent(T[lang].reportSubject(resourceName));
-  const body    = encodeURIComponent(T[lang].reportBody(resourceName));
-  const a = document.createElement('a');
-  a.href = `mailto:${REPORT_EMAIL}?subject=${subject}&body=${body}`;
-  a.click();
+function openReport(idx) {
+  const r = filtered_cache[idx];
+  if (!r) return;
+  const name    = lang === 'es' && r.name_es ? r.name_es : r.name || r.Name || '';
+  const subject = encodeURIComponent(T[lang].reportSubject(name));
+  const body    = encodeURIComponent(T[lang].reportBody(name));
+  window.open('mailto:' + REPORT_EMAIL + '?subject=' + subject + '&body=' + body, '_self');
 }
 
 async function loadData() {
@@ -698,6 +700,7 @@ function renderCards() {
     return matchCat && matchQ;
   });
 
+  filtered_cache = filtered;
   document.getElementById('results-info').textContent = T[lang].showing(filtered.length);
 
   if (!filtered.length) {
@@ -742,7 +745,7 @@ function renderCards() {
         ${website ? `<a class="btn-web" href="${website}" target="_blank" rel="noopener">🔗 ${T[lang].website}</a>` : ''}
       </div>
       <div class="card-footer">
-        <button class="btn-report" data-name="${name.replace(/"/g, '&quot;')}">${T[lang].reportBtn}</button>
+        <button class="btn-report" onclick="openReport(${i})">${T[lang].reportBtn}</button>
       </div>
     </div>`;
   }).join('');
@@ -762,12 +765,6 @@ function setLang(l) {
   document.getElementById('site-subtitle').textContent = T[l].siteSub;
   buildFilters(); renderCards();
 }
-
-document.getElementById('grid').addEventListener('click', function(e) {
-  const btn = e.target.closest('.btn-report');
-  if (!btn) return;
-  openReport(btn.dataset.name);
-});
 
 loadData();
 </script>
