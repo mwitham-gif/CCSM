@@ -516,8 +516,8 @@
 <div class="grid" id="grid"></div>
 
 <footer>
-  <div>Community Corporation of Santa Monica · Resident Services</div>
-  <div style="margin-top:6px">Questions? Call <a href="tel:+13103950220">(310) 395-0220</a></div>
+  <div id="footer-title">Community Corporation of Santa Monica · Resident Services</div>
+  <div id="footer-contact" style="margin-top:6px">Questions? Call <a href="tel:+13103950220">(310) 395-0220</a></div>
 </footer>
 
 <script>
@@ -527,6 +527,10 @@
 const REPORT_EMAIL = 'mwitham@communitycorp.org';
 
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbAtpa7kK10yL2QtdLHRx9q2VbuEIPNG6S2uMbWhQ1GsLGoYA3NqFAlp_E_w8xUGRdcLxT4V3gbiJD/pub?output=csv';
+
+// Recommended Google Sheet columns:
+// name, name_es, category, description, description_es, address, phone, website, hours, notes, notes_es
+// The importer also accepts several human-friendly variations like "Name", "Resource Name", or "Phone Number".
 
 const T = {
   en: {
@@ -543,6 +547,9 @@ const T = {
     loading: 'Loading resources...',
     siteTitle: 'Community Resources',
     siteSub: 'Find help near you · Santa Monica',
+    demoNotice: 'Demo mode: Showing sample data. Connect your Google Sheet by updating the SHEET_URL in the code.',
+    footerTitle: 'Community Corporation of Santa Monica · Resident Services',
+    footerContact: 'Questions? Call',
     reportBtn: 'Report outdated info',
     reportSubject: name => `Outdated listing: ${name}`,
     reportBody: name =>
@@ -569,6 +576,9 @@ Thank you for keeping this resource up to date.`,
     loading: 'Cargando recursos...',
     siteTitle: 'Recursos Comunitarios',
     siteSub: 'Encuentra ayuda cerca · Santa Mónica',
+    demoNotice: 'Modo de demostracion: Mostrando datos de ejemplo. Conecte su hoja de Google actualizando SHEET_URL en el codigo.',
+    footerTitle: 'Community Corporation of Santa Monica · Servicios para Residentes',
+    footerContact: 'Preguntas? Llame al',
     reportBtn: 'Reportar información desactualizada',
     reportSubject: name => `Información desactualizada: ${name}`,
     reportBody: name =>
@@ -631,10 +641,59 @@ const CAT_LABELS = {
   },
 };
 
+const FIELD_ALIASES = {
+  name: ['name', 'resource name', 'program name', 'organization name', 'org name'],
+  name_es: ['name_es', 'name es', 'resource name es', 'resource name spanish', 'program name es', 'nombre', 'nombre_es'],
+  category: ['category', 'service category', 'type', 'service type'],
+  description: ['description', 'service description', 'summary', 'details'],
+  description_es: ['description_es', 'description es', 'service description es', 'descripcion', 'descripcion_es'],
+  address: ['address', 'location', 'street address'],
+  phone: ['phone', 'phone number', 'telephone', 'contact phone'],
+  website: ['website', 'web site', 'url', 'link'],
+  hours: ['hours', 'service hours', 'open hours', 'availability'],
+  notes: ['notes', 'note', 'eligibility', 'requirements', 'instructions'],
+  notes_es: ['notes_es', 'notes es', 'eligibility es', 'requirements es', 'notas', 'notas_es'],
+};
+
+const CATEGORY_ALIASES = {
+  food: 'Food',
+  'food pantry': 'Food',
+  'food pantries': 'Food',
+  groceries: 'Food',
+  grocery: 'Food',
+  mental: 'Mental',
+  'mental health': 'Mental',
+  counseling: 'Mental',
+  rental: 'Rental',
+  'rental assistance': 'Rental',
+  eviction: 'Rental',
+  legal: 'Legal',
+  'legal aid': 'Legal',
+  benefits: 'Benefits',
+  'public benefits': 'Benefits',
+  transportation: 'Transportation',
+  transport: 'Transportation',
+  education: 'Education',
+  employment: 'Employment',
+  jobs: 'Employment',
+  childcare: 'Childcare',
+  'child care': 'Childcare',
+  youth: 'Youth',
+  seniors: 'Seniors',
+  senior: 'Seniors',
+  housing: 'Housing',
+  disability: 'Disability',
+  disabilities: 'Disability',
+  medical: 'Medical',
+  healthcare: 'Medical',
+  health: 'Medical',
+  'domestic violence': 'Domestic Violence',
+};
+
 function openReport(idx) {
   const r = filtered_cache[idx];
   if (!r) return;
-  const name    = lang === 'es' && r.name_es ? r.name_es : r.name || r.Name || '';
+  const name    = getLocalizedValue(r, 'name');
   const subject = encodeURIComponent(T[lang].reportSubject(name));
   const body    = encodeURIComponent(T[lang].reportBody(name));
   window.open('mailto:' + REPORT_EMAIL + '?subject=' + subject + '&body=' + body, '_self');
@@ -652,6 +711,7 @@ async function loadData() {
     const res = await fetch(SHEET_URL);
     const csv = await res.text();
     resources = parseCSV(csv);
+    if (!resources.length) throw new Error('No resources found in sheet');
     buildFilters(); renderCards();
   } catch (e) {
     document.getElementById('demo-notice').classList.add('show');
@@ -661,25 +721,166 @@ async function loadData() {
 }
 
 function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g,''));
-  return lines.slice(1).map(line => {
-    const vals = line.match(/(".*?"|[^,]+|(?<=,)(?=,)|(?<=,)$|^(?=,))/g) || [];
+  const rows = [];
+  let row = [];
+  let cell = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+    const next = text[i + 1];
+
+    if (char === '"') {
+      if (inQuotes && next === '"') {
+        cell += '"';
+        i += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (char === ',' && !inQuotes) {
+      row.push(cell);
+      cell = '';
+      continue;
+    }
+
+    if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (char === '\r' && next === '\n') i += 1;
+      row.push(cell);
+      rows.push(row);
+      row = [];
+      cell = '';
+      continue;
+    }
+
+    cell += char;
+  }
+
+  if (cell || row.length) {
+    row.push(cell);
+    rows.push(row);
+  }
+
+  if (!rows.length) return [];
+
+  const headers = rows[0].map(value => value.trim());
+  return rows.slice(1).map(values => {
     const obj = {};
-    headers.forEach((h, i) => { obj[h] = (vals[i] || '').replace(/^"|"$/g,'').trim(); });
-    return obj;
-  }).filter(r => r.name || r.Name);
+    headers.forEach((header, index) => {
+      obj[header] = (values[index] || '').trim();
+    });
+    return normalizeResource(obj);
+  }).filter(r => getField(r, 'name'));
+}
+
+function normalizeKey(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ');
+}
+
+function getRawField(resource, key) {
+  const direct = resource[key];
+  if (direct != null && String(direct).trim()) return String(direct).trim();
+
+  const normalizedTarget = normalizeKey(key);
+  for (const [fieldName, value] of Object.entries(resource)) {
+    if (normalizeKey(fieldName) === normalizedTarget && String(value || '').trim()) {
+      return String(value).trim();
+    }
+  }
+
+  return '';
+}
+
+function getAliasField(resource, aliases) {
+  for (const alias of aliases) {
+    const value = getRawField(resource, alias);
+    if (value) return value;
+  }
+  return '';
+}
+
+function normalizeCategoryValue(value) {
+  const cleaned = String(value || '').trim();
+  if (!cleaned) return 'Other';
+  const canonical = CATEGORY_ALIASES[normalizeKey(cleaned)];
+  if (canonical) return canonical;
+  return cleaned;
+}
+
+function normalizeResource(resource) {
+  const normalized = {};
+
+  Object.entries(FIELD_ALIASES).forEach(([field, aliases]) => {
+    normalized[field] = getAliasField(resource, [field, ...aliases]);
+  });
+
+  normalized.category = normalizeCategoryValue(normalized.category);
+  return normalized;
+}
+
+function getField(resource, key) {
+  return getRawField(resource, key);
+}
+
+function getLocalizedValue(resource, key) {
+  if (lang === 'es') {
+    const localized = getField(resource, `${key}_es`);
+    if (localized) return localized;
+  }
+  return getField(resource, key);
+}
+
+function normalizeCategory(resource) {
+  return getField(resource, 'category') || 'Other';
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[char]));
+}
+
+function escapeAttr(value) {
+  return escapeHTML(value);
+}
+
+function normalizePhoneHref(phone) {
+  const digits = String(phone).replace(/[^\d+]/g, '');
+  return digits.startsWith('+') ? digits : digits.replace(/\+/g, '');
+}
+
+function normalizeWebsiteUrl(url) {
+  const trimmed = String(url).trim();
+  if (!trimmed) return '';
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  if (/^[a-z]+:/i.test(trimmed)) return '';
+  return `https://${trimmed}`;
 }
 
 function buildFilters() {
-  const categories = ['All', ...new Set(resources.map(r => r.category || r.Category || 'Other'))];
+  const categories = ['All', ...new Set(resources.map(normalizeCategory))];
   const container = document.getElementById('filters');
   container.innerHTML = categories.map(cat => `
     <button class="filter-btn ${cat === activeCategory ? 'active' : ''}"
-      onclick="setCategory('${cat}')">
-      ${cat === 'All' ? T[lang].all : (CAT_LABELS[lang][cat] || cat)}
+      type="button"
+      data-category="${escapeAttr(cat)}">
+      ${escapeHTML(cat === 'All' ? T[lang].all : (CAT_LABELS[lang][cat] || cat))}
     </button>
   `).join('');
+
+  container.querySelectorAll('[data-category]').forEach(button => {
+    button.addEventListener('click', () => setCategory(button.dataset.category));
+  });
 }
 
 function setCategory(cat) {
@@ -692,11 +893,13 @@ function renderCards() {
   const grid  = document.getElementById('grid');
 
   const filtered = resources.filter(r => {
-    const cat = r.category || r.Category || 'Other';
+    const cat = normalizeCategory(r);
     const matchCat = activeCategory === 'All' || cat === activeCategory;
-    const name = (lang === 'es' && r.name_es ? r.name_es : r.name || r.Name || '').toLowerCase();
-    const desc = (lang === 'es' && r.description_es ? r.description_es : r.description || r.Description || '').toLowerCase();
-    const matchQ = !query || name.includes(query) || desc.includes(query) || cat.toLowerCase().includes(query);
+    const name = getLocalizedValue(r, 'name').toLowerCase();
+    const desc = getLocalizedValue(r, 'description').toLowerCase();
+    const address = getField(r, 'address').toLowerCase();
+    const notes = getLocalizedValue(r, 'notes').toLowerCase();
+    const matchQ = !query || name.includes(query) || desc.includes(query) || address.includes(query) || notes.includes(query) || cat.toLowerCase().includes(query);
     return matchCat && matchQ;
   });
 
@@ -713,39 +916,41 @@ function renderCards() {
   }
 
   grid.innerHTML = filtered.map((r, i) => {
-    const cat     = (r.category || r.Category || 'Other').trim();
-    const name    = lang === 'es' && r.name_es ? r.name_es : r.name || r.Name || '';
-    const desc    = lang === 'es' && r.description_es ? r.description_es : r.description || r.Description || '';
-    const notes   = lang === 'es' && r.notes_es ? r.notes_es : r.notes || r.Notes || '';
-    const phone   = r.phone || r.Phone || '';
-    const website = r.website || r.Website || '';
-    const address = r.address || r.Address || '';
-    const hours   = r.hours || r.Hours || '';
+    const cat = normalizeCategory(r);
+    const name = getLocalizedValue(r, 'name');
+    const desc = getLocalizedValue(r, 'description');
+    const notes = getLocalizedValue(r, 'notes');
+    const phone = getField(r, 'phone');
+    const website = normalizeWebsiteUrl(getField(r, 'website'));
+    const address = getField(r, 'address');
+    const hours = getField(r, 'hours');
+    const color = CAT_COLORS[cat] || CAT_COLORS.Other;
+    const iconBg = `${color}22`;
 
     return `
     <div class="card" style="animation-delay:${i*0.04}s">
       <div class="card-header">
-        <div class="card-icon icon-${cat}">${ICONS[cat] || '🤝'}</div>
+        <div class="card-icon" style="background:${escapeAttr(iconBg)}">${escapeHTML(ICONS[cat] || '🤝')}</div>
         <div>
-          <div class="card-name">${name}</div>
+          <div class="card-name">${escapeHTML(name)}</div>
           <div class="card-category">
-            <span class="cat-dot cat-${cat}"></span>
-            ${CAT_LABELS[lang][cat] || cat}
+            <span class="cat-dot" style="background:${escapeAttr(color)}"></span>
+            ${escapeHTML(CAT_LABELS[lang][cat] || cat)}
           </div>
         </div>
       </div>
-      ${desc ? `<div class="card-desc">${desc}</div>` : ''}
+      ${desc ? `<div class="card-desc">${escapeHTML(desc)}</div>` : ''}
       <div class="card-details">
-        ${address ? `<div class="card-detail"><span class="icon">📍</span><span>${address}</span></div>` : ''}
-        ${hours   ? `<div class="card-detail"><span class="icon">🕐</span><span>${hours}</span></div>` : ''}
-        ${notes   ? `<div class="card-detail"><span class="icon">ℹ️</span><span>${notes}</span></div>` : ''}
+        ${address ? `<div class="card-detail"><span class="icon">📍</span><span>${escapeHTML(address)}</span></div>` : ''}
+        ${hours   ? `<div class="card-detail"><span class="icon">🕐</span><span>${escapeHTML(hours)}</span></div>` : ''}
+        ${notes   ? `<div class="card-detail"><span class="icon">ℹ️</span><span>${escapeHTML(notes)}</span></div>` : ''}
       </div>
       <div class="card-actions">
-        ${phone   ? `<a class="btn-call" href="tel:${phone.replace(/\D/g,'')}">📞 ${T[lang].call} ${phone}</a>` : ''}
-        ${website ? `<a class="btn-web" href="${website}" target="_blank" rel="noopener">🔗 ${T[lang].website}</a>` : ''}
+        ${phone   ? `<a class="btn-call" href="tel:${escapeAttr(normalizePhoneHref(phone))}">📞 ${escapeHTML(T[lang].call)} ${escapeHTML(phone)}</a>` : ''}
+        ${website ? `<a class="btn-web" href="${escapeAttr(website)}" target="_blank" rel="noopener">🔗 ${escapeHTML(T[lang].website)}</a>` : ''}
       </div>
       <div class="card-footer">
-        <button class="btn-report" onclick="openReport(${i})">${T[lang].reportBtn}</button>
+        <button class="btn-report" type="button" onclick="openReport(${i})">${escapeHTML(T[lang].reportBtn)}</button>
       </div>
     </div>`;
   }).join('');
@@ -763,6 +968,9 @@ function setLang(l) {
   document.getElementById('search').placeholder = T[l].search;
   document.getElementById('site-title').childNodes[0].textContent = T[l].siteTitle + ' ';
   document.getElementById('site-subtitle').textContent = T[l].siteSub;
+  document.getElementById('demo-notice').innerHTML = `📋 <strong>${escapeHTML(T[l].demoNotice.split(':')[0])}:</strong> ${escapeHTML(T[l].demoNotice.split(':').slice(1).join(':').trim())}`;
+  document.getElementById('footer-title').textContent = T[l].footerTitle;
+  document.getElementById('footer-contact').innerHTML = `${escapeHTML(T[l].footerContact)} <a href="tel:+13103950220">(310) 395-0220</a>`;
   buildFilters(); renderCards();
 }
 
