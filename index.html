@@ -630,10 +630,10 @@ const CAT_LABELS = {
   },
 };
 
-function buildReportHref(resourceName) {
+function openReport(resourceName) {
   const subject = encodeURIComponent(T[lang].reportSubject(resourceName));
   const body    = encodeURIComponent(T[lang].reportBody(resourceName));
-  return `mailto:${REPORT_EMAIL}?subject=${subject}&body=${body}`;
+  window.location.href = `mailto:${REPORT_EMAIL}?subject=${subject}&body=${body}`;
 }
 
 async function loadData() {
@@ -740,7 +740,7 @@ function renderCards() {
         ${website ? `<a class="btn-web" href="${website}" target="_blank" rel="noopener">🔗 ${T[lang].website}</a>` : ''}
       </div>
       <div class="card-footer">
-        <a class="btn-report" href="${buildReportHref(name)}">${T[lang].reportBtn}</a>
+        <button class="btn-report" onclick="openReport(${JSON.stringify(name)})">${T[lang].reportBtn}</button>
       </div>
     </div>`;
   }).join('');
