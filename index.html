@@ -952,16 +952,14 @@ function getResourceEmailLines(resource, includeShareUrl = true) {
   return lines;
 }
 
+function getEmailComposeHref(subject, body) {
+  return `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
 function getShareEmailHref(resource) {
   const shareData = getResourceShareData(resource);
   const lines = getResourceEmailLines(resource);
-  const params = new URLSearchParams({
-    view: 'cm',
-    fs: '1',
-    su: shareData.title,
-    body: lines.join('\n'),
-  });
-  return 'https://mail.google.com/mail/?' + params.toString();
+  return getEmailComposeHref(shareData.title, lines.join('\n'));
 }
 
 function getCategoryShareData(category) {
@@ -987,13 +985,7 @@ function getCategoryShareEmailHref(category) {
     'View resources:',
     shareData.url,
   ].filter((line, index, array) => line || (index > 0 && array[index - 1] !== ''));
-  const params = new URLSearchParams({
-    view: 'cm',
-    fs: '1',
-    su: shareData.title,
-    body: lines.join('\n'),
-  });
-  return 'https://mail.google.com/mail/?' + params.toString();
+  return getEmailComposeHref(shareData.title, lines.join('\n'));
 }
 
 function closeShareMenus() {
