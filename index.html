@@ -742,7 +742,7 @@ function renderCards() {
         ${website ? `<a class="btn-web" href="${website}" target="_blank" rel="noopener">🔗 ${T[lang].website}</a>` : ''}
       </div>
       <div class="card-footer">
-        <button class="btn-report" onclick="openReport(${JSON.stringify(name)})">${T[lang].reportBtn}</button>
+        <button class="btn-report" data-name="${name.replace(/"/g, '&quot;')}">${T[lang].reportBtn}</button>
       </div>
     </div>`;
   }).join('');
@@ -762,6 +762,12 @@ function setLang(l) {
   document.getElementById('site-subtitle').textContent = T[l].siteSub;
   buildFilters(); renderCards();
 }
+
+document.getElementById('grid').addEventListener('click', function(e) {
+  const btn = e.target.closest('.btn-report');
+  if (!btn) return;
+  openReport(btn.dataset.name);
+});
 
 loadData();
 </script>
