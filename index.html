@@ -546,7 +546,7 @@ const T = {
     reportBtn: 'Report outdated info',
     reportSubject: name => `Outdated listing: ${name}`,
     reportBody: name =>
-`Hi,
+`Hi CCSM,
 
 I noticed some information for "${name}" on the CCSM Community Resources page may be outdated.
 
@@ -633,7 +633,9 @@ const CAT_LABELS = {
 function openReport(resourceName) {
   const subject = encodeURIComponent(T[lang].reportSubject(resourceName));
   const body    = encodeURIComponent(T[lang].reportBody(resourceName));
-  window.location.href = `mailto:${REPORT_EMAIL}?subject=${subject}&body=${body}`;
+  const a = document.createElement('a');
+  a.href = `mailto:${REPORT_EMAIL}?subject=${subject}&body=${body}`;
+  a.click();
 }
 
 async function loadData() {
