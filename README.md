@@ -68,7 +68,17 @@ The app will try to normalize close matches like `food pantry`, `mental health`,
 
 The site currently reads from the published CSV URL stored in [`index.html`](/Users/michaelwitham/Desktop/Resource%20Directory/CCSM/index.html#L529).
 
-When changing the source sheet:
+Publishing the Google Sheet is usually a one-time setup step.
+
+If the sheet is already published, staff can continue editing the sheet normally and the website will keep using the same published CSV link.
+
+You only need to update the `SHEET_URL` value when:
+
+- moving the website to a different Google Sheet
+- changing to a different published tab or CSV link
+- setting up publishing for the first time
+
+When changing the source sheet or setting up publishing:
 
 1. Open the Google Sheet.
 2. Use Google Sheets publishing or sharing settings to create a public CSV link.

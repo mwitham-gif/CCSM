@@ -217,6 +217,28 @@
     color: var(--muted);
   }
 
+  .results-row {
+    max-width: 900px;
+    margin: 20px auto 10px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .results-row .results-info {
+    margin: 0;
+    padding: 0;
+    flex: 1;
+  }
+
+  .category-share {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
   /* ── RESOURCE GRID ── */
   .grid {
     max-width: 900px;
@@ -236,7 +258,7 @@
     animation: fadeUp 0.35s ease both;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
     box-shadow: 0 4px 16px rgba(26,82,118,0.10), 0 1px 4px rgba(26,82,118,0.06);
   }
 
@@ -314,8 +336,8 @@
   .card-details {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    margin-top: 2px;
+    gap: 6px;
+    margin-top: 0;
     font-size: 13px;
     color: var(--muted);
   }
@@ -333,27 +355,42 @@
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    margin-top: 4px;
+    margin-top: 2px;
+    justify-content: flex-start;
+    align-items: center;
   }
 
   .btn-call, .btn-web {
     border: none;
-    border-radius: 8px;
-    padding: 8px 14px;
+    border-radius: 10px;
+    padding: 9px 14px;
     font-family: 'DM Sans', sans-serif;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    transition: opacity 0.15s;
+    transition: opacity 0.15s, transform 0.15s;
   }
 
-  .btn-call { background: var(--mint); color: #155724; }
-  .btn-web  { background: #dbeafe; color: #1e40af; box-shadow: 0 2px 0 #93c5fd, 0 2px 6px rgba(30,64,175,0.12); }
-  .btn-call:hover, .btn-web:hover { opacity: 0.8; }
+  .btn-call {
+    background: var(--mint);
+    color: #155724;
+    box-shadow: 0 2px 0 #b7dfc6, 0 2px 6px rgba(21,87,36,0.10);
+  }
+
+  .btn-web  {
+    background: #e8f0ff;
+    color: #294f96;
+    box-shadow: 0 2px 0 #bdd3ff, 0 2px 6px rgba(41,79,150,0.10);
+  }
+
+  .btn-call:hover, .btn-web:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+  }
 
   /* ── REPORT BUTTON ── */
   /*
@@ -363,30 +400,135 @@
    */
   .card-footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
     margin-top: auto;
+    padding-top: 6px;
+    border-top: 1px solid rgba(201,212,224,0.55);
+  }
+
+  .share-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .share-wrap.align-right .share-menu {
+    left: auto;
+    right: 0;
+  }
+
+  .btn-share {
+    min-height: 30px;
+    padding: 0 4px;
+    border: none;
+    background: transparent;
+    color: #728195;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s, transform 0.15s;
+    flex-shrink: 0;
+  }
+
+  .btn-share:hover {
+    color: var(--ocean);
+    transform: translateY(-1px);
+  }
+
+  .btn-share:active {
+    transform: translateY(0);
+  }
+
+  .btn-share.top-share-btn {
+    min-height: 32px;
+    padding: 0 10px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid #d7dee8;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.92);
+    color: #60758a;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s, color 0.15s;
+    box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+  }
+
+  .btn-share.top-share-btn:hover {
+    background: #f8fbff;
+    border-color: #bfd0e4;
+    color: var(--ocean);
+  }
+
+  .share-menu {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 8px);
+    min-width: 138px;
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid #d7dee8;
+    background: rgba(255,255,255,0.98);
+    box-shadow: 0 14px 28px rgba(15,23,42,0.12), 0 3px 8px rgba(15,23,42,0.08);
+    display: none;
+    z-index: 20;
+  }
+
+  .share-menu.show {
+    display: block;
+  }
+
+  .share-option {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #425466;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .share-option:hover {
+    background: #f4f8fc;
+    color: var(--ocean);
   }
 
   .btn-report {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 6px 11px;
-    border-radius: 8px;
-    border: 1.5px solid #fcd34d;
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: 1px solid #f4cf75;
     background: transparent;
-    color: #92400e;
+    color: #9a5a1d;
     font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
+    letter-spacing: 0.01em;
     text-decoration: none;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
   }
 
   .btn-report:hover {
-    background: #fef3c7;
-    border-color: #f59e0b;
+    background: #fff8e8;
+    border-color: #e5b94f;
+    color: #7c4513;
   }
 
   /* ── EMPTY STATE ── */
@@ -450,6 +592,22 @@
 
   .notice.show { display: block; }
 
+  body.share-mode .controls,
+  body.share-mode .results-info,
+  body.share-mode footer {
+    display: none;
+  }
+
+  body.share-mode .grid {
+    max-width: 680px;
+    grid-template-columns: 1fr;
+    padding-top: 28px;
+  }
+
+  body.share-mode .card {
+    min-height: auto;
+  }
+
   @media (max-width: 750px) {
     .grid { grid-template-columns: repeat(2, 1fr); }
   }
@@ -471,7 +629,14 @@
     }
     .filters::-webkit-scrollbar { display: none; }
     .filter-btn { flex-shrink: 0; font-size: 12px; padding: 8px 13px; }
-    .results-info { padding: 0 12px; }
+    .results-row {
+      padding: 0 12px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+    .results-info { padding: 0; }
+    .category-share { justify-content: flex-start; }
     .grid { grid-template-columns: 1fr; padding: 0 12px 48px; gap: 12px; }
     .card { padding: 16px 14px; }
     .card-name { font-size: 0.98rem; }
@@ -512,7 +677,10 @@
   <div class="filters" id="filters"></div>
 </div>
 
-<div class="results-info" id="results-info"></div>
+<div class="results-row">
+  <div class="results-info" id="results-info"></div>
+  <div class="category-share" id="category-share"></div>
+</div>
 <div class="grid" id="grid"></div>
 
 <footer>
@@ -551,16 +719,22 @@ const T = {
     footerTitle: 'Community Corporation of Santa Monica · Resident Services',
     footerContact: 'Questions? Call',
     reportBtn: 'Report outdated info',
+    share: 'Share',
+    shareEmail: 'Email',
+    shareCopyLink: 'Copy link',
     reportSubject: name => `Outdated listing: ${name}`,
     reportBody: name =>
 `Hi CCSM,
 
 I noticed some information for "${name}" on the CCSM Community Resources page may be outdated.
 
-Please describe what is incorrect:
+𝗪𝗵𝗮𝘁 𝘀𝗵𝗼𝘂𝗹𝗱 𝗯𝗲 𝘂𝗽𝗱𝗮𝘁𝗲𝗱:
 
+𝗖𝗼𝗿𝗿𝗲𝗰𝘁 𝗶𝗻𝗳𝗼𝗿𝗺𝗮𝘁𝗶𝗼𝗻:
 
-Thank you for keeping this resource up to date.`,
+Anything else we should know:
+
+Thank you for keeping this resource up to date!`,
   },
   es: {
     search: 'Buscar recursos...',
@@ -580,16 +754,22 @@ Thank you for keeping this resource up to date.`,
     footerTitle: 'Community Corporation of Santa Monica · Servicios para Residentes',
     footerContact: 'Preguntas? Llame al',
     reportBtn: 'Reportar información desactualizada',
+    share: 'Compartir',
+    shareEmail: 'Correo',
+    shareCopyLink: 'Copiar enlace',
     reportSubject: name => `Información desactualizada: ${name}`,
     reportBody: name =>
 `Hola,
 
 Noté que la información de "${name}" en la página de Recursos Comunitarios puede estar desactualizada.
 
-Qué está incorrecto:
-[Por favor describa — ej. número de teléfono incorrecto, dirección cambió, horario diferente, programa ya no existe]
+𝗤𝘂é 𝗱𝗲𝗯𝗲 𝗮𝗰𝘁𝘂𝗮𝗹𝗶𝘇𝗮𝗿𝘀𝗲:
 
-Gracias por mantener este recurso actualizado.`,
+𝗜𝗻𝗳𝗼𝗿𝗺𝗮𝗰𝗶ó𝗻 𝗰𝗼𝗿𝗿𝗲𝗰𝘁𝗮:
+
+Algo más que debamos saber:
+
+Gracias por mantener este recurso actualizado!`,
   }
 };
 
@@ -615,6 +795,9 @@ let resources = [];
 let filtered_cache = [];
 let lang = 'en';
 let activeCategory = 'All';
+const urlParams = new URLSearchParams(window.location.search);
+const shareResourceKey = urlParams.get('share');
+const sharedCategoryKey = urlParams.get('category');
 
 const ICONS = {
   Food:'🥦', Mental:'🧠', Rental:'🏠', Legal:'⚖️', Benefits:'📋', Other:'🤝',
@@ -690,13 +873,280 @@ const CATEGORY_ALIASES = {
   'domestic violence': 'Domestic Violence',
 };
 
-function openReport(idx) {
-  const r = filtered_cache[idx];
-  if (!r) return;
-  const name    = getLocalizedValue(r, 'name');
-  const subject = encodeURIComponent(T[lang].reportSubject(name));
-  const body    = encodeURIComponent(T[lang].reportBody(name));
-  window.open('mailto:' + REPORT_EMAIL + '?subject=' + subject + '&body=' + body, '_self');
+function getReportHref(resource) {
+  const name = getLocalizedValue(resource, 'name');
+  const boldName = toBoldUnicode(name);
+  const params = new URLSearchParams({
+    view: 'cm',
+    fs: '1',
+    to: REPORT_EMAIL,
+    su: T[lang].reportSubject(name),
+    body: T[lang].reportBody(boldName),
+  });
+  return 'https://mail.google.com/mail/?' + params.toString();
+}
+
+function getBasePageUrl() {
+  return window.location.origin + window.location.pathname;
+}
+
+function getShareKey(resource) {
+  return encodeURIComponent(getField(resource, 'name').trim());
+}
+
+function getSharePageUrl(resource) {
+  return `${getBasePageUrl()}?share=${getShareKey(resource)}`;
+}
+
+function getCategorySharePageUrl(category) {
+  return `${getBasePageUrl()}?category=${encodeURIComponent(category)}`;
+}
+
+function getResourceShareData(resource) {
+  const name = getLocalizedValue(resource, 'name');
+  const description = getLocalizedValue(resource, 'description');
+  const website = normalizeWebsiteUrl(getField(resource, 'website'));
+  const address = getField(resource, 'address');
+  const phone = getField(resource, 'phone');
+  const parts = [description, address, phone].filter(Boolean);
+  const shareUrl = getSharePageUrl(resource);
+
+  return {
+    title: name || 'Community resource',
+    text: parts.join(' · '),
+    url: shareUrl,
+  };
+}
+
+function getResourceEmailLines(resource, includeShareUrl = true) {
+  const shareData = getResourceShareData(resource);
+  const website = normalizeWebsiteUrl(getField(resource, 'website'));
+  const lines = [
+    shareData.title,
+    getField(resource, 'address'),
+    getField(resource, 'phone'),
+    getLocalizedValue(resource, 'description'),
+    website,
+  ].filter(Boolean);
+
+  if (includeShareUrl) {
+    lines.push('', 'View resource:', shareData.url);
+  }
+
+  return lines;
+}
+
+function getShareEmailHref(resource) {
+  const shareData = getResourceShareData(resource);
+  const lines = getResourceEmailLines(resource);
+  const params = new URLSearchParams({
+    view: 'cm',
+    fs: '1',
+    su: shareData.title,
+    body: lines.join('\n'),
+  });
+  return 'https://mail.google.com/mail/?' + params.toString();
+}
+
+function getCategoryShareData(category) {
+  const label = CAT_LABELS[lang][category] || category;
+  return {
+    title: `${label} · Community Resources`,
+    text: `Browse ${label.toLowerCase()} resources.`,
+    url: getCategorySharePageUrl(category),
+  };
+}
+
+function getCategoryShareEmailHref(category) {
+  const shareData = getCategoryShareData(category);
+  const categoryResources = resources.filter(resource => normalizeCategory(resource) === category);
+  const lines = [
+    shareData.title,
+    '',
+    ...categoryResources.flatMap((resource, index) => {
+      const block = getResourceEmailLines(resource, false);
+      return index === categoryResources.length - 1 ? block : [...block, ''];
+    }),
+    '',
+    'View resources:',
+    shareData.url,
+  ].filter((line, index, array) => line || (index > 0 && array[index - 1] !== ''));
+  const params = new URLSearchParams({
+    view: 'cm',
+    fs: '1',
+    su: shareData.title,
+    body: lines.join('\n'),
+  });
+  return 'https://mail.google.com/mail/?' + params.toString();
+}
+
+function closeShareMenus() {
+  document.querySelectorAll('.share-menu.show').forEach(menu => menu.classList.remove('show'));
+  document.querySelectorAll('.btn-share[aria-expanded="true"]').forEach(button => button.setAttribute('aria-expanded', 'false'));
+}
+
+function toggleShareMenu(idx, event) {
+  event.stopPropagation();
+  const menu = document.getElementById(`share-menu-${idx}`);
+  const button = event.currentTarget;
+  if (!menu) return;
+
+  const isOpen = menu.classList.contains('show');
+  closeShareMenus();
+
+  if (!isOpen) {
+    menu.classList.add('show');
+    button.setAttribute('aria-expanded', 'true');
+  }
+}
+
+async function copyResourceLink(idx) {
+  const resource = filtered_cache[idx];
+  if (!resource) return;
+
+  const shareData = getResourceShareData(resource);
+  const clipboardText = shareData.url;
+
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(clipboardText);
+      closeShareMenus();
+      window.alert('Link copied to clipboard.');
+      return;
+    }
+
+    window.prompt('Copy this link:', clipboardText);
+  } catch (error) {
+    window.prompt('Copy this link:', shareData.url);
+  }
+}
+
+async function copyCategoryLink() {
+  if (activeCategory === 'All') return;
+
+  const shareUrl = getCategorySharePageUrl(activeCategory);
+
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(shareUrl);
+      closeShareMenus();
+      window.alert('Link copied to clipboard.');
+      return;
+    }
+
+    window.prompt('Copy this link:', shareUrl);
+  } catch (error) {
+    window.prompt('Copy this link:', shareUrl);
+  }
+}
+
+document.addEventListener('click', closeShareMenus);
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') closeShareMenus();
+});
+
+function getShareModeResource() {
+  if (!shareResourceKey) return null;
+  return resources.find(resource => getField(resource, 'name') === shareResourceKey) || null;
+}
+
+function renderCategoryShare() {
+  const container = document.getElementById('category-share');
+  if (!container) return;
+
+  if (shareResourceKey || activeCategory === 'All') {
+    container.innerHTML = '';
+    return;
+  }
+
+  const label = CAT_LABELS[lang][activeCategory] || activeCategory;
+  const shareEmailHref = getCategoryShareEmailHref(activeCategory);
+
+  container.innerHTML = `
+    <div class="share-wrap align-right">
+      <button class="btn-share top-share-btn" type="button" onclick="toggleShareMenu('category', event)" aria-label="${escapeAttr(`${T[lang].share} ${label}`)}" aria-expanded="false">
+        ${escapeHTML(T[lang].share)} ${escapeHTML(label)}
+      </button>
+      <div class="share-menu" id="share-menu-category">
+        <a class="share-option" href="${escapeAttr(shareEmailHref)}" target="_blank" rel="noopener">${escapeHTML(T[lang].shareEmail)}</a>
+        <button class="share-option" type="button" onclick="copyCategoryLink()">${escapeHTML(T[lang].shareCopyLink)}</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderResourceCard(resource, i) {
+  const cat = normalizeCategory(resource);
+  const name = getLocalizedValue(resource, 'name');
+  const desc = getLocalizedValue(resource, 'description');
+  const notes = getLocalizedValue(resource, 'notes');
+  const phone = getField(resource, 'phone');
+  const website = normalizeWebsiteUrl(getField(resource, 'website'));
+  const address = getField(resource, 'address');
+  const hours = getField(resource, 'hours');
+  const color = CAT_COLORS[cat] || CAT_COLORS.Other;
+  const iconBg = `${color}22`;
+  const reportHref = getReportHref(resource);
+  const shareEmailHref = getShareEmailHref(resource);
+
+  return `
+    <div class="card" style="animation-delay:${i*0.04}s">
+      <div class="card-header">
+        <div class="card-icon" style="background:${escapeAttr(iconBg)}">${escapeHTML(ICONS[cat] || '🤝')}</div>
+        <div>
+          <div class="card-name">${escapeHTML(name)}</div>
+          <div class="card-category">
+            <span class="cat-dot" style="background:${escapeAttr(color)}"></span>
+            ${escapeHTML(CAT_LABELS[lang][cat] || cat)}
+          </div>
+        </div>
+      </div>
+      ${desc ? `<div class="card-desc">${escapeHTML(desc)}</div>` : ''}
+      <div class="card-details">
+        ${address ? `<div class="card-detail"><span class="icon">📍</span><span>${escapeHTML(address)}</span></div>` : ''}
+        ${hours   ? `<div class="card-detail"><span class="icon">🕐</span><span>${escapeHTML(hours)}</span></div>` : ''}
+        ${notes   ? `<div class="card-detail"><span class="icon">ℹ️</span><span>${escapeHTML(notes)}</span></div>` : ''}
+      </div>
+      <div class="card-actions">
+        ${phone   ? `<a class="btn-call" href="tel:${escapeAttr(normalizePhoneHref(phone))}">📞 ${escapeHTML(T[lang].call)} ${escapeHTML(phone)}</a>` : ''}
+        ${website ? `<a class="btn-web" href="${escapeAttr(website)}" target="_blank" rel="noopener">🔗 ${escapeHTML(T[lang].website)}</a>` : ''}
+      </div>
+      <div class="card-footer">
+        <div class="share-wrap">
+          <button class="btn-share" type="button" onclick="toggleShareMenu(${i}, event)" aria-label="${escapeAttr(`${T[lang].share} ${name}`)}" aria-expanded="false">
+            ${escapeHTML(T[lang].share)}
+          </button>
+          <div class="share-menu" id="share-menu-${i}">
+            <a class="share-option" href="${escapeAttr(shareEmailHref)}" target="_blank" rel="noopener">${escapeHTML(T[lang].shareEmail)}</a>
+            <button class="share-option" type="button" onclick="copyResourceLink(${i})">${escapeHTML(T[lang].shareCopyLink)}</button>
+          </div>
+        </div>
+        <a class="btn-report" href="${escapeAttr(reportHref)}" target="_blank" rel="noopener" aria-label="${escapeAttr(`${T[lang].reportBtn}: ${name}`)}">${escapeHTML(T[lang].reportBtn)}</a>
+      </div>
+    </div>`;
+}
+
+function renderSharePage() {
+  const resource = getShareModeResource();
+  const grid = document.getElementById('grid');
+  const resultsInfo = document.getElementById('results-info');
+
+  document.body.classList.add('share-mode');
+  filtered_cache = resource ? [resource] : [];
+  resultsInfo.textContent = '';
+
+  if (!resource) {
+    grid.innerHTML = `<div class="empty">
+      <div style="font-size:2.5rem;margin-bottom:12px">🔍</div>
+      <h3>${T[lang].noResults}</h3>
+      <p>${T[lang].noResultsSub}</p>
+    </div>`;
+    return true;
+  }
+
+  document.title = `${getLocalizedValue(resource, 'name')} · Community Resources`;
+  grid.innerHTML = renderResourceCard(resource, 0);
+  return true;
 }
 
 async function loadData() {
@@ -867,6 +1317,20 @@ function normalizeWebsiteUrl(url) {
   return `https://${trimmed}`;
 }
 
+function toBoldUnicode(value) {
+  const boldMap = {
+    A:'𝗔', B:'𝗕', C:'𝗖', D:'𝗗', E:'𝗘', F:'𝗙', G:'𝗚', H:'𝗛', I:'𝗜', J:'𝗝',
+    K:'𝗞', L:'𝗟', M:'𝗠', N:'𝗡', O:'𝗢', P:'𝗣', Q:'𝗤', R:'𝗥', S:'𝗦', T:'𝗧',
+    U:'𝗨', V:'𝗩', W:'𝗪', X:'𝗫', Y:'𝗬', Z:'𝗭',
+    a:'𝗮', b:'𝗯', c:'𝗰', d:'𝗱', e:'𝗲', f:'𝗳', g:'𝗴', h:'𝗵', i:'𝗶', j:'𝗷',
+    k:'𝗸', l:'𝗹', m:'𝗺', n:'𝗻', o:'𝗼', p:'𝗽', q:'𝗾', r:'𝗿', s:'𝘀', t:'𝘁',
+    u:'𝘂', v:'𝘃', w:'𝘄', x:'𝘅', y:'𝘆', z:'𝘇',
+    0:'𝟬', 1:'𝟭', 2:'𝟮', 3:'𝟯', 4:'𝟰', 5:'𝟱', 6:'𝟲', 7:'𝟳', 8:'𝟴', 9:'𝟵',
+  };
+
+  return Array.from(String(value)).map(char => boldMap[char] || char).join('');
+}
+
 function buildFilters() {
   const categories = ['All', ...new Set(resources.map(normalizeCategory))];
   const container = document.getElementById('filters');
@@ -889,6 +1353,12 @@ function setCategory(cat) {
 }
 
 function renderCards() {
+  if (shareResourceKey) {
+    renderSharePage();
+    renderCategoryShare();
+    return;
+  }
+
   const query = document.getElementById('search').value.toLowerCase().trim();
   const grid  = document.getElementById('grid');
 
@@ -905,6 +1375,7 @@ function renderCards() {
 
   filtered_cache = filtered;
   document.getElementById('results-info').textContent = T[lang].showing(filtered.length);
+  renderCategoryShare();
 
   if (!filtered.length) {
     grid.innerHTML = `<div class="empty">
@@ -915,45 +1386,8 @@ function renderCards() {
     return;
   }
 
-  grid.innerHTML = filtered.map((r, i) => {
-    const cat = normalizeCategory(r);
-    const name = getLocalizedValue(r, 'name');
-    const desc = getLocalizedValue(r, 'description');
-    const notes = getLocalizedValue(r, 'notes');
-    const phone = getField(r, 'phone');
-    const website = normalizeWebsiteUrl(getField(r, 'website'));
-    const address = getField(r, 'address');
-    const hours = getField(r, 'hours');
-    const color = CAT_COLORS[cat] || CAT_COLORS.Other;
-    const iconBg = `${color}22`;
-
-    return `
-    <div class="card" style="animation-delay:${i*0.04}s">
-      <div class="card-header">
-        <div class="card-icon" style="background:${escapeAttr(iconBg)}">${escapeHTML(ICONS[cat] || '🤝')}</div>
-        <div>
-          <div class="card-name">${escapeHTML(name)}</div>
-          <div class="card-category">
-            <span class="cat-dot" style="background:${escapeAttr(color)}"></span>
-            ${escapeHTML(CAT_LABELS[lang][cat] || cat)}
-          </div>
-        </div>
-      </div>
-      ${desc ? `<div class="card-desc">${escapeHTML(desc)}</div>` : ''}
-      <div class="card-details">
-        ${address ? `<div class="card-detail"><span class="icon">📍</span><span>${escapeHTML(address)}</span></div>` : ''}
-        ${hours   ? `<div class="card-detail"><span class="icon">🕐</span><span>${escapeHTML(hours)}</span></div>` : ''}
-        ${notes   ? `<div class="card-detail"><span class="icon">ℹ️</span><span>${escapeHTML(notes)}</span></div>` : ''}
-      </div>
-      <div class="card-actions">
-        ${phone   ? `<a class="btn-call" href="tel:${escapeAttr(normalizePhoneHref(phone))}">📞 ${escapeHTML(T[lang].call)} ${escapeHTML(phone)}</a>` : ''}
-        ${website ? `<a class="btn-web" href="${escapeAttr(website)}" target="_blank" rel="noopener">🔗 ${escapeHTML(T[lang].website)}</a>` : ''}
-      </div>
-      <div class="card-footer">
-        <button class="btn-report" type="button" onclick="openReport(${i})">${escapeHTML(T[lang].reportBtn)}</button>
-      </div>
-    </div>`;
-  }).join('');
+  document.body.classList.remove('share-mode');
+  grid.innerHTML = filtered.map((r, i) => renderResourceCard(r, i)).join('');
 }
 
 function showLoading() {
@@ -972,6 +1406,10 @@ function setLang(l) {
   document.getElementById('footer-title').textContent = T[l].footerTitle;
   document.getElementById('footer-contact').innerHTML = `${escapeHTML(T[l].footerContact)} <a href="tel:+13103950220">(310) 395-0220</a>`;
   buildFilters(); renderCards();
+}
+
+if (sharedCategoryKey) {
+  activeCategory = sharedCategoryKey;
 }
 
 loadData();
