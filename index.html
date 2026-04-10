@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Community Resources · Community Corp Santa Monica</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
 <style>
   :root {
     --ocean: #1a5276;
@@ -17,6 +17,13 @@
     --muted: #6b7280;
     --card: #ffffff;
     --border: #e5e7eb;
+    --ink-soft: #425466;
+    --page-edge: #d9e4ef;
+    --surface: rgba(255,255,255,0.74);
+    --surface-strong: rgba(255,255,255,0.9);
+    --shadow-soft: 0 18px 48px rgba(26,82,118,0.08);
+    --shadow-card: 0 10px 30px rgba(26,82,118,0.09), 0 3px 10px rgba(26,82,118,0.04);
+    --shadow-card-hover: 0 18px 42px rgba(26,82,118,0.14), 0 8px 18px rgba(26,82,118,0.08);
 
     --c-Food:    #e05c3a;
     --c-Mental:  #7b5ea7;
@@ -37,28 +44,46 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  :focus-visible {
+    outline: 3px solid rgba(46,134,193,0.28);
+    outline-offset: 3px;
+  }
+
   body {
     font-family: 'DM Sans', sans-serif;
-    background: var(--sand);
+    background:
+      radial-gradient(circle at top left, rgba(113, 168, 213, 0.16), transparent 32%),
+      radial-gradient(circle at top right, rgba(240, 165, 0, 0.12), transparent 24%),
+      linear-gradient(180deg, #f8fbfd 0%, #edf3f8 26%, #eef2f7 100%);
     color: var(--text);
     min-height: 100vh;
   }
 
   /* ── HEADER ── */
   header {
-    background: var(--ocean);
+    background: linear-gradient(135deg, #184c6e 0%, #215f89 100%);
     color: white;
     padding: 0;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 12px 28px rgba(14,33,54,0.18);
   }
 
   .header-inner {
     max-width: 900px;
     margin: 0 auto;
-    padding: 18px 20px 14px;
+    padding: 20px 20px 16px;
+    position: relative;
+  }
+
+  .header-inner::after {
+    content: "";
+    position: absolute;
+    inset: auto 20px 0;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.16), rgba(255,255,255,0.04));
   }
 
   .header-top {
@@ -70,19 +95,20 @@
 
   h1 {
     font-family: 'Fraunces', serif;
-    font-size: clamp(1.4rem, 5vw, 2rem);
+    font-size: clamp(1.45rem, 5vw, 2.15rem);
     font-weight: 700;
-    line-height: 1.1;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
   }
 
   h1 .sub {
     display: block;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.55em;
-    font-weight: 300;
-    opacity: 0.8;
-    margin-top: 3px;
-    letter-spacing: 0.02em;
+    font-size: 0.48em;
+    font-weight: 400;
+    opacity: 0.86;
+    margin-top: 7px;
+    letter-spacing: 0.01em;
   }
 
   .header-logo {
@@ -97,57 +123,192 @@
 
   .lang-toggle {
     display: flex;
-    background: rgba(255,255,255,0.12);
-    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 999px;
     overflow: hidden;
     flex-shrink: 0;
     margin-top: 2px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
   }
 
   .lang-toggle button {
     background: none;
     border: none;
     color: white;
-    padding: 6px 14px;
+    padding: 7px 14px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s, color 0.2s;
   }
 
   .lang-toggle button.active {
-    background: rgba(255,255,255,0.25);
-    border-radius: 6px;
+    background: rgba(255,255,255,0.2);
+    color: #ffffff;
   }
 
   /* ── SEARCH + FILTER ── */
   .controls {
     max-width: 900px;
-    margin: 28px auto 0;
+    margin: 24px auto 0;
     padding: 0 16px;
+    position: relative;
+  }
+
+  .finder-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.76));
+    border: 1px solid rgba(209,221,232,0.96);
+    border-radius: 22px;
+    padding: 16px;
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(12px);
+  }
+
+  .finder-section + .finder-section {
+    margin-top: 14px;
+  }
+
+  .finder-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: #6f8399;
+    margin-bottom: 8px;
+  }
+
+  .finder-hint {
+    font-size: 12px;
+    color: #6a7d91;
+    margin-top: -2px;
+    margin-bottom: 10px;
+  }
+
+  .shortcut-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .shortcut-chip {
+    border: 1px solid #d2dde8;
+    background: rgba(247,250,252,0.96);
+    color: #46617e;
+    border-radius: 999px;
+    padding: 8px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(15,23,42,0.04);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, color 0.18s ease, background-color 0.18s ease;
+  }
+
+  .shortcut-chip:hover {
+    transform: translateY(-1px);
+    border-color: #b7cade;
+    box-shadow: 0 8px 18px rgba(46,134,193,0.08);
+    color: #1a5276;
+  }
+
+  .shortcut-chip.active {
+    border-color: #1d5c84;
+    background: linear-gradient(135deg, #1d5c84, #184d6e);
+    color: #ffffff;
+    box-shadow: 0 12px 22px rgba(26,82,118,0.18);
+  }
+
+  .intro-panel {
+    max-width: 900px;
+    margin: 24px auto 0;
+    padding: 0 16px;
+  }
+
+  .intro-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,255,255,0.72));
+    border: 1px solid rgba(208,220,231,0.95);
+    border-radius: 22px;
+    padding: 18px 18px 16px;
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(14px);
+  }
+
+  .intro-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6b8096;
+    margin-bottom: 8px;
+  }
+
+  .intro-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.15rem, 3vw, 1.45rem);
+    line-height: 1.15;
+    color: #183f5c;
+    letter-spacing: -0.02em;
+  }
+
+  .intro-copy {
+    margin-top: 9px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #526274;
+    max-width: 62ch;
+  }
+
+  .intro-points {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+
+  .intro-point {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    padding: 8px 11px;
+    border-radius: 999px;
+    background: rgba(247,250,252,0.95);
+    border: 1px solid #e0e9f1;
+    color: #5d7085;
+    font-size: 12px;
+    font-weight: 500;
   }
 
   .search-wrap {
     position: relative;
-    margin-bottom: 16px;
+    margin-bottom: 0;
   }
 
   .search-wrap input {
     width: 100%;
-    padding: 14px 18px 14px 48px;
-    border: 2px solid var(--border);
-    border-radius: 14px;
+    padding: 16px 18px 16px 48px;
+    border: 1px solid rgba(188,204,220,0.9);
+    border-radius: 18px;
     font-family: 'DM Sans', sans-serif;
     font-size: 16px;
-    background: white;
+    background: var(--surface-strong);
+    backdrop-filter: blur(16px);
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
     color: var(--text);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: var(--shadow-soft);
   }
 
-  .search-wrap input:focus { border-color: var(--sky); }
+  .search-wrap input:focus {
+    border-color: rgba(46,134,193,0.8);
+    box-shadow: 0 20px 42px rgba(46,134,193,0.14);
+    transform: translateY(-1px);
+  }
 
   .search-icon {
     position: absolute;
@@ -158,54 +319,107 @@
     font-size: 18px;
   }
 
+  .clear-search {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: #7b8898;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 8px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: none;
+  }
+
+  .clear-search.show {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .clear-search:hover {
+    background: rgba(227,235,243,0.72);
+    color: #486786;
+  }
+
   .filters {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     flex-wrap: wrap;
-    padding-bottom: 4px;
+    padding: 2px 0 0;
   }
 
   .filter-btn {
-    border: 2px solid #b0bec5;
-    background: white;
-    border-radius: 10px;
-    padding: 9px 18px;
+    border: 1px solid #c8d5e1;
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(10px);
+    border-radius: 999px;
+    padding: 9px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s;
     white-space: nowrap;
-    color: #374151;
-    box-shadow: 0 2px 0 #b0bec5, 0 2px 6px rgba(0,0,0,0.07);
+    color: #425466;
+    box-shadow: 0 6px 14px rgba(15,23,42,0.05);
     letter-spacing: 0.01em;
     user-select: none;
   }
 
   .filter-btn:hover {
-    border-color: var(--sky);
-    color: var(--sky);
-    box-shadow: 0 2px 0 var(--sky), 0 3px 10px rgba(46,134,193,0.15);
+    border-color: #aac1d8;
+    color: var(--ocean);
+    box-shadow: 0 10px 20px rgba(46,134,193,0.1);
     transform: translateY(-1px);
   }
 
   .filter-btn:active {
     transform: translateY(1px);
-    box-shadow: 0 0px 0 #b0bec5;
+    box-shadow: 0 2px 8px rgba(15,23,42,0.08);
   }
 
   .filter-btn.active {
-    background: var(--ocean);
-    border-color: #134261;
+    background: linear-gradient(135deg, #1d5c84, #184d6e);
+    border-color: #174765;
     color: white;
-    box-shadow: 0 2px 0 #134261, 0 3px 10px rgba(26,82,118,0.25);
+    box-shadow: 0 12px 22px rgba(26,82,118,0.2);
   }
 
   .filter-btn.active:hover {
-    background: var(--sky);
-    border-color: #1f6491;
-    box-shadow: 0 2px 0 #1f6491, 0 3px 10px rgba(46,134,193,0.3);
+    background: linear-gradient(135deg, #226897, #1d5c84);
+    border-color: #1d5c84;
+    box-shadow: 0 14px 24px rgba(46,134,193,0.22);
     color: white;
+  }
+
+  .chip-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: rgba(227,235,243,0.95);
+    color: #5a6f84;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+  }
+
+  .filter-btn.active .chip-count,
+  .shortcut-chip.active .chip-count {
+    background: rgba(255,255,255,0.18);
+    color: #ffffff;
   }
 
   /* ── RESULTS INFO ── */
@@ -217,6 +431,122 @@
     color: var(--muted);
   }
 
+  .results-row {
+    max-width: 900px;
+    margin: 24px auto 8px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .results-row .results-info {
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    color: #627286;
+  }
+
+  .results-note {
+    width: fit-content;
+    max-width: calc(100% - 32px);
+    margin: 4px auto 18px;
+    padding: 7px 12px;
+    font-size: 12px;
+    color: #728194;
+    text-align: center;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.66);
+    border: 1px solid rgba(204,216,228,0.9);
+    box-shadow: 0 8px 18px rgba(15,23,42,0.04);
+  }
+
+  .results-context {
+    max-width: 900px;
+    margin: 0 auto 18px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .results-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .results-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 30px;
+    padding: 0 11px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.8);
+    border: 1px solid #d9e3ed;
+    color: #5c6f84;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(15,23,42,0.04);
+  }
+
+  .results-pill strong {
+    color: #30465c;
+    font-weight: 600;
+  }
+
+  .results-reset {
+    border: none;
+    background: transparent;
+    color: #56708d;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 0;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+
+  .results-reset:hover {
+    color: #1a5276;
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%) translateY(12px) scale(0.97);
+    background: rgba(24, 58, 85, 0.9);
+    color: #ffffff;
+    padding: 11px 14px;
+    border-radius: 14px;
+    box-shadow: 0 18px 34px rgba(15,23,42,0.18);
+    backdrop-filter: blur(14px);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+    z-index: 250;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  .category-share {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
   /* ── RESOURCE GRID ── */
   .grid {
     max-width: 900px;
@@ -224,24 +554,44 @@
     padding: 0 16px 60px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    transition: opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease;
+  }
+
+  .grid.is-updating {
+    opacity: 0.72;
+    transform: translateY(4px);
+    filter: saturate(0.96);
   }
 
   /* ── CARD ── */
   .card {
-    background: var(--card);
-    border-radius: 16px;
-    border: 2px solid #c9d4e0;
-    padding: 20px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(251,253,255,0.96));
+    border-radius: 22px;
+    border: 1px solid #d5e0ea;
+    padding: 22px 20px 18px;
     transition: box-shadow 0.2s, transform 0.2s;
     animation: fadeUp 0.35s ease both;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    box-shadow: 0 4px 16px rgba(26,82,118,0.10), 0 1px 4px rgba(26,82,118,0.06);
+    gap: 14px;
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+    will-change: transform, box-shadow;
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 72px;
+    background: linear-gradient(180deg, rgba(236,243,249,0.88), rgba(236,243,249,0));
+    pointer-events: none;
   }
 
   .card:hover {
-    box-shadow: 0 12px 36px rgba(26,82,118,0.18), 0 3px 8px rgba(26,82,118,0.10);
+    box-shadow: var(--shadow-card-hover);
     transform: translateY(-2px);
   }
 
@@ -253,17 +603,28 @@
   .card-header {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
+    gap: 13px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(227,235,243,0.92);
+    position: relative;
+    z-index: 1;
   }
 
   .card-icon {
-    width: 40px; height: 40px;
-    border-radius: 10px;
+    width: 46px; height: 46px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 20px;
     flex-shrink: 0;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 10px 18px rgba(15,23,42,0.06);
+    margin-top: 1px;
+  }
+
+  .card-title-block {
+    min-width: 0;
+    flex: 1;
   }
 
   .icon-Food    { background: #fde8e2; }
@@ -274,26 +635,58 @@
   .icon-Other   { background: #f3f4f6; }
 
   .card-name {
-    font-family: 'Fraunces', serif;
-    font-size: 1.05rem;
+    font-family: 'Newsreader', serif;
+    font-size: 1.18rem;
     font-weight: 600;
-    line-height: 1.25;
+    line-height: 1.14;
+    letter-spacing: -0.015em;
     color: var(--ocean);
+    max-width: 16ch;
+    text-wrap: balance;
   }
 
   .card-category {
     display: inline-flex;
     align-items: center;
-    font-size: 11px;
+    margin-top: 9px;
+    padding: 5px 9px 5px 7px;
+    border-radius: 999px;
+    background: rgba(247,250,252,0.95);
+    border: 1px solid #e7edf3;
+    font-size: 10px;
     font-weight: 500;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: #7d8b9e;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 10px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid #dfe8f0;
+    background: rgba(248, 251, 254, 0.96);
+    color: #5c7388;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    box-shadow: 0 4px 10px rgba(15,23,42,0.04);
   }
 
   .cat-dot {
     display: inline-block;
-    width: 9px; height: 9px;
+    width: 8px; height: 8px;
     border-radius: 50%;
     margin-right: 6px;
     flex-shrink: 0;
@@ -307,53 +700,188 @@
 
   .card-desc {
     font-size: 14px;
-    line-height: 1.55;
-    color: #374151;
+    line-height: 1.72;
+    color: #314255;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-desc.compact {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  mark.match {
+    background: rgba(255, 232, 163, 0.75);
+    color: inherit;
+    padding: 0 0.08em;
+    border-radius: 0.2em;
+  }
+
+  .card-section-label {
+    display: inline-block;
+    margin-bottom: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #7a8ba0;
   }
 
   .card-details {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    margin-top: 2px;
+    gap: 8px;
+    margin-top: 0;
+    padding: 13px 12px 11px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(248,250,252,0.98), rgba(244,248,251,0.98));
+    border: 1px solid #e3ebf3;
     font-size: 13px;
-    color: var(--muted);
+    color: #6a7789;
+    position: relative;
+    z-index: 1;
   }
 
   .card-detail {
     display: flex;
     align-items: flex-start;
-    gap: 7px;
+    gap: 0;
+    line-height: 1.5;
   }
 
-  .card-detail span.icon { flex-shrink: 0; }
+  .card-detail span.icon {
+    display: none;
+  }
+
+  .card-detail-content {
+    min-width: 0;
+  }
+
+  .card-detail-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8a98aa;
+    margin-bottom: 2px;
+  }
+
+  .card-detail-text {
+    display: block;
+    color: #56677b;
+  }
+
+  .card-detail-text.compact {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-more {
+    margin-top: 6px;
+    border: none;
+    background: transparent;
+    color: #4f6d8a;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.18s ease, transform 0.18s ease;
+  }
+
+  .card-more:hover {
+    color: #1a5276;
+    transform: translateX(1px);
+  }
 
   /* ── ACTION BUTTONS ROW ── */
   .card-actions {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 4px;
+    margin-top: auto;
+    padding-top: 6px;
+    align-items: stretch;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-actions .card-section-label,
+  .card-empty-actions {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
   }
 
   .btn-call, .btn-web {
     border: none;
-    border-radius: 8px;
-    padding: 8px 14px;
+    border-radius: 13px;
+    padding: 10px 14px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 12.5px;
+    font-weight: 600;
     cursor: pointer;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    transition: opacity 0.15s;
+    justify-content: center;
+    gap: 0;
+    transition: opacity 0.15s, transform 0.15s;
+    min-height: 42px;
+    text-align: center;
   }
 
-  .btn-call { background: var(--mint); color: #155724; }
-  .btn-web  { background: #dbeafe; color: #1e40af; box-shadow: 0 2px 0 #93c5fd, 0 2px 6px rgba(30,64,175,0.12); }
-  .btn-call:hover, .btn-web:hover { opacity: 0.8; }
+  .btn-call {
+    background: linear-gradient(180deg, #daf3e5, #cfeeda);
+    color: #155724;
+    box-shadow: 0 2px 0 #b7dfc6, 0 8px 16px rgba(21,87,36,0.08);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 9px 15px 8px;
+  }
+
+  .btn-call-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(21,87,36,0.72);
+    line-height: 1;
+  }
+
+  .btn-call-number {
+    display: block;
+    margin-top: 1px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+    color: #155724;
+    white-space: nowrap;
+  }
+
+  .btn-web  {
+    background: linear-gradient(180deg, #f2f6ff, #e8efff);
+    color: #3157a1;
+    box-shadow: 0 2px 0 #cad8fb, 0 8px 16px rgba(41,79,150,0.08);
+  }
+
+  .btn-call:hover, .btn-web:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+  }
+
+  .card-actions.single-action {
+    grid-template-columns: minmax(0, 1fr);
+  }
 
   /* ── REPORT BUTTON ── */
   /*
@@ -363,37 +891,148 @@
    */
   .card-footer {
     display: flex;
-    justify-content: flex-end;
-    margin-top: auto;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(213,223,233,0.8);
+    position: relative;
+    z-index: 1;
   }
 
-  .btn-report {
+  .share-wrap {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 6px 11px;
-    border-radius: 8px;
-    border: 1.5px solid #fcd34d;
+  }
+
+  .share-wrap.align-right .share-menu {
+    left: auto;
+    right: 0;
+  }
+
+  .btn-share {
+    min-height: 30px;
+    padding: 0 4px;
+    border: none;
     background: transparent;
-    color: #92400e;
+    color: #7f8ea0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     font-family: 'DM Sans', sans-serif;
     font-size: 12px;
     font-weight: 500;
     text-decoration: none;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
+    transition: color 0.15s, transform 0.15s;
+    flex-shrink: 0;
+  }
+
+  .btn-share:hover {
+    color: #486786;
+    transform: translateY(-1px);
+  }
+
+  .btn-share:active {
+    transform: translateY(0);
+  }
+
+  .btn-share.top-share-btn {
+    min-height: 34px;
+    padding: 0 12px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid #d5e0ea;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.86);
+    color: #60758a;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s, color 0.15s;
+    box-shadow: 0 6px 14px rgba(15,23,42,0.05);
+  }
+
+  .btn-share.top-share-btn:hover {
+    background: #f8fbff;
+    border-color: #bfd0e4;
+    color: var(--ocean);
+  }
+
+  .share-menu {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 8px);
+    min-width: 144px;
+    padding: 7px;
+    border-radius: 12px;
+    border: 1px solid #d7e1ea;
+    background: rgba(255,255,255,0.98);
+    box-shadow: 0 18px 36px rgba(15,23,42,0.12), 0 6px 12px rgba(15,23,42,0.06);
+    display: none;
+    z-index: 20;
+  }
+
+  .share-menu.show {
+    display: block;
+  }
+
+  .share-option {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #425466;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .share-option:hover {
+    background: #f4f8fc;
+    color: var(--ocean);
+  }
+
+  .btn-report {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    padding: 6px 0;
+    border-radius: 0;
+    border: none;
+    background: transparent;
+    color: #9d6729;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s;
   }
 
   .btn-report:hover {
-    background: #fef3c7;
-    border-color: #f59e0b;
+    color: #7c4513;
+  }
+
+  .card-empty-actions {
+    font-size: 12px;
+    color: #7d8da0;
+    padding-top: 2px;
   }
 
   /* ── EMPTY STATE ── */
   .empty {
     grid-column: 1 / -1;
     text-align: center;
-    padding: 60px 20px;
+    padding: 64px 20px;
     color: var(--muted);
   }
 
@@ -402,6 +1041,123 @@
     font-size: 1.4rem;
     color: var(--ocean);
     margin-bottom: 8px;
+  }
+
+  .empty p {
+    max-width: 34ch;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .empty-action {
+    margin-top: 16px;
+    border: 1px solid #c8d5e1;
+    background: rgba(255,255,255,0.9);
+    color: #33506b;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(15,23,42,0.05);
+  }
+
+  .empty-action:hover {
+    border-color: #b6c9db;
+    color: #1e4867;
+  }
+
+  .share-hero {
+    grid-column: 1 / -1;
+    margin-bottom: 8px;
+    padding: 0;
+  }
+
+  .share-shell {
+    position: relative;
+    overflow: hidden;
+    padding: 22px 22px 20px;
+    border-radius: 26px;
+    border: 1px solid rgba(191, 209, 224, 0.78);
+    background:
+      radial-gradient(circle at top right, rgba(169, 213, 239, 0.28), transparent 32%),
+      linear-gradient(180deg, rgba(255,255,255,0.98), rgba(247,251,255,0.94));
+    box-shadow: 0 20px 42px rgba(15,23,42,0.08), 0 8px 18px rgba(15,23,42,0.05);
+  }
+
+  .share-shell::after {
+    content: "";
+    position: absolute;
+    inset: auto -48px -68px auto;
+    width: 168px;
+    height: 168px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(191, 223, 244, 0.45), rgba(191, 223, 244, 0));
+    pointer-events: none;
+  }
+
+  .share-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #5c748c;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+  }
+
+  .share-back:hover {
+    color: #1a5276;
+  }
+
+  .share-eyebrow {
+    margin-top: 14px;
+    color: #698298;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .share-heading {
+    margin-top: 10px;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.5rem, 3.4vw, 2rem);
+    color: #173f5e;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+  }
+
+  .share-subheading {
+    margin-top: 10px;
+    max-width: 44ch;
+    color: #576c81;
+    font-size: 14px;
+    line-height: 1.62;
+  }
+
+  .share-meta {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .share-meta-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(199, 214, 227, 0.9);
+    background: rgba(255,255,255,0.82);
+    color: #5b7287;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
   }
 
   /* ── LOADING ── */
@@ -423,14 +1179,32 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  @media (prefers-reduced-motion: reduce) {
+    .shortcut-chip,
+    .filter-btn,
+    .chip-count,
+    .toast,
+    .grid,
+    .card,
+    .card-more,
+    .btn-share,
+    .btn-report,
+    .btn-call,
+    .btn-web {
+      transition: none !important;
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+
   /* ── FOOTER ── */
   footer {
-    background: var(--ocean);
-    color: rgba(255,255,255,0.7);
+    background: linear-gradient(180deg, #1b4e70, #153d59);
+    color: rgba(255,255,255,0.76);
     text-align: center;
-    padding: 24px 16px;
+    padding: 28px 16px;
     font-size: 13px;
-    margin-top: 20px;
+    margin-top: 28px;
   }
 
   footer a { color: rgba(255,255,255,0.9); }
@@ -440,43 +1214,153 @@
     background: #fef3c7;
     border-left: 4px solid var(--sun);
     max-width: 900px;
-    margin: 16px auto 0;
+    margin: 18px auto 0;
     padding: 12px 16px;
     border-radius: 0 10px 10px 0;
     font-size: 13px;
     color: #78350f;
     display: none;
+    box-shadow: 0 10px 24px rgba(120,53,15,0.08);
   }
 
   .notice.show { display: block; }
 
+  body.share-mode .controls,
+  body.share-mode .intro-panel,
+  body.share-mode .results-row,
+  body.share-mode .results-info,
+  body.share-mode .results-note,
+  body.share-mode .results-context,
+  body.share-mode footer {
+    display: none;
+  }
+
+  body.share-mode .grid {
+    max-width: 680px;
+    grid-template-columns: 1fr;
+    padding-top: 28px;
+  }
+
+  body.share-mode .card {
+    min-height: auto;
+  }
+
   @media (max-width: 750px) {
-    .grid { grid-template-columns: repeat(2, 1fr); }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
   }
 
   @media (max-width: 480px) {
     h1 { font-size: 1.1rem; }
     h1 .sub { font-size: 0.6em; }
-    .header-inner { padding: 10px 12px; }
+    .header-inner { padding: 12px 12px 13px; }
     .header-logo { height: 32px; }
     .lang-toggle button { padding: 5px 10px; font-size: 12px; }
-    .controls { margin-top: 14px; padding: 0 12px; }
-    .search-wrap input { font-size: 16px; padding: 11px 12px 11px 40px; border-radius: 10px; }
+    .controls {
+      margin-top: 14px;
+      padding: 0 12px;
+      position: sticky;
+      top: 62px;
+      z-index: 85;
+    }
+    .finder-card {
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 12px 26px rgba(15,23,42,0.08);
+    }
+    .finder-section + .finder-section { margin-top: 12px; }
+    .finder-label { margin-bottom: 6px; }
+    .finder-hint { font-size: 11px; margin-bottom: 8px; }
+    .intro-panel { margin-top: 16px; padding: 0 12px; }
+    .intro-card { padding: 16px 14px 14px; border-radius: 18px; }
+    .share-shell { padding: 18px 18px 17px; border-radius: 22px; }
+    .share-heading { font-size: 1.45rem; }
+    .share-subheading { font-size: 13px; }
+    .share-meta-pill { min-height: 28px; padding: 0 10px; font-size: 10px; }
+    .intro-copy { font-size: 13px; }
+    .intro-points { display: none; }
+    .intro-point { font-size: 11px; padding: 7px 10px; }
+    .shortcut-row {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .shortcut-row::-webkit-scrollbar { display: none; }
+    .shortcut-chip { flex-shrink: 0; padding: 8px 11px; }
+    .search-wrap input { font-size: 16px; padding: 14px 70px 14px 40px; border-radius: 14px; }
     .filters {
       flex-wrap: nowrap;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      padding-bottom: 6px;
+      padding-bottom: 2px;
     }
     .filters::-webkit-scrollbar { display: none; }
     .filter-btn { flex-shrink: 0; font-size: 12px; padding: 8px 13px; }
-    .results-info { padding: 0 12px; }
+    .results-row {
+      padding: 0 12px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 6px;
+      margin-top: 18px;
+    }
+    .results-note {
+      max-width: calc(100% - 24px);
+      padding: 8px 12px;
+      line-height: 1.35;
+      margin-bottom: 12px;
+      font-size: 11px;
+    }
+    .results-context {
+      padding: 0 12px;
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .results-info { padding: 0; }
+    .category-share { justify-content: stretch; width: 100%; }
+    .btn-share.top-share-btn { width: 100%; justify-content: center; min-height: 38px; }
     .grid { grid-template-columns: 1fr; padding: 0 12px 48px; gap: 12px; }
-    .card { padding: 16px 14px; }
-    .card-name { font-size: 0.98rem; }
+    .card { padding: 18px 14px 16px; border-radius: 20px; }
+    .card-name {
+      font-size: 1.02rem;
+      max-width: none;
+      text-wrap: pretty;
+    }
     .card-desc { font-size: 13px; }
-    .btn-call, .btn-web { font-size: 12px; padding: 7px 11px; }
+    .card-header { gap: 10px; padding-bottom: 8px; }
+    .card-category { margin-top: 7px; }
+    .card-tags { margin-top: 9px; gap: 6px; }
+    .card-tag { min-height: 24px; padding: 0 9px; font-size: 10px; }
+    .card-details { padding: 11px 11px 10px; border-radius: 14px; }
+    .card-actions { grid-template-columns: 1fr; }
+    .btn-call, .btn-web { font-size: 12px; padding: 8px 11px; min-height: 40px; }
+    .btn-call { padding: 8px 13px; }
+    .btn-call-number { font-size: 13px; white-space: nowrap; }
+    .card-footer {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+    .card-footer .share-wrap,
+    .card-footer .btn-report {
+      width: 100%;
+    }
+    .card-footer .btn-share,
+    .card-footer .btn-report {
+      min-height: 40px;
+      justify-content: center;
+      border-radius: 12px;
+      border: 1px solid #dde6ee;
+      background: rgba(248,250,252,0.9);
+      padding: 0 12px;
+    }
+    .card-footer .btn-report {
+      color: #8a5b23;
+    }
   }
 </style>
 </head>
@@ -489,7 +1373,7 @@
         <img src="ccsm_logo_web.png" alt="Community Corporation of Santa Monica" class="header-logo">
         <h1 id="site-title">
           Community Resources
-          <span class="sub" id="site-subtitle">Find help near you · Santa Monica</span>
+          <span class="sub" id="site-subtitle">Help with food, housing, health, and family needs</span>
         </h1>
       </div>
       <div class="lang-toggle">
@@ -501,23 +1385,58 @@
 </header>
 
 <div class="notice" id="demo-notice">
-  📋 <strong>Demo mode:</strong> Showing sample data. Connect your Google Sheet by updating the <code>SHEET_URL</code> in the code.
+  📋 <strong>Demo mode:</strong> Showing sample data. Connect your Google Sheet by updating <code>SHEET_URL</code>.
+</div>
+
+<div class="intro-panel" id="intro-panel">
+  <div class="intro-card">
+    <div class="intro-eyebrow" id="intro-eyebrow">Santa Monica resource guide</div>
+    <div class="intro-title" id="intro-title">Find the right support with clarity and confidence.</div>
+    <div class="intro-copy" id="intro-copy">Search in plain language, explore by type of help, and share trusted local resources with the people who need them.</div>
+    <div class="intro-points">
+      <div class="intro-point" id="intro-point-search">Search by need</div>
+      <div class="intro-point" id="intro-point-browse">Browse support options</div>
+      <div class="intro-point" id="intro-point-share">Share what helps</div>
+    </div>
+  </div>
 </div>
 
 <div class="controls">
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="search" placeholder="Search resources..." oninput="renderCards()" autocomplete="off">
+  <div class="finder-card">
+    <div class="finder-section">
+      <div class="finder-label" id="finder-label-shortcuts">Start with a need</div>
+      <div class="finder-hint" id="finder-hint-shortcuts">Choose the kind of support you need most right now.</div>
+      <div class="shortcut-row" id="shortcut-row"></div>
+    </div>
+    <div class="finder-section">
+      <label class="finder-label" for="search" id="finder-label-search">Search the directory</label>
+      <div class="finder-hint" id="finder-hint-search">Try food, housing, youth, legal help, provider names, phone numbers, or addresses.</div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search" placeholder="Search resources..." oninput="handleSearchInput()" autocomplete="off">
+        <button class="clear-search" id="clear-search" type="button" onclick="clearSearch()">Clear</button>
+      </div>
+    </div>
+    <div class="finder-section">
+      <div class="finder-label" id="finder-label-filters">Explore all support areas</div>
+      <div class="filters" id="filters"></div>
+    </div>
   </div>
-  <div class="filters" id="filters"></div>
 </div>
 
-<div class="results-info" id="results-info"></div>
+<div class="results-row">
+  <div class="results-info" id="results-info"></div>
+  <div class="category-share" id="category-share"></div>
+</div>
+<div class="results-note" id="results-note">Always call or contact providers directly for the most current information.</div>
+<div class="results-context" id="results-context"></div>
 <div class="grid" id="grid"></div>
+<div class="toast" id="toast" aria-live="polite"></div>
 
 <footer>
-  <div>Community Corporation of Santa Monica · Resident Services</div>
-  <div style="margin-top:6px">Questions? Call <a href="tel:+13103950220">(310) 395-0220</a></div>
+  <div id="footer-title">Community Corporation of Santa Monica · Resident Services</div>
+  <div id="footer-contact" style="margin-top:6px">Need help using this directory? Call <a href="tel:+13103950220">(310) 395-0220</a></div>
+  <div id="footer-note" style="margin-top:6px">Services, hours, and eligibility can change. Please confirm details with providers before visiting.</div>
 </footer>
 
 <script>
@@ -528,13 +1447,44 @@ const REPORT_EMAIL = 'mwitham@communitycorp.org';
 
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbAtpa7kK10yL2QtdLHRx9q2VbuEIPNG6S2uMbWhQ1GsLGoYA3NqFAlp_E_w8xUGRdcLxT4V3gbiJD/pub?output=csv';
 
+// Recommended Google Sheet columns:
+// name, name_es, category, description, description_es, address, phone, website, hours, notes, notes_es, tags, tags_es
+// The importer also accepts several human-friendly variations like "Name", "Resource Name", or "Phone Number".
+
 const T = {
   en: {
-    search: 'Search resources...',
+    search: 'Search by need, provider, service, or keyword...',
+    clearSearch: 'Clear',
     all: 'All',
     showing: n => `Showing ${n} resource${n===1?'':'s'}`,
+    bestMatches: 'Best matches first',
+    narrowingTo: (visible, total) => `${visible} of ${total} resources`,
+    resultsNote: 'Always call or contact providers directly for the most current information.',
+    introEyebrow: 'Santa Monica resource guide',
+    introTitle: 'Find the right support with clarity and confidence.',
+    introCopy: 'Search in plain language, explore by type of help, and share trusted local resources with the people who need them.',
+    introPointSearch: 'Search by need',
+    introPointBrowse: 'Browse support options',
+    introPointShare: 'Share what helps',
+    finderLabelShortcuts: 'Start with a need',
+    finderHintShortcuts: 'Choose the kind of support you need most right now.',
+    finderLabelSearch: 'Search the directory',
+    finderHintSearch: 'Try food, housing, youth, legal help, provider names, phone numbers, or addresses.',
+    finderLabelFilters: 'Explore all support areas',
+    activeCategory: 'Need',
+    activeSearch: 'Search',
+    resetFilters: 'Clear filters',
     noResults: 'No resources found',
-    noResultsSub: 'Try a different search or category.',
+    noResultsSub: 'Try a different keyword, provider name, or support area.',
+    noResultsReset: 'Show all resources',
+    detailsLabel: 'Key details',
+    contactLabel: 'Contact',
+    addressLabel: 'Where',
+    hoursLabel: 'When',
+    notesLabel: 'Details',
+    noContact: 'Contact details unavailable',
+    showMore: 'Read more',
+    showLess: 'Show less',
     call: 'Call',
     website: 'Website',
     hours: 'Hours',
@@ -542,25 +1492,70 @@ const T = {
     notes: 'Notes',
     loading: 'Loading resources...',
     siteTitle: 'Community Resources',
-    siteSub: 'Find help near you · Santa Monica',
-    reportBtn: 'Report outdated info',
+    siteSub: 'Help with food, housing, health, and family needs',
+    demoNotice: 'Demo mode: Showing sample data. Connect your Google Sheet by updating SHEET_URL.',
+    footerTitle: 'Community Corporation of Santa Monica · Resident Services',
+    footerContact: 'Need help using this directory? Call',
+    footerNote: 'Services, hours, and eligibility can change. Please confirm details with providers before visiting.',
+    reportBtn: 'Report incorrect information',
+    share: 'Share',
+    shareEmail: 'Email',
+    shareCopyLink: 'Copy link',
+    linkCopied: 'Link copied',
+    copyPrompt: 'Copy this link:',
+    shareBack: 'Back to full directory',
+    shareEyebrow: 'Shared from Community Resources',
+    shareHeading: 'A resource someone wanted to share with you',
+    shareSubheading: 'Review the details below, then call, visit the website, or pass this resource along to someone else.',
+    shareMetaCommunity: 'Santa Monica resource guide',
+    shareMetaUpdated: 'Provider details may change',
     reportSubject: name => `Outdated listing: ${name}`,
     reportBody: name =>
 `Hi CCSM,
 
 I noticed some information for "${name}" on the CCSM Community Resources page may be outdated.
 
-Please describe what is incorrect:
+𝗪𝗵𝗮𝘁 𝘀𝗵𝗼𝘂𝗹𝗱 𝗯𝗲 𝘂𝗽𝗱𝗮𝘁𝗲𝗱:
 
+𝗖𝗼𝗿𝗿𝗲𝗰𝘁 𝗶𝗻𝗳𝗼𝗿𝗺𝗮𝘁𝗶𝗼𝗻:
 
-Thank you for keeping this resource up to date.`,
+Anything else we should know:
+
+Thank you for keeping this resource up to date!`,
   },
   es: {
-    search: 'Buscar recursos...',
+    search: 'Buscar por necesidad, proveedor, servicio o palabra clave...',
+    clearSearch: 'Borrar',
     all: 'Todo',
     showing: n => `Mostrando ${n} recurso${n===1?'':'s'}`,
+    bestMatches: 'Mejores resultados primero',
+    narrowingTo: (visible, total) => `${visible} de ${total} recursos`,
+    resultsNote: 'Siempre llame o contacte directamente a los proveedores para confirmar la información más actual.',
+    introEyebrow: 'Guía de recursos de Santa Mónica',
+    introTitle: 'Encuentre el apoyo adecuado con claridad y confianza.',
+    introCopy: 'Busque en lenguaje sencillo, explore por tipo de ayuda y comparta recursos locales confiables con quienes los necesiten.',
+    introPointSearch: 'Buscar por necesidad',
+    introPointBrowse: 'Explorar opciones de apoyo',
+    introPointShare: 'Compartir lo útil',
+    finderLabelShortcuts: 'Empiece con una necesidad',
+    finderHintShortcuts: 'Elija el tipo de apoyo que más necesita en este momento.',
+    finderLabelSearch: 'Buscar en el directorio',
+    finderHintSearch: 'Pruebe comida, vivienda, juventud, ayuda legal, nombres de proveedores, teléfonos o direcciones.',
+    finderLabelFilters: 'Explorar todas las áreas de apoyo',
+    activeCategory: 'Necesidad',
+    activeSearch: 'Búsqueda',
+    resetFilters: 'Limpiar filtros',
     noResults: 'No se encontraron recursos',
-    noResultsSub: 'Intenta una búsqueda diferente o categoría.',
+    noResultsSub: 'Intente con otra palabra clave, nombre de proveedor o área de apoyo.',
+    noResultsReset: 'Mostrar todos los recursos',
+    detailsLabel: 'Detalles clave',
+    contactLabel: 'Contacto',
+    addressLabel: 'Dónde',
+    hoursLabel: 'Cuándo',
+    notesLabel: 'Detalles',
+    noContact: 'Datos de contacto no disponibles',
+    showMore: 'Leer más',
+    showLess: 'Mostrar menos',
     call: 'Llamar',
     website: 'Sitio web',
     hours: 'Horario',
@@ -568,18 +1563,36 @@ Thank you for keeping this resource up to date.`,
     notes: 'Notas',
     loading: 'Cargando recursos...',
     siteTitle: 'Recursos Comunitarios',
-    siteSub: 'Encuentra ayuda cerca · Santa Mónica',
-    reportBtn: 'Reportar información desactualizada',
+    siteSub: 'Ayuda con comida, vivienda, salud y necesidades familiares',
+    demoNotice: 'Modo de demostración: Mostrando datos de ejemplo. Conecte su hoja de Google actualizando SHEET_URL.',
+    footerTitle: 'Community Corporation of Santa Monica · Servicios para Residentes',
+    footerContact: '¿Necesita ayuda para usar este directorio? Llame al',
+    footerNote: 'Los servicios, horarios y requisitos pueden cambiar. Confirme los detalles con los proveedores antes de visitar.',
+    reportBtn: 'Reportar información incorrecta',
+    share: 'Compartir',
+    shareEmail: 'Correo',
+    shareCopyLink: 'Copiar enlace',
+    linkCopied: 'Enlace copiado',
+    copyPrompt: 'Copie este enlace:',
+    shareBack: 'Volver al directorio completo',
+    shareEyebrow: 'Compartido desde Recursos Comunitarios',
+    shareHeading: 'Un recurso que alguien quiso compartir con usted',
+    shareSubheading: 'Revise los detalles abajo y luego llame, visite el sitio web o comparta este recurso con otra persona.',
+    shareMetaCommunity: 'Guía de recursos de Santa Mónica',
+    shareMetaUpdated: 'Los detalles del proveedor pueden cambiar',
     reportSubject: name => `Información desactualizada: ${name}`,
     reportBody: name =>
 `Hola,
 
 Noté que la información de "${name}" en la página de Recursos Comunitarios puede estar desactualizada.
 
-Qué está incorrecto:
-[Por favor describa — ej. número de teléfono incorrecto, dirección cambió, horario diferente, programa ya no existe]
+𝗤𝘂é 𝗱𝗲𝗯𝗲 𝗮𝗰𝘁𝘂𝗮𝗹𝗶𝘇𝗮𝗿𝘀𝗲:
 
-Gracias por mantener este recurso actualizado.`,
+𝗜𝗻𝗳𝗼𝗿𝗺𝗮𝗰𝗶ó𝗻 𝗰𝗼𝗿𝗿𝗲𝗰𝘁𝗮:
+
+Algo más que debamos saber:
+
+Gracias por mantener este recurso actualizado!`,
   }
 };
 
@@ -605,6 +1618,13 @@ let resources = [];
 let filtered_cache = [];
 let lang = 'en';
 let activeCategory = 'All';
+const expandedSections = new Set();
+let toastTimer = null;
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const urlParams = new URLSearchParams(window.location.search);
+const shareResourceKey = urlParams.get('share');
+const sharedCategoryKey = urlParams.get('category');
+const initialSearchQuery = urlParams.get('q') || '';
 
 const ICONS = {
   Food:'🥦', Mental:'🧠', Rental:'🏠', Legal:'⚖️', Benefits:'📋', Other:'🤝',
@@ -615,36 +1635,567 @@ const ICONS = {
 
 const CAT_LABELS = {
   en: {
-    Food:'Food Pantries', Mental:'Mental Health', Rental:'Rental Assistance',
-    Legal:'Legal Aid', Benefits:'Public Benefits', Other:'Other',
-    Transportation:'Transportation', Education:'Education', Employment:'Employment',
-    Childcare:'Childcare', Youth:'Youth', Seniors:'Seniors', Housing:'Housing',
-    Disability:'Disability Services', Medical:'Medical Care', 'Domestic Violence':'Domestic Violence'
+    Food:'Food support', Mental:'Mental health support', Rental:'Rental help',
+    Legal:'Legal help', Benefits:'Benefits help', Other:'Community support',
+    Transportation:'Transportation help', Education:'Education support', Employment:'Job support',
+    Childcare:'Childcare support', Youth:'Youth support', Seniors:'Senior support', Housing:'Housing help',
+    Disability:'Disability support', Medical:'Medical care', 'Domestic Violence':'Domestic violence support'
   },
   es: {
-    Food:'Despensas', Mental:'Salud Mental', Rental:'Asistencia de Renta',
-    Legal:'Ayuda Legal', Benefits:'Beneficios Públicos', Other:'Otros',
-    Transportation:'Transporte', Education:'Educación', Employment:'Empleo',
-    Childcare:'Cuidado Infantil', Youth:'Juventud', Seniors:'Personas Mayores',
-    Housing:'Vivienda', Disability:'Discapacidad', Medical:'Atención Médica',
-    'Domestic Violence':'Violencia Doméstica',
+    Food:'Apoyo con comida', Mental:'Apoyo de salud mental', Rental:'Ayuda con renta',
+    Legal:'Ayuda legal', Benefits:'Ayuda con beneficios', Other:'Apoyo comunitario',
+    Transportation:'Ayuda con transporte', Education:'Apoyo educativo', Employment:'Ayuda con empleo',
+    Childcare:'Apoyo con cuidado infantil', Youth:'Apoyo para jóvenes', Seniors:'Apoyo para personas mayores',
+    Housing:'Ayuda con vivienda', Disability:'Apoyo por discapacidad', Medical:'Atención médica',
+    'Domestic Violence':'Apoyo por violencia doméstica',
   },
 };
 
-function openReport(idx) {
-  const r = filtered_cache[idx];
-  if (!r) return;
-  const name    = lang === 'es' && r.name_es ? r.name_es : r.name || r.Name || '';
-  const subject = encodeURIComponent(T[lang].reportSubject(name));
-  const body    = encodeURIComponent(T[lang].reportBody(name));
-  window.open('mailto:' + REPORT_EMAIL + '?subject=' + subject + '&body=' + body, '_self');
+const QUICK_LABELS = {
+  en: {
+    Food: 'I need food',
+    Housing: 'I need housing help',
+    Mental: 'I need mental health support',
+    Benefits: 'I need benefits help',
+    Legal: 'I need legal help',
+    Youth: 'I need youth support',
+  },
+  es: {
+    Food: 'Necesito comida',
+    Housing: 'Necesito ayuda con vivienda',
+    Mental: 'Necesito apoyo de salud mental',
+    Benefits: 'Necesito ayuda con beneficios',
+    Legal: 'Necesito ayuda legal',
+    Youth: 'Necesito apoyo para jóvenes',
+  },
+};
+
+const FIELD_ALIASES = {
+  name: ['name', 'resource name', 'program name', 'organization name', 'org name'],
+  name_es: ['name_es', 'name es', 'resource name es', 'resource name spanish', 'program name es', 'nombre', 'nombre_es'],
+  category: ['category', 'service category', 'type', 'service type'],
+  description: ['description', 'service description', 'summary', 'details'],
+  description_es: ['description_es', 'description es', 'service description es', 'descripcion', 'descripcion_es'],
+  address: ['address', 'location', 'street address'],
+  phone: ['phone', 'phone number', 'telephone', 'contact phone'],
+  website: ['website', 'web site', 'url', 'link'],
+  hours: ['hours', 'service hours', 'open hours', 'availability'],
+  notes: ['notes', 'note', 'eligibility', 'requirements', 'instructions'],
+  notes_es: ['notes_es', 'notes es', 'eligibility es', 'requirements es', 'notas', 'notas_es'],
+  tags: ['tags', 'tag', 'highlights', 'quick tags', 'quick_tag', 'quick tags'],
+  tags_es: ['tags_es', 'tags es', 'tag es', 'highlights es', 'etiquetas', 'etiquetas_es'],
+};
+
+const CATEGORY_ALIASES = {
+  food: 'Food',
+  'food pantry': 'Food',
+  'food pantries': 'Food',
+  groceries: 'Food',
+  grocery: 'Food',
+  mental: 'Mental',
+  'mental health': 'Mental',
+  counseling: 'Mental',
+  rental: 'Rental',
+  'rental assistance': 'Rental',
+  eviction: 'Rental',
+  legal: 'Legal',
+  'legal aid': 'Legal',
+  benefits: 'Benefits',
+  'public benefits': 'Benefits',
+  transportation: 'Transportation',
+  transport: 'Transportation',
+  education: 'Education',
+  employment: 'Employment',
+  jobs: 'Employment',
+  childcare: 'Childcare',
+  'child care': 'Childcare',
+  youth: 'Youth',
+  seniors: 'Seniors',
+  senior: 'Seniors',
+  housing: 'Housing',
+  disability: 'Disability',
+  disabilities: 'Disability',
+  medical: 'Medical',
+  healthcare: 'Medical',
+  health: 'Medical',
+  'domestic violence': 'Domestic Violence',
+};
+
+const QUICK_CATEGORIES = ['Food', 'Housing', 'Mental', 'Benefits', 'Legal', 'Youth'];
+
+function getReportHref(resource) {
+  const name = getLocalizedValue(resource, 'name');
+  const boldName = toBoldUnicode(name);
+  return getEmailComposeHref({
+    to: REPORT_EMAIL,
+    subject: T[lang].reportSubject(name),
+    body: T[lang].reportBody(boldName),
+  });
+}
+
+function getBasePageUrl() {
+  return window.location.origin + window.location.pathname;
+}
+
+function getShareKey(resource) {
+  return encodeURIComponent(getField(resource, 'name').trim());
+}
+
+function getSharePageUrl(resource) {
+  return `${getBasePageUrl()}?share=${getShareKey(resource)}`;
+}
+
+function getCategorySharePageUrl(category) {
+  return `${getBasePageUrl()}?category=${encodeURIComponent(category)}`;
+}
+
+function updateDirectoryUrl() {
+  if (shareResourceKey) return;
+
+  const params = new URLSearchParams();
+  const query = getSearchQuery();
+
+  if (activeCategory !== 'All') params.set('category', activeCategory);
+  if (query) params.set('q', query);
+
+  const next = params.toString()
+    ? `${getBasePageUrl()}?${params.toString()}`
+    : getBasePageUrl();
+
+  window.history.replaceState({}, '', next);
+}
+
+function getResourceShareData(resource) {
+  const name = getLocalizedValue(resource, 'name');
+  const description = getLocalizedValue(resource, 'description');
+  const website = normalizeWebsiteUrl(getField(resource, 'website'));
+  const address = getField(resource, 'address');
+  const phone = getField(resource, 'phone');
+  const parts = [description, address, phone].filter(Boolean);
+  const shareUrl = getSharePageUrl(resource);
+
+  return {
+    title: name || 'Community resource',
+    text: parts.join(' · '),
+    url: shareUrl,
+  };
+}
+
+function getResourceEmailLines(resource, includeShareUrl = true) {
+  const shareData = getResourceShareData(resource);
+  const website = normalizeWebsiteUrl(getField(resource, 'website'));
+  const lines = [
+    shareData.title,
+    getField(resource, 'address'),
+    getField(resource, 'phone'),
+    getLocalizedValue(resource, 'description'),
+    website,
+  ].filter(Boolean);
+
+  if (includeShareUrl) {
+    lines.push('', 'View resource:', shareData.url);
+  }
+
+  return lines;
+}
+
+function isMobileEmailClientPreferred() {
+  return /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+}
+
+function getGmailComposeHref({ to = '', subject, body }) {
+  const params = new URLSearchParams({
+    view: 'cm',
+    fs: '1',
+    su: subject,
+    body,
+  });
+
+  if (to) params.set('to', to);
+  return 'https://mail.google.com/mail/?' + params.toString();
+}
+
+function getMailtoHref({ to = '', subject, body }) {
+  const prefix = to ? `mailto:${encodeURIComponent(to)}` : 'mailto:';
+  return `${prefix}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function getEmailComposeHref({ to = '', subject, body }) {
+  return isMobileEmailClientPreferred()
+    ? getMailtoHref({ to, subject, body })
+    : getGmailComposeHref({ to, subject, body });
+}
+
+function getShareEmailHref(resource) {
+  const shareData = getResourceShareData(resource);
+  const lines = getResourceEmailLines(resource);
+  return getEmailComposeHref({
+    subject: shareData.title,
+    body: lines.join('\n'),
+  });
+}
+
+function getCategoryShareData(category) {
+  const label = CAT_LABELS[lang][category] || category;
+  return {
+    title: `${label} · Community Resources`,
+    text: `Browse ${label.toLowerCase()} resources.`,
+    url: getCategorySharePageUrl(category),
+  };
+}
+
+function getCategoryShareEmailHref(category) {
+  const shareData = getCategoryShareData(category);
+  const categoryResources = resources.filter(resource => normalizeCategory(resource) === category);
+  const lines = [
+    shareData.title,
+    '',
+    ...categoryResources.flatMap((resource, index) => {
+      const block = getResourceEmailLines(resource, false);
+      return index === categoryResources.length - 1 ? block : [...block, ''];
+    }),
+    '',
+    'View resources:',
+    shareData.url,
+  ].filter((line, index, array) => line || (index > 0 && array[index - 1] !== ''));
+  return getEmailComposeHref({
+    subject: shareData.title,
+    body: lines.join('\n'),
+  });
+}
+
+function closeShareMenus() {
+  document.querySelectorAll('.share-menu.show').forEach(menu => menu.classList.remove('show'));
+  document.querySelectorAll('.btn-share[aria-expanded="true"]').forEach(button => button.setAttribute('aria-expanded', 'false'));
+}
+
+function toggleShareMenu(idx, event) {
+  event.stopPropagation();
+  const menu = document.getElementById(`share-menu-${idx}`);
+  const button = event.currentTarget;
+  if (!menu) return;
+
+  const isOpen = menu.classList.contains('show');
+  closeShareMenus();
+
+  if (!isOpen) {
+    menu.classList.add('show');
+    button.setAttribute('aria-expanded', 'true');
+  }
+}
+
+function getSectionStateKey(resourceName, section) {
+  return `${resourceName}::${section}`;
+}
+
+function isSectionExpanded(resourceName, section) {
+  return expandedSections.has(getSectionStateKey(resourceName, section));
+}
+
+function toggleCardSection(encodedResourceName, section) {
+  const resourceName = decodeURIComponent(encodedResourceName);
+  const key = getSectionStateKey(resourceName, section);
+  if (expandedSections.has(key)) expandedSections.delete(key);
+  else expandedSections.add(key);
+  renderCards();
+}
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add('show');
+  if (toastTimer) window.clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(() => {
+    toast.classList.remove('show');
+  }, 1800);
+}
+
+function updateGridMarkup(html) {
+  const grid = document.getElementById('grid');
+  if (!grid) return;
+
+  const commit = () => {
+    grid.innerHTML = html;
+    requestAnimationFrame(() => {
+      grid.classList.remove('is-updating');
+    });
+  };
+
+  grid.classList.add('is-updating');
+
+  if (!prefersReducedMotion.matches && typeof document.startViewTransition === 'function') {
+    document.startViewTransition(commit);
+    return;
+  }
+
+  requestAnimationFrame(commit);
+}
+
+async function copyResourceLink(idx) {
+  const resource = filtered_cache[idx];
+  if (!resource) return;
+
+  const shareData = getResourceShareData(resource);
+  const clipboardText = shareData.url;
+
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(clipboardText);
+      closeShareMenus();
+      showToast(T[lang].linkCopied);
+      return;
+    }
+
+    window.prompt(T[lang].copyPrompt, clipboardText);
+  } catch (error) {
+    window.prompt(T[lang].copyPrompt, shareData.url);
+  }
+}
+
+async function copyCategoryLink() {
+  if (activeCategory === 'All') return;
+
+  const shareUrl = getCategorySharePageUrl(activeCategory);
+
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(shareUrl);
+      closeShareMenus();
+      showToast(T[lang].linkCopied);
+      return;
+    }
+
+    window.prompt(T[lang].copyPrompt, shareUrl);
+  } catch (error) {
+    window.prompt(T[lang].copyPrompt, shareUrl);
+  }
+}
+
+document.addEventListener('click', closeShareMenus);
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') closeShareMenus();
+});
+
+function getShareModeResource() {
+  if (!shareResourceKey) return null;
+  return resources.find(resource => getField(resource, 'name') === shareResourceKey) || null;
+}
+
+function getSearchQuery() {
+  const input = document.getElementById('search');
+  return input ? input.value.trim() : '';
+}
+
+function updateSearchClearButton() {
+  const button = document.getElementById('clear-search');
+  if (!button) return;
+  button.textContent = T[lang].clearSearch;
+  button.classList.toggle('show', Boolean(getSearchQuery()));
+}
+
+function handleSearchInput() {
+  updateSearchClearButton();
+  renderCards();
+}
+
+function clearSearch() {
+  const input = document.getElementById('search');
+  if (!input) return;
+  input.value = '';
+  updateSearchClearButton();
+  renderCards();
+  input.focus();
+}
+
+function clearAllFilters() {
+  activeCategory = 'All';
+  const input = document.getElementById('search');
+  if (input) input.value = '';
+  buildFilters();
+  updateSearchClearButton();
+  renderCards();
+}
+
+function renderShortcuts() {
+  const container = document.getElementById('shortcut-row');
+  if (!container) return;
+
+  const available = QUICK_CATEGORIES.filter(category => resources.some(resource => normalizeCategory(resource) === category));
+  container.innerHTML = available.map(category => `
+    <button class="shortcut-chip ${activeCategory === category ? 'active' : ''}" type="button" onclick="setCategory('${escapeAttr(category)}')">
+      <span>${escapeHTML((QUICK_LABELS[lang] && QUICK_LABELS[lang][category]) || (CAT_LABELS[lang][category] || category))}</span>
+      <span class="chip-count">${resources.filter(resource => normalizeCategory(resource) === category).length}</span>
+    </button>
+  `).join('');
+}
+
+function renderResultsContext(query, visibleCount) {
+  const container = document.getElementById('results-context');
+  if (!container) return;
+
+  const pills = [];
+  if (activeCategory !== 'All' || query) {
+    pills.push(`<div class="results-pill"><strong>${escapeHTML(T[lang].narrowingTo(visibleCount, resources.length))}</strong></div>`);
+  }
+  if (activeCategory !== 'All') {
+    pills.push(`<div class="results-pill"><strong>${escapeHTML(T[lang].activeCategory)}:</strong> ${escapeHTML(CAT_LABELS[lang][activeCategory] || activeCategory)}</div>`);
+  }
+  if (query) {
+    pills.push(`<div class="results-pill"><strong>${escapeHTML(T[lang].activeSearch)}:</strong> ${escapeHTML(query)}</div>`);
+  }
+
+  if (!pills.length) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="results-pills">${pills.join('')}</div>
+    <button class="results-reset" type="button" onclick="clearAllFilters()">${escapeHTML(T[lang].resetFilters)}</button>
+  `;
+}
+
+function renderCategoryShare() {
+  const container = document.getElementById('category-share');
+  if (!container) return;
+
+  if (shareResourceKey || activeCategory === 'All') {
+    container.innerHTML = '';
+    return;
+  }
+
+  const label = CAT_LABELS[lang][activeCategory] || activeCategory;
+  const shareEmailHref = getCategoryShareEmailHref(activeCategory);
+
+  container.innerHTML = `
+    <div class="share-wrap align-right">
+      <button class="btn-share top-share-btn" type="button" onclick="toggleShareMenu('category', event)" aria-label="${escapeAttr(`${T[lang].share} ${label}`)}" aria-expanded="false">
+        ${escapeHTML(T[lang].share)} ${escapeHTML(label)}
+      </button>
+      <div class="share-menu" id="share-menu-category">
+        <a class="share-option" href="${escapeAttr(shareEmailHref)}" target="_blank" rel="noopener">${escapeHTML(T[lang].shareEmail)}</a>
+        <button class="share-option" type="button" onclick="copyCategoryLink()">${escapeHTML(T[lang].shareCopyLink)}</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderResourceCard(resource, i, query = '') {
+  const cat = normalizeCategory(resource);
+  const name = getLocalizedValue(resource, 'name');
+  const desc = getLocalizedValue(resource, 'description');
+  const notes = getLocalizedValue(resource, 'notes');
+  const tags = getLocalizedTags(resource);
+  const phone = getField(resource, 'phone');
+  const website = normalizeWebsiteUrl(getField(resource, 'website'));
+  const address = getField(resource, 'address');
+  const hours = getField(resource, 'hours');
+  const color = CAT_COLORS[cat] || CAT_COLORS.Other;
+  const iconBg = `${color}22`;
+  const reportHref = getReportHref(resource);
+  const shareEmailHref = getShareEmailHref(resource);
+  const actionCount = [phone, website].filter(Boolean).length;
+  const actionClass = actionCount <= 1 ? 'card-actions single-action' : 'card-actions';
+  const descExpanded = isSectionExpanded(name, 'desc');
+  const notesExpanded = isSectionExpanded(name, 'notes');
+  const hasLongDesc = desc.length > 190;
+  const hasLongNotes = notes.length > 120;
+  const encodedName = encodeURIComponent(name);
+
+  return `
+    <div class="card" style="animation-delay:${i*0.04}s">
+      <div class="card-header">
+        <div class="card-icon" style="background:${escapeAttr(iconBg)}">${escapeHTML(ICONS[cat] || '🤝')}</div>
+        <div class="card-title-block">
+          <div class="card-name">${highlightMatch(name, query)}</div>
+          <div class="card-category">
+            <span class="cat-dot" style="background:${escapeAttr(color)}"></span>
+            ${escapeHTML(CAT_LABELS[lang][cat] || cat)}
+          </div>
+          ${tags.length ? `<div class="card-tags">${tags.map(tag => `<span class="card-tag">${escapeHTML(tag)}</span>`).join('')}</div>` : ''}
+        </div>
+      </div>
+      ${desc ? `
+        <div>
+          <div class="card-desc ${hasLongDesc && !descExpanded ? 'compact' : ''}">${highlightMatch(desc, query)}</div>
+          ${hasLongDesc ? `<button class="card-more" type="button" onclick="toggleCardSection('${escapeAttr(encodedName)}', 'desc')">${escapeHTML(descExpanded ? T[lang].showLess : T[lang].showMore)}</button>` : ''}
+        </div>
+      ` : ''}
+      <div class="card-details">
+        <div class="card-section-label">${escapeHTML(T[lang].detailsLabel)}</div>
+        ${address ? `<div class="card-detail"><span class="icon"></span><span class="card-detail-content"><span class="card-detail-label">${escapeHTML(T[lang].addressLabel)}</span><span class="card-detail-text">${highlightMatch(address, query)}</span></span></div>` : ''}
+        ${hours   ? `<div class="card-detail"><span class="icon"></span><span class="card-detail-content"><span class="card-detail-label">${escapeHTML(T[lang].hoursLabel)}</span><span class="card-detail-text">${highlightMatch(hours, query)}</span></span></div>` : ''}
+        ${notes   ? `<div class="card-detail"><span class="icon"></span><span class="card-detail-content"><span class="card-detail-label">${escapeHTML(T[lang].notesLabel)}</span><span class="card-detail-text ${hasLongNotes && !notesExpanded ? 'compact' : ''}">${highlightMatch(notes, query)}</span>${hasLongNotes ? `<button class="card-more" type="button" onclick="toggleCardSection('${escapeAttr(encodedName)}', 'notes')">${escapeHTML(notesExpanded ? T[lang].showLess : T[lang].showMore)}</button>` : ''}</span></div>` : ''}
+      </div>
+      <div class="${actionClass}">
+        ${actionCount ? `<div class="card-section-label">${escapeHTML(T[lang].contactLabel)}</div>` : `<div class="card-empty-actions">${escapeHTML(T[lang].noContact)}</div>`}
+        ${phone   ? `<a class="btn-call" href="tel:${escapeAttr(normalizePhoneHref(phone))}"><span class="btn-call-label">${escapeHTML(T[lang].call)}</span><span class="btn-call-number">${escapeHTML(phone)}</span></a>` : ''}
+        ${website ? `<a class="btn-web" href="${escapeAttr(website)}" target="_blank" rel="noopener">${escapeHTML(T[lang].website)}</a>` : ''}
+      </div>
+      <div class="card-footer">
+        <div class="share-wrap">
+          <button class="btn-share" type="button" onclick="toggleShareMenu(${i}, event)" aria-label="${escapeAttr(`${T[lang].share} ${name}`)}" aria-expanded="false">
+            ${escapeHTML(T[lang].share)}
+          </button>
+          <div class="share-menu" id="share-menu-${i}">
+            <a class="share-option" href="${escapeAttr(shareEmailHref)}" target="_blank" rel="noopener">${escapeHTML(T[lang].shareEmail)}</a>
+            <button class="share-option" type="button" onclick="copyResourceLink(${i})">${escapeHTML(T[lang].shareCopyLink)}</button>
+          </div>
+        </div>
+        <a class="btn-report" href="${escapeAttr(reportHref)}" target="_blank" rel="noopener" aria-label="${escapeAttr(`${T[lang].reportBtn}: ${name}`)}">${escapeHTML(T[lang].reportBtn)}</a>
+      </div>
+    </div>`;
+}
+
+function renderSharePage() {
+  const resource = getShareModeResource();
+  const grid = document.getElementById('grid');
+  const resultsInfo = document.getElementById('results-info');
+  const resultsContext = document.getElementById('results-context');
+
+  document.body.classList.add('share-mode');
+  filtered_cache = resource ? [resource] : [];
+  resultsInfo.textContent = '';
+  if (resultsContext) resultsContext.innerHTML = '';
+
+  if (!resource) {
+    updateGridMarkup(`<div class="empty">
+      <div style="font-size:2.5rem;margin-bottom:12px">🔍</div>
+      <h3>${T[lang].noResults}</h3>
+      <p>${T[lang].noResultsSub}</p>
+      <button class="empty-action" type="button" onclick="window.location.href='${escapeAttr(getBasePageUrl())}'">${escapeHTML(T[lang].shareBack)}</button>
+    </div>`);
+    return true;
+  }
+
+  document.title = `${getLocalizedValue(resource, 'name')} · Community Resources`;
+  const shareMeta = [
+    T[lang].shareMetaCommunity,
+    T[lang].shareMetaUpdated
+  ];
+  updateGridMarkup(`
+    <div class="share-hero">
+      <div class="share-shell">
+        <a class="share-back" href="${escapeAttr(getBasePageUrl())}">← ${escapeHTML(T[lang].shareBack)}</a>
+        <div class="share-eyebrow">${escapeHTML(T[lang].shareEyebrow)}</div>
+        <div class="share-heading">${escapeHTML(T[lang].shareHeading)}</div>
+        <div class="share-subheading">${escapeHTML(T[lang].shareSubheading)}</div>
+        <div class="share-meta">
+          ${shareMeta.map(item => `<div class="share-meta-pill">${escapeHTML(item)}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+    ${renderResourceCard(resource, 0)}
+  `);
+  return true;
 }
 
 async function loadData() {
   if (!SHEET_URL) {
     document.getElementById('demo-notice').classList.add('show');
     resources = SAMPLE;
-    buildFilters(); renderCards();
+    buildFilters(); renderShortcuts(); renderCards();
     return;
   }
   showLoading();
@@ -652,34 +2203,249 @@ async function loadData() {
     const res = await fetch(SHEET_URL);
     const csv = await res.text();
     resources = parseCSV(csv);
-    buildFilters(); renderCards();
+    if (!resources.length) throw new Error('No resources found in sheet');
+    buildFilters(); renderShortcuts(); renderCards();
   } catch (e) {
     document.getElementById('demo-notice').classList.add('show');
     resources = SAMPLE;
-    buildFilters(); renderCards();
+    buildFilters(); renderShortcuts(); renderCards();
   }
 }
 
 function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g,''));
-  return lines.slice(1).map(line => {
-    const vals = line.match(/(".*?"|[^,]+|(?<=,)(?=,)|(?<=,)$|^(?=,))/g) || [];
+  const rows = [];
+  let row = [];
+  let cell = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+    const next = text[i + 1];
+
+    if (char === '"') {
+      if (inQuotes && next === '"') {
+        cell += '"';
+        i += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (char === ',' && !inQuotes) {
+      row.push(cell);
+      cell = '';
+      continue;
+    }
+
+    if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (char === '\r' && next === '\n') i += 1;
+      row.push(cell);
+      rows.push(row);
+      row = [];
+      cell = '';
+      continue;
+    }
+
+    cell += char;
+  }
+
+  if (cell || row.length) {
+    row.push(cell);
+    rows.push(row);
+  }
+
+  if (!rows.length) return [];
+
+  const headers = rows[0].map(value => value.trim());
+  return rows.slice(1).map(values => {
     const obj = {};
-    headers.forEach((h, i) => { obj[h] = (vals[i] || '').replace(/^"|"$/g,'').trim(); });
-    return obj;
-  }).filter(r => r.name || r.Name);
+    headers.forEach((header, index) => {
+      obj[header] = (values[index] || '').trim();
+    });
+    return normalizeResource(obj);
+  }).filter(r => getField(r, 'name'));
+}
+
+function normalizeKey(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ');
+}
+
+function getRawField(resource, key) {
+  const direct = resource[key];
+  if (direct != null && String(direct).trim()) return String(direct).trim();
+
+  const normalizedTarget = normalizeKey(key);
+  for (const [fieldName, value] of Object.entries(resource)) {
+    if (normalizeKey(fieldName) === normalizedTarget && String(value || '').trim()) {
+      return String(value).trim();
+    }
+  }
+
+  return '';
+}
+
+function getAliasField(resource, aliases) {
+  for (const alias of aliases) {
+    const value = getRawField(resource, alias);
+    if (value) return value;
+  }
+  return '';
+}
+
+function normalizeCategoryValue(value) {
+  const cleaned = String(value || '').trim();
+  if (!cleaned) return 'Other';
+  const canonical = CATEGORY_ALIASES[normalizeKey(cleaned)];
+  if (canonical) return canonical;
+  return cleaned;
+}
+
+function normalizeResource(resource) {
+  const normalized = {};
+
+  Object.entries(FIELD_ALIASES).forEach(([field, aliases]) => {
+    normalized[field] = getAliasField(resource, [field, ...aliases]);
+  });
+
+  normalized.category = normalizeCategoryValue(normalized.category);
+  return normalized;
+}
+
+function getField(resource, key) {
+  return getRawField(resource, key);
+}
+
+function getLocalizedValue(resource, key) {
+  if (lang === 'es') {
+    const localized = getField(resource, `${key}_es`);
+    if (localized) return localized;
+  }
+  return getField(resource, key);
+}
+
+function getLocalizedTags(resource) {
+  const source = lang === 'es' && getField(resource, 'tags_es')
+    ? getField(resource, 'tags_es')
+    : getField(resource, 'tags');
+
+  return String(source || '')
+    .split(/[|,]/)
+    .map(tag => tag.trim())
+    .filter(Boolean)
+    .slice(0, 4);
+}
+
+function normalizeCategory(resource) {
+  return getField(resource, 'category') || 'Other';
+}
+
+function compareText(a, b) {
+  return String(a || '').localeCompare(String(b || ''), undefined, { sensitivity: 'base' });
+}
+
+function getSearchScore(resource, query) {
+  if (!query) return 0;
+
+  const name = getLocalizedValue(resource, 'name').toLowerCase();
+  const desc = getLocalizedValue(resource, 'description').toLowerCase();
+  const address = getField(resource, 'address').toLowerCase();
+  const notes = getLocalizedValue(resource, 'notes').toLowerCase();
+  const categoryLabel = (CAT_LABELS[lang][normalizeCategory(resource)] || normalizeCategory(resource)).toLowerCase();
+
+  let score = 0;
+
+  if (name === query) score += 120;
+  else if (name.startsWith(query)) score += 90;
+  else if (name.includes(query)) score += 65;
+
+  if (categoryLabel.startsWith(query)) score += 48;
+  else if (categoryLabel.includes(query)) score += 34;
+
+  if (desc.startsWith(query)) score += 24;
+  else if (desc.includes(query)) score += 16;
+
+  if (address.includes(query)) score += 10;
+  if (notes.includes(query)) score += 8;
+
+  return score;
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[char]));
+}
+
+function escapeAttr(value) {
+  return escapeHTML(value);
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlightMatch(value, query) {
+  const text = String(value || '');
+  const trimmed = String(query || '').trim();
+  if (!trimmed) return escapeHTML(text);
+
+  const escapedText = escapeHTML(text);
+  const pattern = new RegExp(`(${escapeRegExp(escapeHTML(trimmed))})`, 'ig');
+  return escapedText.replace(pattern, '<mark class="match">$1</mark>');
+}
+
+function normalizePhoneHref(phone) {
+  const digits = String(phone).replace(/[^\d+]/g, '');
+  return digits.startsWith('+') ? digits : digits.replace(/\+/g, '');
+}
+
+function normalizeWebsiteUrl(url) {
+  const trimmed = String(url).trim();
+  if (!trimmed) return '';
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  if (/^[a-z]+:/i.test(trimmed)) return '';
+  return `https://${trimmed}`;
+}
+
+function toBoldUnicode(value) {
+  const boldMap = {
+    A:'𝗔', B:'𝗕', C:'𝗖', D:'𝗗', E:'𝗘', F:'𝗙', G:'𝗚', H:'𝗛', I:'𝗜', J:'𝗝',
+    K:'𝗞', L:'𝗟', M:'𝗠', N:'𝗡', O:'𝗢', P:'𝗣', Q:'𝗤', R:'𝗥', S:'𝗦', T:'𝗧',
+    U:'𝗨', V:'𝗩', W:'𝗪', X:'𝗫', Y:'𝗬', Z:'𝗭',
+    a:'𝗮', b:'𝗯', c:'𝗰', d:'𝗱', e:'𝗲', f:'𝗳', g:'𝗴', h:'𝗵', i:'𝗶', j:'𝗷',
+    k:'𝗸', l:'𝗹', m:'𝗺', n:'𝗻', o:'𝗼', p:'𝗽', q:'𝗾', r:'𝗿', s:'𝘀', t:'𝘁',
+    u:'𝘂', v:'𝘃', w:'𝘄', x:'𝘅', y:'𝘆', z:'𝘇',
+    0:'𝟬', 1:'𝟭', 2:'𝟮', 3:'𝟯', 4:'𝟰', 5:'𝟱', 6:'𝟲', 7:'𝟳', 8:'𝟴', 9:'𝟵',
+  };
+
+  return Array.from(String(value)).map(char => boldMap[char] || char).join('');
 }
 
 function buildFilters() {
-  const categories = ['All', ...new Set(resources.map(r => r.category || r.Category || 'Other'))];
+  const categories = ['All', ...new Set(resources.map(normalizeCategory))];
   const container = document.getElementById('filters');
+  const totalCount = resources.length;
   container.innerHTML = categories.map(cat => `
     <button class="filter-btn ${cat === activeCategory ? 'active' : ''}"
-      onclick="setCategory('${cat}')">
-      ${cat === 'All' ? T[lang].all : (CAT_LABELS[lang][cat] || cat)}
+      type="button"
+      data-category="${escapeAttr(cat)}">
+      <span>${escapeHTML(cat === 'All' ? T[lang].all : (CAT_LABELS[lang][cat] || cat))}</span>
+      <span class="chip-count">${cat === 'All' ? totalCount : resources.filter(resource => normalizeCategory(resource) === cat).length}</span>
     </button>
   `).join('');
+
+  container.querySelectorAll('[data-category]').forEach(button => {
+    button.addEventListener('click', () => setCategory(button.dataset.category));
+  });
 }
 
 function setCategory(cat) {
@@ -688,72 +2454,64 @@ function setCategory(cat) {
 }
 
 function renderCards() {
-  const query = document.getElementById('search').value.toLowerCase().trim();
-  const grid  = document.getElementById('grid');
-
-  const filtered = resources.filter(r => {
-    const cat = r.category || r.Category || 'Other';
-    const matchCat = activeCategory === 'All' || cat === activeCategory;
-    const name = (lang === 'es' && r.name_es ? r.name_es : r.name || r.Name || '').toLowerCase();
-    const desc = (lang === 'es' && r.description_es ? r.description_es : r.description || r.Description || '').toLowerCase();
-    const matchQ = !query || name.includes(query) || desc.includes(query) || cat.toLowerCase().includes(query);
-    return matchCat && matchQ;
-  });
-
-  filtered_cache = filtered;
-  document.getElementById('results-info').textContent = T[lang].showing(filtered.length);
-
-  if (!filtered.length) {
-    grid.innerHTML = `<div class="empty">
-      <div style="font-size:2.5rem;margin-bottom:12px">🔍</div>
-      <h3>${T[lang].noResults}</h3>
-      <p>${T[lang].noResultsSub}</p>
-    </div>`;
+  if (shareResourceKey) {
+    updateSearchClearButton();
+    renderSharePage();
+    renderCategoryShare();
     return;
   }
 
-  grid.innerHTML = filtered.map((r, i) => {
-    const cat     = (r.category || r.Category || 'Other').trim();
-    const name    = lang === 'es' && r.name_es ? r.name_es : r.name || r.Name || '';
-    const desc    = lang === 'es' && r.description_es ? r.description_es : r.description || r.Description || '';
-    const notes   = lang === 'es' && r.notes_es ? r.notes_es : r.notes || r.Notes || '';
-    const phone   = r.phone || r.Phone || '';
-    const website = r.website || r.Website || '';
-    const address = r.address || r.Address || '';
-    const hours   = r.hours || r.Hours || '';
+  const rawQuery = getSearchQuery();
+  const query = rawQuery.toLowerCase();
+  const grid  = document.getElementById('grid');
 
-    return `
-    <div class="card" style="animation-delay:${i*0.04}s">
-      <div class="card-header">
-        <div class="card-icon icon-${cat}">${ICONS[cat] || '🤝'}</div>
-        <div>
-          <div class="card-name">${name}</div>
-          <div class="card-category">
-            <span class="cat-dot cat-${cat}"></span>
-            ${CAT_LABELS[lang][cat] || cat}
-          </div>
-        </div>
-      </div>
-      ${desc ? `<div class="card-desc">${desc}</div>` : ''}
-      <div class="card-details">
-        ${address ? `<div class="card-detail"><span class="icon">📍</span><span>${address}</span></div>` : ''}
-        ${hours   ? `<div class="card-detail"><span class="icon">🕐</span><span>${hours}</span></div>` : ''}
-        ${notes   ? `<div class="card-detail"><span class="icon">ℹ️</span><span>${notes}</span></div>` : ''}
-      </div>
-      <div class="card-actions">
-        ${phone   ? `<a class="btn-call" href="tel:${phone.replace(/\D/g,'')}">📞 ${T[lang].call} ${phone}</a>` : ''}
-        ${website ? `<a class="btn-web" href="${website}" target="_blank" rel="noopener">🔗 ${T[lang].website}</a>` : ''}
-      </div>
-      <div class="card-footer">
-        <button class="btn-report" onclick="openReport(${i})">${T[lang].reportBtn}</button>
-      </div>
-    </div>`;
-  }).join('');
+  const filtered = resources.filter(r => {
+    const cat = normalizeCategory(r);
+    const matchCat = activeCategory === 'All' || cat === activeCategory;
+    const name = getLocalizedValue(r, 'name').toLowerCase();
+    const desc = getLocalizedValue(r, 'description').toLowerCase();
+    const address = getField(r, 'address').toLowerCase();
+    const notes = getLocalizedValue(r, 'notes').toLowerCase();
+    const categoryLabel = (CAT_LABELS[lang][cat] || cat).toLowerCase();
+    const matchQ = !query || name.includes(query) || desc.includes(query) || address.includes(query) || notes.includes(query) || categoryLabel.includes(query);
+    return matchCat && matchQ;
+  }).sort((a, b) => {
+    if (!query) {
+      return compareText(getLocalizedValue(a, 'name'), getLocalizedValue(b, 'name'));
+    }
+
+    const scoreDiff = getSearchScore(b, query) - getSearchScore(a, query);
+    if (scoreDiff !== 0) return scoreDiff;
+    return compareText(getLocalizedValue(a, 'name'), getLocalizedValue(b, 'name'));
+  });
+
+  filtered_cache = filtered;
+  document.getElementById('results-info').textContent = query
+    ? `${T[lang].showing(filtered.length)} · ${T[lang].bestMatches}`
+    : T[lang].showing(filtered.length);
+  document.getElementById('results-note').textContent = T[lang].resultsNote;
+  renderResultsContext(rawQuery, filtered.length);
+  renderCategoryShare();
+  updateSearchClearButton();
+  updateDirectoryUrl();
+
+  if (!filtered.length) {
+    updateGridMarkup(`<div class="empty">
+      <div style="font-size:2.5rem;margin-bottom:12px">🔍</div>
+      <h3>${T[lang].noResults}</h3>
+      <p>${T[lang].noResultsSub}</p>
+      <button class="empty-action" type="button" onclick="clearAllFilters()">${escapeHTML(T[lang].noResultsReset)}</button>
+    </div>`);
+    return;
+  }
+
+  document.body.classList.remove('share-mode');
+  updateGridMarkup(filtered.map((r, i) => renderResourceCard(r, i, rawQuery)).join(''));
 }
 
 function showLoading() {
-  document.getElementById('grid').innerHTML = `
-    <div class="loading"><div class="spinner"></div><div>${T[lang].loading}</div></div>`;
+  updateGridMarkup(`
+    <div class="loading"><div class="spinner"></div><div>${T[lang].loading}</div></div>`);
 }
 
 function setLang(l) {
@@ -761,9 +2519,35 @@ function setLang(l) {
   document.getElementById('btn-en').classList.toggle('active', l === 'en');
   document.getElementById('btn-es').classList.toggle('active', l === 'es');
   document.getElementById('search').placeholder = T[l].search;
+  document.getElementById('clear-search').textContent = T[l].clearSearch;
   document.getElementById('site-title').childNodes[0].textContent = T[l].siteTitle + ' ';
   document.getElementById('site-subtitle').textContent = T[l].siteSub;
-  buildFilters(); renderCards();
+  document.getElementById('intro-eyebrow').textContent = T[l].introEyebrow;
+  document.getElementById('intro-title').textContent = T[l].introTitle;
+  document.getElementById('intro-copy').textContent = T[l].introCopy;
+  document.getElementById('intro-point-search').textContent = T[l].introPointSearch;
+  document.getElementById('intro-point-browse').textContent = T[l].introPointBrowse;
+  document.getElementById('intro-point-share').textContent = T[l].introPointShare;
+  document.getElementById('finder-label-shortcuts').textContent = T[l].finderLabelShortcuts;
+  document.getElementById('finder-hint-shortcuts').textContent = T[l].finderHintShortcuts;
+  document.getElementById('finder-label-search').textContent = T[l].finderLabelSearch;
+  document.getElementById('finder-hint-search').textContent = T[l].finderHintSearch;
+  document.getElementById('finder-label-filters').textContent = T[l].finderLabelFilters;
+  document.getElementById('demo-notice').innerHTML = `📋 <strong>${escapeHTML(T[l].demoNotice.split(':')[0])}:</strong> ${escapeHTML(T[l].demoNotice.split(':').slice(1).join(':').trim())}`;
+  document.getElementById('results-note').textContent = T[l].resultsNote;
+  document.getElementById('footer-title').textContent = T[l].footerTitle;
+  document.getElementById('footer-contact').innerHTML = `${escapeHTML(T[l].footerContact)} <a href="tel:+13103950220">(310) 395-0220</a>`;
+  document.getElementById('footer-note').textContent = T[l].footerNote;
+  buildFilters(); renderShortcuts(); renderCards();
+}
+
+if (sharedCategoryKey) {
+  activeCategory = sharedCategoryKey;
+}
+
+if (initialSearchQuery) {
+  const searchInput = document.getElementById('search');
+  if (searchInput) searchInput.value = initialSearchQuery;
 }
 
 loadData();
