@@ -1302,8 +1302,7 @@
     }
 
     .intro-panel {
-      margin-top: 14px;
-      padding: 0 12px;
+      display: none;
     }
 
     .intro-card {
@@ -1342,22 +1341,23 @@
     }
 
     .controls {
-      margin-top: 14px;
+      margin-top: 10px;
       padding: 0 12px;
-      position: sticky;
-      top: 66px;
-      z-index: 90;
+      position: relative;
+      top: auto;
+      z-index: 40;
     }
 
     .finder-card {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      padding: 14px 12px 12px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.94);
-      backdrop-filter: blur(18px);
-      box-shadow: 0 16px 34px rgba(15,23,42,0.1);
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: none;
+      backdrop-filter: none;
+      box-shadow: none;
     }
 
     .finder-section {
@@ -1366,6 +1366,12 @@
 
     .finder-section:nth-child(2) {
       order: 1;
+      position: static;
+      top: auto;
+      z-index: auto;
+      padding: 0;
+      background: transparent;
+      backdrop-filter: none;
     }
 
     .finder-section:nth-child(1) {
@@ -1383,7 +1389,7 @@
     }
 
     .finder-hint {
-      margin-bottom: 8px;
+      margin-bottom: 7px;
       font-size: 11px;
       line-height: 1.35;
     }
@@ -1392,7 +1398,8 @@
       padding: 15px 74px 15px 42px;
       border-radius: 16px;
       font-size: 16px;
-      box-shadow: 0 12px 26px rgba(26,82,118,0.08);
+      box-shadow: 0 10px 22px rgba(26,82,118,0.08);
+      background: rgba(255,255,255,0.96);
     }
 
     .search-icon {
@@ -1450,7 +1457,7 @@
       flex-direction: column;
       align-items: stretch;
       gap: 8px;
-      margin-top: 16px;
+      margin-top: 12px;
     }
 
     .results-row .results-info {
@@ -1462,12 +1469,12 @@
       width: auto;
       max-width: calc(100% - 24px);
       margin: 2px 12px 12px;
-      padding: 10px 12px;
+      padding: 9px 11px;
       border-radius: 14px;
       text-align: left;
       font-size: 11px;
       line-height: 1.42;
-      box-shadow: 0 10px 22px rgba(15,23,42,0.04);
+      box-shadow: none;
     }
 
     .results-context {
@@ -1515,7 +1522,7 @@
       border-radius: 22px;
       padding: 17px 14px 15px;
       gap: 12px;
-      box-shadow: 0 12px 28px rgba(26,82,118,0.09), 0 3px 10px rgba(26,82,118,0.04);
+      box-shadow: 0 10px 22px rgba(26,82,118,0.07), 0 2px 8px rgba(26,82,118,0.03);
     }
 
     .card::before {
@@ -1598,27 +1605,27 @@
     }
 
     .card-footer {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 9px;
-      align-items: stretch;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
       padding-top: 12px;
     }
 
     .card-footer .share-wrap,
     .card-footer .btn-report {
-      width: 100%;
+      width: auto;
     }
 
     .card-footer .btn-share,
     .card-footer .btn-report {
-      min-height: 40px;
-      width: 100%;
-      justify-content: center;
-      border-radius: 12px;
-      border: 1px solid #dde6ee;
-      background: rgba(248,250,252,0.92);
-      padding: 0 12px;
+      min-height: 28px;
+      width: auto;
+      justify-content: flex-start;
+      border-radius: 0;
+      border: none;
+      background: transparent;
+      padding: 0;
       font-size: 11px;
       font-weight: 600;
     }
@@ -1633,8 +1640,8 @@
 
     .share-menu {
       left: 0;
-      right: 0;
-      min-width: 0;
+      right: auto;
+      min-width: 148px;
       bottom: calc(100% + 6px);
       padding: 6px;
       border-radius: 14px;
@@ -1652,16 +1659,11 @@
     .header-inner { padding: 12px 12px 11px; }
     .header-logo { height: 30px; }
     .lang-toggle button { min-height: 30px; padding: 0 10px; font-size: 11px; }
-    .controls { top: 60px; padding: 0 10px; }
-    .finder-card { padding: 12px 10px 10px; border-radius: 18px; }
-    .intro-panel { margin-top: 12px; padding: 0 10px; }
-    .intro-card { padding: 14px 13px 12px; border-radius: 17px; }
+    .controls { padding: 0 10px; }
     .share-shell { padding: 18px 18px 17px; border-radius: 22px; }
     .share-heading { font-size: 1.45rem; }
     .share-subheading { font-size: 13px; }
     .share-meta-pill { min-height: 28px; padding: 0 10px; font-size: 10px; }
-    .intro-copy { font-size: 12.5px; }
-    .intro-points { display: none; }
     .search-wrap input { padding: 14px 68px 14px 39px; border-radius: 15px; }
     .shortcut-chip,
     .filter-btn { min-height: 36px; }
@@ -1674,7 +1676,7 @@
     .card-details { padding: 10px 10px 9px; }
     .btn-call, .btn-web { min-height: 44px; }
     .btn-call-number { font-size: 13px; white-space: nowrap; }
-    .card-footer { grid-template-columns: 1fr; }
+    .card-footer { gap: 8px; }
   }
 </style>
 </head>
