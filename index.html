@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<a class="skip-link" href="#search">Skip to search</a>
 
 <header>
   <div class="header-inner">
@@ -19,18 +20,19 @@
           <span class="sub" id="site-subtitle">Find local help from your phone</span>
         </h1>
       </div>
-      <div class="lang-toggle">
-        <button class="active" data-lang="en" id="btn-en">EN</button>
-        <button data-lang="es" id="btn-es">ES</button>
+      <div class="lang-toggle" aria-label="Language">
+        <button class="active" data-lang="en" id="btn-en" aria-pressed="true">EN</button>
+        <button data-lang="es" id="btn-es" aria-pressed="false">ES</button>
       </div>
     </div>
   </div>
 </header>
 
-<div class="notice" id="demo-notice">
-  📋 <strong>Demo mode:</strong> Showing sample data. Connect your Google Sheet by updating <code>SHEET_URL</code>.
+<div class="notice" id="status-notice" role="alert" aria-live="assertive">
+  <strong>Resources could not load.</strong> Please call Resident Services at <a href="tel:+13103950220">(310) 395-0220</a>.
 </div>
 
+<main>
 <div class="intro-panel" id="intro-panel">
   <div class="intro-card">
     <div class="intro-eyebrow" id="intro-eyebrow">Santa Monica resource guide</div>
@@ -56,7 +58,7 @@
       <div class="finder-hint" id="finder-hint-search">Try food, rent, legal help, youth, a provider name, or an address.</div>
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
-        <input type="text" id="search" placeholder="Search resources..." autocomplete="off">
+        <input type="search" id="search" placeholder="Search resources..." autocomplete="off" aria-describedby="finder-hint-search">
         <button class="clear-search" id="clear-search" type="button" data-action="clear-search">Clear</button>
       </div>
     </div>
@@ -68,13 +70,14 @@
 </div>
 
 <div class="results-row">
-  <div class="results-info" id="results-info"></div>
+  <div class="results-info" id="results-info" role="status" aria-live="polite" aria-atomic="true"></div>
   <div class="category-share" id="category-share"></div>
 </div>
 <div class="results-note" id="results-note">Always call or contact providers directly for the most current information.</div>
 <div class="results-context" id="results-context"></div>
-<div class="grid" id="grid"></div>
+<div class="grid" id="grid" aria-live="polite"></div>
 <div class="toast" id="toast" aria-live="polite"></div>
+</main>
 
 <footer>
   <div id="footer-title">Community Corporation of Santa Monica · Resident Services</div>

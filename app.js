@@ -51,9 +51,12 @@ const T = {
     address: 'Address',
     notes: 'Notes',
     loading: 'Loading resources...',
+    loadErrorNotice: 'Resources could not load. Please call Resident Services at',
+    loadErrorTitle: 'We are having trouble loading resources',
+    loadErrorBody: 'Please check your connection and try again. If you need help now, call Resident Services.',
+    retry: 'Try again',
     siteTitle: 'Community Resources',
     siteSub: 'Find local help from your phone',
-    demoNotice: 'Demo mode: Showing sample data. Connect your Google Sheet by updating SHEET_URL.',
     footerTitle: 'Community Corporation of Santa Monica · Resident Services',
     footerContact: 'Need help using this directory? Call',
     footerNote: 'Services, hours, and eligibility can change. Please confirm details with providers before visiting.',
@@ -123,9 +126,12 @@ Thank you for keeping this resource up to date!`,
     address: 'Dirección',
     notes: 'Notas',
     loading: 'Cargando recursos...',
+    loadErrorNotice: 'No se pudieron cargar los recursos. Llame a Servicios para Residentes al',
+    loadErrorTitle: 'Tenemos problemas para cargar los recursos',
+    loadErrorBody: 'Revise su conexión e inténtelo de nuevo. Si necesita ayuda ahora, llame a Servicios para Residentes.',
+    retry: 'Intentar de nuevo',
     siteTitle: 'Recursos Comunitarios',
     siteSub: 'Encuentre ayuda local desde su teléfono',
-    demoNotice: 'Modo de demostración: Mostrando datos de ejemplo. Conecte su hoja de Google actualizando SHEET_URL.',
     footerTitle: 'Community Corporation of Santa Monica · Servicios para Residentes',
     footerContact: '¿Necesita ayuda para usar este directorio? Llame al',
     footerNote: 'Los servicios, horarios y requisitos pueden cambiar. Confirme los detalles con los proveedores antes de visitar.',
@@ -157,17 +163,6 @@ Gracias por mantener este recurso actualizado!`,
   }
 };
 
-const SAMPLE = [
-  { name:'Westside Food Bank', name_es:'Banco de Alimentos del Oeste', category:'Food', description:'Free groceries and pantry items for Santa Monica residents. No ID required.', description_es:'Comida gratis para residentes. No se requiere identificación.', address:'1710 22nd St, Santa Monica', phone:'(310) 829-0041', website:'', hours:'Tue & Thu 10am–1pm', notes:'Bring reusable bags', notes_es:'Traiga bolsas reutilizables' },
-  { name:'OPCC Mental Health Services', name_es:'Servicios de Salud Mental OPCC', category:'Mental', description:'Free counseling, crisis support, and mental health case management for low-income residents.', description_es:'Consejería gratuita y apoyo en crisis para residentes de bajos ingresos.', address:'1523 2nd St, Santa Monica', phone:'(310) 264-6646', website:'https://opcc.org', hours:'Mon–Fri 9am–5pm', notes:'Walk-ins welcome for crisis support', notes_es:'Se aceptan visitas sin cita para crisis' },
-  { name:'St. Joseph Center', name_es:'Centro St. Joseph', category:'Rental', description:'Emergency rental assistance and eviction prevention for households facing housing instability.', description_es:'Asistencia de renta de emergencia y prevención de desalojos.', address:'204 Hampton Dr, Venice', phone:'(310) 396-6468', website:'https://stjosephctr.org', hours:'Mon–Fri 8:30am–5pm', notes:'Call ahead to schedule', notes_es:'Llame antes para hacer una cita' },
-  { name:'Bet Tzedek Legal Services', name_es:'Servicios Legales Bet Tzedek', category:'Legal', description:'Free legal help for low-income tenants facing eviction, housing discrimination, or lease disputes.', description_es:'Ayuda legal gratis para inquilinos de bajos ingresos con problemas de vivienda.', address:'3250 Wilshire Blvd, Los Angeles', phone:'(323) 939-0506', website:'https://bettzedek.org', hours:'Mon–Fri 9am–5pm', notes:'Intake by phone first', notes_es:'Primero llame para evaluación' },
-  { name:'DPSS — CalFresh / MediCal', name_es:'DPSS — CalFresh / MediCal', category:'Benefits', description:'Apply for CalFresh (food stamps), Medi-Cal health coverage, and CalWORKs cash assistance.', description_es:'Solicite CalFresh, Medi-Cal y ayuda económica CalWORKs.', address:'1111 E. Las Tunas Dr, San Gabriel', phone:'(800) 827-3777', website:'https://dpss.lacounty.gov', hours:'Mon–Fri 8am–5pm', notes:'Online applications available 24/7', notes_es:'Solicitudes en línea disponibles 24/7' },
-  { name:'Step Up on Second', name_es:'Step Up on Second', category:'Mental', description:'Peer support, housing navigation, and wellness programs for adults with mental health challenges.', description_es:'Apoyo entre pares y programas de bienestar para adultos con desafíos de salud mental.', address:'1328 Second St, Santa Monica', phone:'(310) 394-6889', website:'https://stepuponsecond.org', hours:'Mon–Fri 9am–5pm', notes:'Drop-in wellness center available', notes_es:'Centro de bienestar de acceso libre disponible' },
-  { name:'Human Services Division — City of SM', name_es:'División de Servicios Humanos', category:'Benefits', description:'Utility assistance, senior services, and emergency aid programs for Santa Monica residents.', description_es:'Asistencia de servicios públicos, servicios para personas mayores y ayuda de emergencia.', address:'1212 Main St, Santa Monica', phone:'(310) 458-8701', website:'https://santamonica.gov', hours:'Mon–Thu 8am–5:30pm', notes:'Income verification may be required', notes_es:'Puede requerirse verificación de ingresos' },
-  { name:'Neighborhood Legal Services', name_es:'Servicios Legales del Vecindario', category:'Legal', description:'Free civil legal aid for low-income residents — housing, family law, and public benefits.', description_es:'Ayuda legal civil gratuita para residentes de bajos ingresos.', address:'Multiple locations in LA County', phone:'(800) 433-6251', website:'https://nlsla.org', hours:'Mon–Fri 9am–4pm', notes:'Remote appointments available', notes_es:'Citas remotas disponibles' },
-];
-
 let resources = [];
 let filtered_cache = [];
 let lang = 'en';
@@ -175,6 +170,7 @@ let activeCategory = 'All';
 const INITIAL_RESULT_LIMIT = 24;
 const RESULT_LIMIT_INCREMENT = 24;
 let visibleResultLimit = INITIAL_RESULT_LIMIT;
+let hasLoadError = false;
 const expandedSections = new Set();
 let toastTimer = null;
 const urlParams = new URLSearchParams(window.location.search);
@@ -561,6 +557,7 @@ document.addEventListener('click', event => {
     if (action === 'clear-all') clearAllFilters();
     if (action === 'copy-category') copyCategoryLink();
     if (action === 'show-more') showMoreResults();
+    if (action === 'retry-load') loadData();
     if (action === 'back-to-directory') window.location.href = getBasePageUrl();
     if (action !== 'copy-category') closeShareMenus();
     return;
@@ -626,7 +623,7 @@ function renderShortcuts() {
 
   const available = QUICK_CATEGORIES.filter(category => resources.some(resource => normalizeCategory(resource) === category));
   container.innerHTML = available.map(category => `
-    <button class="shortcut-chip ${activeCategory === category ? 'active' : ''}" type="button" data-category="${escapeAttr(category)}">
+    <button class="shortcut-chip ${activeCategory === category ? 'active' : ''}" type="button" data-category="${escapeAttr(category)}" aria-pressed="${activeCategory === category ? 'true' : 'false'}">
       <span>${escapeHTML((QUICK_LABELS[lang] && QUICK_LABELS[lang][category]) || (CAT_LABELS[lang][category] || category))}</span>
       <span class="chip-count">${resources.filter(resource => normalizeCategory(resource) === category).length}</span>
     </button>
@@ -793,13 +790,45 @@ function renderSharePage() {
   return true;
 }
 
+function updateStatusNotice(show = false) {
+  const notice = document.getElementById('status-notice');
+  if (!notice) return;
+
+  notice.innerHTML = `<strong>${escapeHTML(T[lang].loadErrorNotice)}</strong> <a href="tel:+13103950220">(310) 395-0220</a>.`;
+  notice.classList.toggle('show', show);
+}
+
+function renderLoadError() {
+  hasLoadError = true;
+  resources = [];
+  filtered_cache = [];
+  activeCategory = 'All';
+  visibleResultLimit = INITIAL_RESULT_LIMIT;
+
+  document.getElementById('results-info').textContent = '';
+  document.getElementById('results-context').innerHTML = '';
+  document.getElementById('category-share').innerHTML = '';
+  document.getElementById('shortcut-row').innerHTML = '';
+  document.getElementById('filters').innerHTML = '';
+  updateSearchClearButton();
+  updateStatusNotice(true);
+
+  updateGridMarkup(`<div class="empty outage">
+    <div class="empty-icon">!</div>
+    <h3>${escapeHTML(T[lang].loadErrorTitle)}</h3>
+    <p>${escapeHTML(T[lang].loadErrorBody)}</p>
+    <a class="empty-action empty-link" href="tel:+13103950220">(310) 395-0220</a>
+    <button class="empty-action" type="button" data-action="retry-load">${escapeHTML(T[lang].retry)}</button>
+  </div>`);
+}
+
 async function loadData() {
   if (!SHEET_URL) {
-    document.getElementById('demo-notice').classList.add('show');
-    resources = SAMPLE;
-    buildFilters(); renderShortcuts(); renderCards();
+    renderLoadError();
     return;
   }
+  hasLoadError = false;
+  updateStatusNotice(false);
   showLoading();
   try {
     const res = await fetch(SHEET_URL);
@@ -808,11 +837,11 @@ async function loadData() {
     if (csv.length > MAX_CSV_BYTES) throw new Error('Sheet response is too large');
     resources = parseCSV(csv);
     if (!resources.length) throw new Error('No resources found in sheet');
+    hasLoadError = false;
+    updateStatusNotice(false);
     buildFilters(); renderShortcuts(); renderCards();
   } catch (e) {
-    document.getElementById('demo-notice').classList.add('show');
-    resources = SAMPLE;
-    buildFilters(); renderShortcuts(); renderCards();
+    renderLoadError();
   }
 }
 
@@ -1045,15 +1074,13 @@ function buildFilters() {
   container.innerHTML = categories.map(cat => `
     <button class="filter-btn ${cat === activeCategory ? 'active' : ''}"
       type="button"
-      data-category="${escapeAttr(cat)}">
+      data-category="${escapeAttr(cat)}"
+      aria-pressed="${cat === activeCategory ? 'true' : 'false'}">
       <span>${escapeHTML(cat === 'All' ? T[lang].all : (CAT_LABELS[lang][cat] || cat))}</span>
       <span class="chip-count">${cat === 'All' ? totalCount : resources.filter(resource => normalizeCategory(resource) === cat).length}</span>
     </button>
   `).join('');
 
-  container.querySelectorAll('[data-category]').forEach(button => {
-    button.addEventListener('click', () => setCategory(button.dataset.category));
-  });
 }
 
 function setCategory(cat) {
@@ -1132,6 +1159,8 @@ function setLang(l) {
   lang = l;
   document.getElementById('btn-en').classList.toggle('active', l === 'en');
   document.getElementById('btn-es').classList.toggle('active', l === 'es');
+  document.getElementById('btn-en').setAttribute('aria-pressed', l === 'en' ? 'true' : 'false');
+  document.getElementById('btn-es').setAttribute('aria-pressed', l === 'es' ? 'true' : 'false');
   document.getElementById('search').placeholder = T[l].search;
   document.getElementById('clear-search').textContent = T[l].clearSearch;
   document.getElementById('site-title').childNodes[0].textContent = T[l].siteTitle + ' ';
@@ -1147,11 +1176,15 @@ function setLang(l) {
   document.getElementById('finder-label-search').textContent = T[l].finderLabelSearch;
   document.getElementById('finder-hint-search').textContent = T[l].finderHintSearch;
   document.getElementById('finder-label-filters').textContent = T[l].finderLabelFilters;
-  document.getElementById('demo-notice').innerHTML = `📋 <strong>${escapeHTML(T[l].demoNotice.split(':')[0])}:</strong> ${escapeHTML(T[l].demoNotice.split(':').slice(1).join(':').trim())}`;
+  updateStatusNotice(document.getElementById('status-notice').classList.contains('show'));
   document.getElementById('results-note').textContent = T[l].resultsNote;
   document.getElementById('footer-title').textContent = T[l].footerTitle;
   document.getElementById('footer-contact').innerHTML = `${escapeHTML(T[l].footerContact)} <a href="tel:+13103950220">(310) 395-0220</a>`;
   document.getElementById('footer-note').textContent = T[l].footerNote;
+  if (hasLoadError) {
+    renderLoadError();
+    return;
+  }
   buildFilters(); renderShortcuts(); renderCards();
 }
 
