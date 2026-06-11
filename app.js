@@ -72,6 +72,9 @@ const T = {
     shareSubheading: 'Review the details below, then call, visit the website, or pass this resource along to someone else.',
     shareMetaCommunity: 'Santa Monica resource guide',
     shareMetaUpdated: 'Provider details may change',
+    shareMissingTitle: 'This shared resource may have moved',
+    shareMissingBody: 'The listing may have been renamed or removed. You can still search the full directory for current support options.',
+    searchDirectory: 'Search the directory',
     reportSubject: name => `Outdated listing: ${name}`,
     reportBody: name =>
 `Hi CCSM,
@@ -147,6 +150,9 @@ Thank you for keeping this resource up to date!`,
     shareSubheading: 'Revise los detalles abajo y luego llame, visite el sitio web o comparta este recurso con otra persona.',
     shareMetaCommunity: 'Guía de recursos de Santa Mónica',
     shareMetaUpdated: 'Los detalles del proveedor pueden cambiar',
+    shareMissingTitle: 'Este recurso compartido puede haber cambiado',
+    shareMissingBody: 'Es posible que el listado haya cambiado de nombre o se haya eliminado. Todavía puede buscar en el directorio completo opciones de apoyo actuales.',
+    searchDirectory: 'Buscar en el directorio',
     reportSubject: name => `Información desactualizada: ${name}`,
     reportBody: name =>
 `Hola,
@@ -759,11 +765,12 @@ function renderSharePage() {
   if (resultsContext) resultsContext.innerHTML = '';
 
   if (!resource) {
+    document.title = `${T[lang].shareMissingTitle} · Community Resources`;
     updateGridMarkup(`<div class="empty">
       <div class="empty-icon">🔍</div>
-      <h3>${T[lang].noResults}</h3>
-      <p>${T[lang].noResultsSub}</p>
-      <button class="empty-action" type="button" data-action="back-to-directory">${escapeHTML(T[lang].shareBack)}</button>
+      <h3>${escapeHTML(T[lang].shareMissingTitle)}</h3>
+      <p>${escapeHTML(T[lang].shareMissingBody)}</p>
+      <button class="empty-action" type="button" data-action="back-to-directory">${escapeHTML(T[lang].searchDirectory)}</button>
     </div>`);
     return true;
   }
