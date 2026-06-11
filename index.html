@@ -15,23 +15,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ocean: #1a5276;
-    --sky: #2e86c1;
-    --sand: #eef2f7;
-    --sun: #f0a500;
-    --coral: #e05c3a;
-    --mint: #d4efdf;
-    --text: #1c1c1c;
-    --muted: #6b7280;
+    --ocean: #17405f;
+    --sky: #236d9c;
+    --sand: #f4f0e8;
+    --sun: #c97316;
+    --coral: #c74f32;
+    --mint: #d7efe4;
+    --text: #17212b;
+    --muted: #526171;
     --card: #ffffff;
-    --border: #e5e7eb;
-    --ink-soft: #425466;
-    --page-edge: #d9e4ef;
-    --surface: rgba(255,255,255,0.74);
-    --surface-strong: rgba(255,255,255,0.9);
-    --shadow-soft: 0 18px 48px rgba(26,82,118,0.08);
-    --shadow-card: 0 10px 30px rgba(26,82,118,0.09), 0 3px 10px rgba(26,82,118,0.04);
-    --shadow-card-hover: 0 18px 42px rgba(26,82,118,0.14), 0 8px 18px rgba(26,82,118,0.08);
+    --cream: #fffaf1;
+    --border: #d7e0e7;
+    --ink-soft: #34495e;
+    --page-edge: #e7edf2;
+    --surface: #ffffff;
+    --surface-strong: #ffffff;
+    --shadow-soft: 0 10px 24px rgba(23,64,95,0.08);
+    --shadow-card: 0 8px 20px rgba(23,64,95,0.08);
+    --shadow-card-hover: 0 12px 26px rgba(23,64,95,0.12);
 
     --c-Food:    #e05c3a;
     --c-Mental:  #7b5ea7;
@@ -59,30 +60,27 @@
 
   body {
     font-family: 'DM Sans', sans-serif;
-    background:
-      radial-gradient(circle at top left, rgba(113, 168, 213, 0.16), transparent 32%),
-      radial-gradient(circle at top right, rgba(240, 165, 0, 0.12), transparent 24%),
-      linear-gradient(180deg, #f8fbfd 0%, #edf3f8 26%, #eef2f7 100%);
+    background: linear-gradient(180deg, #fffaf1 0%, #f6f8fb 42%, #edf3f7 100%);
     color: var(--text);
     min-height: 100vh;
   }
 
   /* ── HEADER ── */
   header {
-    background: linear-gradient(135deg, #184c6e 0%, #215f89 100%);
+    background: #17405f;
     color: white;
     padding: 0;
     position: sticky;
     top: 0;
     z-index: 100;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
-    box-shadow: 0 12px 28px rgba(14,33,54,0.18);
+    border-bottom: 1px solid rgba(255,255,255,0.16);
+    box-shadow: 0 8px 18px rgba(14,33,54,0.14);
   }
 
   .header-inner {
     max-width: 900px;
     margin: 0 auto;
-    padding: 20px 20px 16px;
+    padding: 14px 20px 13px;
     position: relative;
   }
 
@@ -103,24 +101,24 @@
 
   h1 {
     font-family: 'Fraunces', serif;
-    font-size: clamp(1.45rem, 5vw, 2.15rem);
+    font-size: clamp(1.35rem, 4vw, 1.9rem);
     font-weight: 700;
-    line-height: 1.05;
-    letter-spacing: -0.02em;
+    line-height: 1.08;
+    letter-spacing: 0;
   }
 
   h1 .sub {
     display: block;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.48em;
+    font-size: 0.5em;
     font-weight: 400;
-    opacity: 0.86;
+    opacity: 0.92;
     margin-top: 7px;
-    letter-spacing: 0.01em;
+    letter-spacing: 0;
   }
 
   .header-logo {
-    height: 52px;
+    height: 44px;
     width: auto;
     display: block;
     filter: brightness(0) invert(1);
@@ -131,9 +129,9 @@
 
   .lang-toggle {
     display: flex;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.16);
-    border-radius: 999px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 12px;
     overflow: hidden;
     flex-shrink: 0;
     margin-top: 2px;
@@ -144,34 +142,34 @@
     background: none;
     border: none;
     color: white;
-    padding: 7px 14px;
+    min-height: 40px;
+    padding: 0 14px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: 700;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
   }
 
   .lang-toggle button.active {
-    background: rgba(255,255,255,0.2);
-    color: #ffffff;
+    background: #ffffff;
+    color: #17405f;
   }
 
   /* ── SEARCH + FILTER ── */
   .controls {
     max-width: 900px;
-    margin: 24px auto 0;
+    margin: 18px auto 0;
     padding: 0 16px;
     position: relative;
   }
 
   .finder-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.76));
-    border: 1px solid rgba(209,221,232,0.96);
-    border-radius: 22px;
+    background: #ffffff;
+    border: 1px solid #d7e0e7;
+    border-radius: 8px;
     padding: 16px;
     box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(12px);
   }
 
   .finder-section + .finder-section {
@@ -180,19 +178,20 @@
 
   .finder-label {
     display: block;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.11em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: #6f8399;
+    color: #354b60;
     margin-bottom: 8px;
   }
 
   .finder-hint {
-    font-size: 12px;
-    color: #6a7d91;
+    font-size: 14px;
+    color: #526171;
     margin-top: -2px;
     margin-bottom: 10px;
+    line-height: 1.45;
   }
 
   .shortcut-row {
@@ -202,73 +201,72 @@
   }
 
   .shortcut-chip {
-    border: 1px solid #d2dde8;
-    background: rgba(247,250,252,0.96);
-    color: #46617e;
-    border-radius: 999px;
-    padding: 8px 12px;
+    border: 1px solid #c9d6df;
+    background: #f7fafc;
+    color: #24394f;
+    border-radius: 8px;
+    min-height: 44px;
+    padding: 0 13px;
     display: inline-flex;
     align-items: center;
     gap: 8px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(15,23,42,0.04);
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, color 0.18s ease, background-color 0.18s ease;
+    box-shadow: none;
+    transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease, background-color 0.18s ease;
   }
 
   .shortcut-chip:hover {
     transform: translateY(-1px);
     border-color: #b7cade;
-    box-shadow: 0 8px 18px rgba(46,134,193,0.08);
     color: #1a5276;
   }
 
   .shortcut-chip.active {
-    border-color: #1d5c84;
-    background: linear-gradient(135deg, #1d5c84, #184d6e);
+    border-color: #17405f;
+    background: #17405f;
     color: #ffffff;
-    box-shadow: 0 12px 22px rgba(26,82,118,0.18);
+    box-shadow: 0 6px 14px rgba(23,64,95,0.18);
   }
 
   .intro-panel {
     max-width: 900px;
-    margin: 24px auto 0;
+    margin: 18px auto 0;
     padding: 0 16px;
   }
 
   .intro-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,255,255,0.72));
-    border: 1px solid rgba(208,220,231,0.95);
-    border-radius: 22px;
+    background: #fff2d8;
+    border: 1px solid #ead6ae;
+    border-radius: 8px;
     padding: 18px 18px 16px;
     box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(14px);
   }
 
   .intro-eyebrow {
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
-    color: #6b8096;
+    color: #80521d;
     margin-bottom: 8px;
   }
 
   .intro-title {
     font-family: 'Fraunces', serif;
-    font-size: clamp(1.15rem, 3vw, 1.45rem);
-    line-height: 1.15;
-    color: #183f5c;
-    letter-spacing: -0.02em;
+    font-size: clamp(1.3rem, 4vw, 1.75rem);
+    line-height: 1.12;
+    color: #17344f;
+    letter-spacing: 0;
   }
 
   .intro-copy {
     margin-top: 9px;
-    font-size: 14px;
-    line-height: 1.6;
-    color: #526274;
+    font-size: 15px;
+    line-height: 1.55;
+    color: #38495a;
     max-width: 62ch;
   }
 
@@ -283,13 +281,14 @@
     display: inline-flex;
     align-items: center;
     gap: 0;
-    padding: 8px 11px;
-    border-radius: 999px;
-    background: rgba(247,250,252,0.95);
-    border: 1px solid #e0e9f1;
-    color: #5d7085;
+    min-height: 34px;
+    padding: 0 11px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #ead6ae;
+    color: #32475a;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 700;
   }
 
   .search-wrap {
@@ -299,23 +298,22 @@
 
   .search-wrap input {
     width: 100%;
-    padding: 16px 18px 16px 48px;
-    border: 1px solid rgba(188,204,220,0.9);
-    border-radius: 18px;
+    min-height: 54px;
+    padding: 16px 82px 16px 48px;
+    border: 2px solid #b9c9d5;
+    border-radius: 8px;
     font-family: 'DM Sans', sans-serif;
     font-size: 16px;
-    background: var(--surface-strong);
-    backdrop-filter: blur(16px);
+    background: #ffffff;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
     color: var(--text);
-    box-shadow: var(--shadow-soft);
+    box-shadow: none;
   }
 
   .search-wrap input:focus {
-    border-color: rgba(46,134,193,0.8);
-    box-shadow: 0 20px 42px rgba(46,134,193,0.14);
-    transform: translateY(-1px);
+    border-color: #236d9c;
+    box-shadow: 0 0 0 4px rgba(35,109,156,0.14);
   }
 
   .search-icon {
@@ -335,10 +333,10 @@
     border: none;
     background: transparent;
     color: #7b8898;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
-    padding: 6px 8px;
-    border-radius: 999px;
+    padding: 7px 10px;
+    border-radius: 8px;
     cursor: pointer;
     display: none;
   }
@@ -363,29 +361,28 @@
 
   .filter-btn {
     border: 1px solid #c8d5e1;
-    background: rgba(255,255,255,0.82);
-    backdrop-filter: blur(10px);
-    border-radius: 999px;
-    padding: 9px 16px;
+    background: #ffffff;
+    border-radius: 8px;
+    min-height: 42px;
+    padding: 0 14px;
     display: inline-flex;
     align-items: center;
     gap: 8px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s;
     white-space: nowrap;
-    color: #425466;
-    box-shadow: 0 6px 14px rgba(15,23,42,0.05);
-    letter-spacing: 0.01em;
+    color: #24394f;
+    box-shadow: none;
+    letter-spacing: 0;
     user-select: none;
   }
 
   .filter-btn:hover {
     border-color: #aac1d8;
     color: var(--ocean);
-    box-shadow: 0 10px 20px rgba(46,134,193,0.1);
     transform: translateY(-1px);
   }
 
@@ -395,16 +392,15 @@
   }
 
   .filter-btn.active {
-    background: linear-gradient(135deg, #1d5c84, #184d6e);
-    border-color: #174765;
+    background: #17405f;
+    border-color: #17405f;
     color: white;
-    box-shadow: 0 12px 22px rgba(26,82,118,0.2);
+    box-shadow: 0 6px 14px rgba(23,64,95,0.18);
   }
 
   .filter-btn.active:hover {
-    background: linear-gradient(135deg, #226897, #1d5c84);
-    border-color: #1d5c84;
-    box-shadow: 0 14px 24px rgba(46,134,193,0.22);
+    background: #225b82;
+    border-color: #225b82;
     color: white;
   }
 
@@ -416,8 +412,8 @@
     height: 20px;
     padding: 0 6px;
     border-radius: 999px;
-    background: rgba(227,235,243,0.95);
-    color: #5a6f84;
+    background: #e7edf2;
+    color: #34495e;
     font-size: 11px;
     font-weight: 700;
     line-height: 1;
@@ -455,7 +451,8 @@
     flex: 1;
     font-size: 13px;
     letter-spacing: 0.01em;
-    color: #627286;
+    color: #354b60;
+    font-weight: 700;
   }
 
   .results-note {
@@ -464,12 +461,12 @@
     margin: 4px auto 18px;
     padding: 7px 12px;
     font-size: 12px;
-    color: #728194;
+    color: #526171;
     text-align: center;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.66);
-    border: 1px solid rgba(204,216,228,0.9);
-    box-shadow: 0 8px 18px rgba(15,23,42,0.04);
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #d7e0e7;
+    box-shadow: none;
   }
 
   .results-context {
@@ -495,13 +492,13 @@
     gap: 6px;
     min-height: 30px;
     padding: 0 11px;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.8);
+    border-radius: 8px;
+    background: #ffffff;
     border: 1px solid #d9e3ed;
-    color: #5c6f84;
+    color: #40576d;
     font-size: 12px;
     font-weight: 500;
-    box-shadow: 0 4px 12px rgba(15,23,42,0.04);
+    box-shadow: none;
   }
 
   .results-pill strong {
@@ -561,7 +558,7 @@
     margin: 0 auto;
     padding: 0 16px 60px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
     transition: opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease;
   }
@@ -574,10 +571,10 @@
 
   /* ── CARD ── */
   .card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(251,253,255,0.96));
-    border-radius: 22px;
+    background: #ffffff;
+    border-radius: 8px;
     border: 1px solid #d5e0ea;
-    padding: 22px 20px 18px;
+    padding: 18px;
     transition: box-shadow 0.2s, transform 0.2s;
     animation: fadeUp 0.35s ease both;
     display: flex;
@@ -585,17 +582,12 @@
     gap: 14px;
     box-shadow: var(--shadow-card);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     will-change: transform, box-shadow;
   }
 
   .card::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto;
-    height: 72px;
-    background: linear-gradient(180deg, rgba(236,243,249,0.88), rgba(236,243,249,0));
-    pointer-events: none;
+    display: none;
   }
 
   .card:hover {
@@ -613,20 +605,20 @@
     align-items: flex-start;
     gap: 13px;
     padding-bottom: 10px;
-    border-bottom: 1px solid rgba(227,235,243,0.92);
+    border-bottom: 1px solid #e1e8ee;
     position: relative;
     z-index: 1;
   }
 
   .card-icon {
-    width: 46px; height: 46px;
-    border-radius: 14px;
+    width: 44px; height: 44px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
     flex-shrink: 0;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 10px 18px rgba(15,23,42,0.06);
+    box-shadow: none;
     margin-top: 1px;
   }
 
@@ -644,12 +636,12 @@
 
   .card-name {
     font-family: 'Newsreader', serif;
-    font-size: 1.18rem;
+    font-size: 1.22rem;
     font-weight: 600;
     line-height: 1.14;
-    letter-spacing: -0.015em;
-    color: var(--ocean);
-    max-width: 16ch;
+    letter-spacing: 0;
+    color: #17344f;
+    max-width: none;
     text-wrap: balance;
   }
 
@@ -658,14 +650,14 @@
     align-items: center;
     margin-top: 9px;
     padding: 5px 9px 5px 7px;
-    border-radius: 999px;
-    background: rgba(247,250,252,0.95);
+    border-radius: 8px;
+    background: #f7fafc;
     border: 1px solid #e7edf3;
-    font-size: 10px;
+    font-size: 10.5px;
     font-weight: 500;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: #7d8b9e;
+    color: #4f6071;
   }
 
   .card-tags {
@@ -682,14 +674,14 @@
     align-items: center;
     min-height: 26px;
     padding: 0 10px;
-    border-radius: 999px;
+    border-radius: 8px;
     border: 1px solid #dfe8f0;
-    background: rgba(248, 251, 254, 0.96);
-    color: #5c7388;
+    background: #f7fafc;
+    color: #40576d;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.01em;
-    box-shadow: 0 4px 10px rgba(15,23,42,0.04);
+    box-shadow: none;
   }
 
   .cat-dot {
@@ -707,9 +699,9 @@
   .cat-Other   { background: #6b7280; }
 
   .card-desc {
-    font-size: 14px;
-    line-height: 1.72;
-    color: #314255;
+    font-size: 15px;
+    line-height: 1.58;
+    color: #263748;
     position: relative;
     z-index: 1;
   }
@@ -733,9 +725,9 @@
     margin-bottom: 8px;
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: #7a8ba0;
+    color: #526171;
   }
 
   .card-details {
@@ -744,11 +736,11 @@
     gap: 8px;
     margin-top: 0;
     padding: 13px 12px 11px;
-    border-radius: 16px;
-    background: linear-gradient(180deg, rgba(248,250,252,0.98), rgba(244,248,251,0.98));
+    border-radius: 8px;
+    background: #f7fafc;
     border: 1px solid #e3ebf3;
     font-size: 13px;
-    color: #6a7789;
+    color: #40576d;
     position: relative;
     z-index: 1;
   }
@@ -774,13 +766,13 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #8a98aa;
+    color: #5b6c7d;
     margin-bottom: 2px;
   }
 
   .card-detail-text {
     display: block;
-    color: #56677b;
+    color: #263748;
   }
 
   .card-detail-text.compact {
@@ -812,7 +804,7 @@
   .card-actions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    gap: 10px;
     margin-top: auto;
     padding-top: 6px;
     align-items: stretch;
@@ -828,10 +820,10 @@
 
   .btn-call, .btn-web {
     border: none;
-    border-radius: 13px;
+    border-radius: 8px;
     padding: 10px 14px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 12.5px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
@@ -840,14 +832,14 @@
     justify-content: center;
     gap: 0;
     transition: opacity 0.15s, transform 0.15s;
-    min-height: 42px;
+    min-height: 50px;
     text-align: center;
   }
 
   .btn-call {
-    background: linear-gradient(180deg, #daf3e5, #cfeeda);
-    color: #155724;
-    box-shadow: 0 2px 0 #b7dfc6, 0 8px 16px rgba(21,87,36,0.08);
+    background: #176b3a;
+    color: #ffffff;
+    box-shadow: 0 3px 0 #0f512b;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -861,7 +853,7 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(21,87,36,0.72);
+    color: rgba(255,255,255,0.8);
     line-height: 1;
   }
 
@@ -872,14 +864,14 @@
     font-weight: 700;
     letter-spacing: -0.01em;
     line-height: 1.05;
-    color: #155724;
+    color: #ffffff;
     white-space: nowrap;
   }
 
   .btn-web  {
-    background: linear-gradient(180deg, #f2f6ff, #e8efff);
-    color: #3157a1;
-    box-shadow: 0 2px 0 #cad8fb, 0 8px 16px rgba(41,79,150,0.08);
+    background: #17405f;
+    color: #ffffff;
+    box-shadow: 0 3px 0 #102e45;
   }
 
   .btn-call:hover, .btn-web:hover {
@@ -951,12 +943,12 @@
   .btn-share.top-share-btn {
     min-height: 34px;
     padding: 0 12px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     border: 1px solid #d5e0ea;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.86);
-    color: #60758a;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #40576d;
     transition: background 0.15s, border-color 0.15s, transform 0.15s, color 0.15s;
     box-shadow: 0 6px 14px rgba(15,23,42,0.05);
   }
@@ -973,7 +965,7 @@
     bottom: calc(100% + 8px);
     min-width: 144px;
     padding: 7px;
-    border-radius: 12px;
+    border-radius: 8px;
     border: 1px solid #d7e1ea;
     background: rgba(255,255,255,0.98);
     box-shadow: 0 18px 36px rgba(15,23,42,0.12), 0 6px 12px rgba(15,23,42,0.06);
@@ -995,7 +987,7 @@
     align-items: center;
     justify-content: flex-start;
     padding: 8px 10px;
-    border-radius: 8px;
+    border-radius: 6px;
     font-family: 'DM Sans', sans-serif;
     font-size: 12px;
     font-weight: 500;
@@ -1062,7 +1054,7 @@
     border: 1px solid #c8d5e1;
     background: rgba(255,255,255,0.9);
     color: #33506b;
-    border-radius: 999px;
+    border-radius: 8px;
     padding: 10px 16px;
     font-family: 'DM Sans', sans-serif;
     font-size: 12px;
@@ -1086,23 +1078,14 @@
     position: relative;
     overflow: hidden;
     padding: 22px 22px 20px;
-    border-radius: 26px;
+    border-radius: 8px;
     border: 1px solid rgba(191, 209, 224, 0.78);
-    background:
-      radial-gradient(circle at top right, rgba(169, 213, 239, 0.28), transparent 32%),
-      linear-gradient(180deg, rgba(255,255,255,0.98), rgba(247,251,255,0.94));
-    box-shadow: 0 20px 42px rgba(15,23,42,0.08), 0 8px 18px rgba(15,23,42,0.05);
+    background: #fff2d8;
+    box-shadow: var(--shadow-soft);
   }
 
   .share-shell::after {
-    content: "";
-    position: absolute;
-    inset: auto -48px -68px auto;
-    width: 168px;
-    height: 168px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(191, 223, 244, 0.45), rgba(191, 223, 244, 0));
-    pointer-events: none;
+    display: none;
   }
 
   .share-back {
@@ -1158,7 +1141,7 @@
     align-items: center;
     min-height: 30px;
     padding: 0 12px;
-    border-radius: 999px;
+    border-radius: 8px;
     border: 1px solid rgba(199, 214, 227, 0.9);
     background: rgba(255,255,255,0.82);
     color: #5b7287;
@@ -1207,8 +1190,8 @@
 
   /* ── FOOTER ── */
   footer {
-    background: linear-gradient(180deg, #1b4e70, #153d59);
-    color: rgba(255,255,255,0.76);
+    background: #17344f;
+    color: rgba(255,255,255,0.86);
     text-align: center;
     padding: 28px 16px;
     font-size: 13px;
@@ -1224,7 +1207,7 @@
     max-width: 900px;
     margin: 18px auto 0;
     padding: 12px 16px;
-    border-radius: 0 10px 10px 0;
+    border-radius: 0 8px 8px 0;
     font-size: 13px;
     color: #78350f;
     display: none;
@@ -1253,18 +1236,22 @@
     min-height: auto;
   }
 
-  @media (max-width: 750px) {
-    .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  @media (max-width: 760px) {
+    .grid { grid-template-columns: 1fr; gap: 14px; }
   }
 
   @media (max-width: 640px) {
     body {
-      background:
-        linear-gradient(180deg, #f7fbfe 0%, #eef4f8 28%, #edf2f7 100%);
+      background: linear-gradient(180deg, #fffaf1 0%, #f8fafc 38%, #edf3f7 100%);
+    }
+
+    header {
+      position: static;
+      box-shadow: none;
     }
 
     .header-inner {
-      padding: 14px 14px 12px;
+      padding: 12px 14px 12px;
     }
 
     .header-top {
@@ -1273,14 +1260,14 @@
     }
 
     .header-logo {
-      height: 34px;
+      height: 32px;
       margin-bottom: 4px;
     }
 
     h1 {
-      font-size: 1.16rem;
-      line-height: 1.02;
-      max-width: 10ch;
+      font-size: 1.18rem;
+      line-height: 1.08;
+      max-width: 13ch;
     }
 
     h1 .sub {
@@ -1302,13 +1289,15 @@
     }
 
     .intro-panel {
-      display: none;
+      display: block;
+      margin-top: 12px;
+      padding: 0 12px;
     }
 
     .intro-card {
       padding: 15px 14px 13px;
-      border-radius: 18px;
-      box-shadow: 0 12px 30px rgba(26,82,118,0.08);
+      border-radius: 8px;
+      box-shadow: none;
     }
 
     .intro-eyebrow {
@@ -1318,30 +1307,29 @@
     }
 
     .intro-title {
-      font-size: 1.12rem;
-      line-height: 1.14;
+      font-size: 1.32rem;
+      line-height: 1.12;
     }
 
     .intro-copy {
       margin-top: 7px;
-      font-size: 13px;
+      font-size: 14px;
       line-height: 1.48;
     }
 
     .intro-points {
-      gap: 7px;
-      margin-top: 11px;
+      display: none;
     }
 
     .intro-point {
-      min-height: 28px;
+      min-height: 32px;
       padding: 0 10px;
       font-size: 10px;
       font-weight: 600;
     }
 
     .controls {
-      margin-top: 10px;
+      margin-top: 12px;
       padding: 0 12px;
       position: relative;
       top: auto;
@@ -1351,12 +1339,11 @@
     .finder-card {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      padding: 0;
-      border-radius: 0;
-      background: transparent;
-      border: none;
-      backdrop-filter: none;
+      gap: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid #d7e0e7;
       box-shadow: none;
     }
 
@@ -1384,22 +1371,23 @@
 
     .finder-label {
       margin-bottom: 6px;
-      font-size: 10px;
-      letter-spacing: 0.12em;
+      font-size: 11px;
+      letter-spacing: 0.07em;
     }
 
     .finder-hint {
       margin-bottom: 7px;
-      font-size: 11px;
+      font-size: 13px;
       line-height: 1.35;
     }
 
     .search-wrap input {
+      min-height: 54px;
       padding: 15px 74px 15px 42px;
-      border-radius: 16px;
+      border-radius: 8px;
       font-size: 16px;
-      box-shadow: 0 10px 22px rgba(26,82,118,0.08);
-      background: rgba(255,255,255,0.96);
+      box-shadow: none;
+      background: #ffffff;
     }
 
     .search-icon {
@@ -1412,7 +1400,7 @@
       padding: 7px 9px;
       font-size: 11px;
       font-weight: 700;
-      background: rgba(240,245,250,0.95);
+      background: #eef3f7;
       border: 1px solid #d7e2ec;
       color: #4f6882;
       min-height: 30px;
@@ -1441,15 +1429,15 @@
     }
 
     .shortcut-chip {
-      min-height: 38px;
+      min-height: 42px;
       padding: 0 12px;
-      font-size: 11px;
+      font-size: 12px;
     }
 
     .filter-btn {
-      min-height: 38px;
+      min-height: 42px;
       padding: 0 14px;
-      font-size: 11px;
+      font-size: 12px;
     }
 
     .results-row {
@@ -1470,9 +1458,9 @@
       max-width: calc(100% - 24px);
       margin: 2px 12px 12px;
       padding: 9px 11px;
-      border-radius: 14px;
+      border-radius: 8px;
       text-align: left;
-      font-size: 11px;
+      font-size: 12px;
       line-height: 1.42;
       box-shadow: none;
     }
@@ -1507,7 +1495,7 @@
 
     .btn-share.top-share-btn {
       width: 100%;
-      min-height: 40px;
+      min-height: 44px;
       justify-content: center;
       font-size: 11px;
     }
@@ -1519,10 +1507,10 @@
     }
 
     .card {
-      border-radius: 22px;
-      padding: 17px 14px 15px;
+      border-radius: 8px;
+      padding: 16px 14px 14px;
       gap: 12px;
-      box-shadow: 0 10px 22px rgba(26,82,118,0.07), 0 2px 8px rgba(26,82,118,0.03);
+      box-shadow: 0 6px 16px rgba(23,64,95,0.07);
     }
 
     .card::before {
@@ -1537,14 +1525,14 @@
     .card-icon {
       width: 42px;
       height: 42px;
-      border-radius: 13px;
+      border-radius: 8px;
       font-size: 18px;
     }
 
     .card-name {
       max-width: none;
-      font-size: 1.07rem;
-      line-height: 1.12;
+      font-size: 1.12rem;
+      line-height: 1.16;
       text-wrap: pretty;
     }
 
@@ -1569,8 +1557,8 @@
     }
 
     .card-desc {
-      font-size: 13px;
-      line-height: 1.58;
+      font-size: 14px;
+      line-height: 1.56;
     }
 
     .card-details {
@@ -1583,13 +1571,18 @@
       grid-template-columns: 1fr;
       gap: 9px;
       padding-top: 4px;
+      order: 3;
+    }
+
+    .card-details {
+      order: 4;
     }
 
     .btn-call,
     .btn-web {
-      min-height: 46px;
-      border-radius: 14px;
-      font-size: 12px;
+      min-height: 52px;
+      border-radius: 8px;
+      font-size: 14px;
     }
 
     .btn-call {
@@ -1610,6 +1603,7 @@
       align-items: center;
       gap: 10px;
       padding-top: 12px;
+      order: 5;
     }
 
     .card-footer .share-wrap,
@@ -1644,7 +1638,7 @@
       min-width: 148px;
       bottom: calc(100% + 6px);
       padding: 6px;
-      border-radius: 14px;
+      border-radius: 8px;
     }
 
     .share-wrap.align-right .share-menu {
@@ -1660,18 +1654,18 @@
     .header-logo { height: 30px; }
     .lang-toggle button { min-height: 30px; padding: 0 10px; font-size: 11px; }
     .controls { padding: 0 10px; }
-    .share-shell { padding: 18px 18px 17px; border-radius: 22px; }
+    .share-shell { padding: 18px 18px 17px; border-radius: 8px; }
     .share-heading { font-size: 1.45rem; }
     .share-subheading { font-size: 13px; }
     .share-meta-pill { min-height: 28px; padding: 0 10px; font-size: 10px; }
-    .search-wrap input { padding: 14px 68px 14px 39px; border-radius: 15px; }
+    .search-wrap input { padding: 14px 68px 14px 39px; border-radius: 8px; }
     .shortcut-chip,
     .filter-btn { min-height: 36px; }
     .results-row { padding: 0 10px; margin-top: 14px; }
     .results-note { margin: 2px 10px 11px; }
     .results-context { padding: 0 10px; }
     .grid { padding: 0 10px calc(68px + env(safe-area-inset-bottom)); gap: 11px; }
-    .card { padding: 16px 13px 14px; border-radius: 19px; }
+    .card { padding: 16px 13px 14px; border-radius: 8px; }
     .card-name { font-size: 1rem; }
     .card-details { padding: 10px 10px 9px; }
     .btn-call, .btn-web { min-height: 44px; }
@@ -1689,7 +1683,7 @@
         <img src="ccsm_logo_web.png" alt="Community Corporation of Santa Monica" class="header-logo">
         <h1 id="site-title">
           Community Resources
-          <span class="sub" id="site-subtitle">Help with food, housing, health, and family needs</span>
+          <span class="sub" id="site-subtitle">Find local help from your phone</span>
         </h1>
       </div>
       <div class="lang-toggle">
@@ -1707,12 +1701,12 @@
 <div class="intro-panel" id="intro-panel">
   <div class="intro-card">
     <div class="intro-eyebrow" id="intro-eyebrow">Santa Monica resource guide</div>
-    <div class="intro-title" id="intro-title">Find the right support with clarity and confidence.</div>
-    <div class="intro-copy" id="intro-copy">Search in plain language, explore by type of help, and share trusted local resources with the people who need them.</div>
+    <div class="intro-title" id="intro-title">What kind of help do you need today?</div>
+    <div class="intro-copy" id="intro-copy">Choose a need, search by keyword, then call or visit a provider directly for current details.</div>
     <div class="intro-points">
-      <div class="intro-point" id="intro-point-search">Search by need</div>
-      <div class="intro-point" id="intro-point-browse">Browse support options</div>
-      <div class="intro-point" id="intro-point-share">Share what helps</div>
+      <div class="intro-point" id="intro-point-search">Food, housing, health</div>
+      <div class="intro-point" id="intro-point-browse">Phone-friendly listings</div>
+      <div class="intro-point" id="intro-point-share">Easy to share</div>
     </div>
   </div>
 </div>
@@ -1721,12 +1715,12 @@
   <div class="finder-card">
     <div class="finder-section">
       <div class="finder-label" id="finder-label-shortcuts">Start with a need</div>
-      <div class="finder-hint" id="finder-hint-shortcuts">Choose the kind of support you need most right now.</div>
+      <div class="finder-hint" id="finder-hint-shortcuts">Tap the closest match. You can change it anytime.</div>
       <div class="shortcut-row" id="shortcut-row"></div>
     </div>
     <div class="finder-section">
       <label class="finder-label" for="search" id="finder-label-search">Search the directory</label>
-      <div class="finder-hint" id="finder-hint-search">Try food, housing, youth, legal help, provider names, phone numbers, or addresses.</div>
+      <div class="finder-hint" id="finder-hint-search">Try food, rent, legal help, youth, a provider name, or an address.</div>
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
         <input type="text" id="search" placeholder="Search resources..." oninput="handleSearchInput()" autocomplete="off">
@@ -1777,15 +1771,15 @@ const T = {
     narrowingTo: (visible, total) => `${visible} of ${total} resources`,
     resultsNote: 'Always call or contact providers directly for the most current information.',
     introEyebrow: 'Santa Monica resource guide',
-    introTitle: 'Find the right support with clarity and confidence.',
-    introCopy: 'Search in plain language, explore by type of help, and share trusted local resources with the people who need them.',
-    introPointSearch: 'Search by need',
-    introPointBrowse: 'Browse support options',
-    introPointShare: 'Share what helps',
+    introTitle: 'What kind of help do you need today?',
+    introCopy: 'Choose a need, search by keyword, then call or visit a provider directly for current details.',
+    introPointSearch: 'Food, housing, health',
+    introPointBrowse: 'Phone-friendly listings',
+    introPointShare: 'Easy to share',
     finderLabelShortcuts: 'Start with a need',
-    finderHintShortcuts: 'Choose the kind of support you need most right now.',
+    finderHintShortcuts: 'Tap the closest match. You can change it anytime.',
     finderLabelSearch: 'Search the directory',
-    finderHintSearch: 'Try food, housing, youth, legal help, provider names, phone numbers, or addresses.',
+    finderHintSearch: 'Try food, rent, legal help, youth, a provider name, or an address.',
     finderLabelFilters: 'Explore all support areas',
     activeCategory: 'Need',
     activeSearch: 'Search',
@@ -1802,13 +1796,13 @@ const T = {
     showMore: 'Read more',
     showLess: 'Show less',
     call: 'Call',
-    website: 'Website',
+    website: 'Visit website',
     hours: 'Hours',
     address: 'Address',
     notes: 'Notes',
     loading: 'Loading resources...',
     siteTitle: 'Community Resources',
-    siteSub: 'Help with food, housing, health, and family needs',
+    siteSub: 'Find local help from your phone',
     demoNotice: 'Demo mode: Showing sample data. Connect your Google Sheet by updating SHEET_URL.',
     footerTitle: 'Community Corporation of Santa Monica · Resident Services',
     footerContact: 'Need help using this directory? Call',
@@ -1848,15 +1842,15 @@ Thank you for keeping this resource up to date!`,
     narrowingTo: (visible, total) => `${visible} de ${total} recursos`,
     resultsNote: 'Siempre llame o contacte directamente a los proveedores para confirmar la información más actual.',
     introEyebrow: 'Guía de recursos de Santa Mónica',
-    introTitle: 'Encuentre el apoyo adecuado con claridad y confianza.',
-    introCopy: 'Busque en lenguaje sencillo, explore por tipo de ayuda y comparta recursos locales confiables con quienes los necesiten.',
-    introPointSearch: 'Buscar por necesidad',
-    introPointBrowse: 'Explorar opciones de apoyo',
-    introPointShare: 'Compartir lo útil',
+    introTitle: '¿Qué tipo de ayuda necesita hoy?',
+    introCopy: 'Elija una necesidad, busque por palabra clave y luego llame o visite el sitio web del proveedor para confirmar detalles.',
+    introPointSearch: 'Comida, vivienda, salud',
+    introPointBrowse: 'Listados para teléfono',
+    introPointShare: 'Fácil de compartir',
     finderLabelShortcuts: 'Empiece con una necesidad',
-    finderHintShortcuts: 'Elija el tipo de apoyo que más necesita en este momento.',
+    finderHintShortcuts: 'Toque la opción más cercana. Puede cambiarla cuando quiera.',
     finderLabelSearch: 'Buscar en el directorio',
-    finderHintSearch: 'Pruebe comida, vivienda, juventud, ayuda legal, nombres de proveedores, teléfonos o direcciones.',
+    finderHintSearch: 'Pruebe comida, renta, ayuda legal, juventud, nombre de proveedor o dirección.',
     finderLabelFilters: 'Explorar todas las áreas de apoyo',
     activeCategory: 'Necesidad',
     activeSearch: 'Búsqueda',
@@ -1873,13 +1867,13 @@ Thank you for keeping this resource up to date!`,
     showMore: 'Leer más',
     showLess: 'Mostrar menos',
     call: 'Llamar',
-    website: 'Sitio web',
+    website: 'Visitar sitio web',
     hours: 'Horario',
     address: 'Dirección',
     notes: 'Notas',
     loading: 'Cargando recursos...',
     siteTitle: 'Recursos Comunitarios',
-    siteSub: 'Ayuda con comida, vivienda, salud y necesidades familiares',
+    siteSub: 'Encuentre ayuda local desde su teléfono',
     demoNotice: 'Modo de demostración: Mostrando datos de ejemplo. Conecte su hoja de Google actualizando SHEET_URL.',
     footerTitle: 'Community Corporation of Santa Monica · Servicios para Residentes',
     footerContact: '¿Necesita ayuda para usar este directorio? Llame al',
