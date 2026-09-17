@@ -18,15 +18,8 @@ const T = {
     showing: n => `Showing ${n} resource${n===1?'':'s'}`,
     bestMatches: 'Best matches first',
     narrowingTo: (visible, total) => `${visible} of ${total} resources`,
-    resultsNote: 'Always call or contact providers directly for the most current information.',
-    introEyebrow: 'Santa Monica resource guide',
     introTitle: 'What kind of help do you need today?',
-    introCopy: 'Choose a need, search by keyword, then call or visit a provider directly for current details.',
-    introPointSearch: 'Food, housing, health',
-    introPointBrowse: 'Phone-friendly listings',
-    introPointShare: 'Easy to share',
-    finderLabelShortcuts: 'Start with a need',
-    finderHintShortcuts: 'Tap the closest match. You can change it anytime.',
+    introCopy: 'Search by keyword or choose a support area, then call or visit a provider directly for current details.',
     finderLabelSearch: 'Search the directory',
     finderHintSearch: 'Try food, rent, legal help, youth, a provider name, or an address.',
     finderLabelFilters: 'Explore all support areas',
@@ -96,15 +89,8 @@ Thank you for keeping this resource up to date!`,
     showing: n => `Mostrando ${n} recurso${n===1?'':'s'}`,
     bestMatches: 'Mejores resultados primero',
     narrowingTo: (visible, total) => `${visible} de ${total} recursos`,
-    resultsNote: 'Siempre llame o contacte directamente a los proveedores para confirmar la información más actual.',
-    introEyebrow: 'Guía de recursos de Santa Mónica',
     introTitle: '¿Qué tipo de ayuda necesita hoy?',
-    introCopy: 'Elija una necesidad, busque por palabra clave y luego llame o visite el sitio web del proveedor para confirmar detalles.',
-    introPointSearch: 'Comida, vivienda, salud',
-    introPointBrowse: 'Listados para teléfono',
-    introPointShare: 'Fácil de compartir',
-    finderLabelShortcuts: 'Empiece con una necesidad',
-    finderHintShortcuts: 'Toque la opción más cercana. Puede cambiarla cuando quiera.',
+    introCopy: 'Busque por palabra clave o elija un área de apoyo, y luego llame o visite el sitio web del proveedor para confirmar detalles.',
     finderLabelSearch: 'Buscar en el directorio',
     finderHintSearch: 'Pruebe comida, renta, ayuda legal, juventud, nombre de proveedor o dirección.',
     finderLabelFilters: 'Explorar todas las áreas de apoyo',
@@ -209,24 +195,6 @@ const CAT_LABELS = {
   },
 };
 
-const QUICK_LABELS = {
-  en: {
-    Food: 'I need food',
-    Housing: 'I need housing help',
-    Mental: 'I need mental health support',
-    Benefits: 'I need benefits help',
-    Legal: 'I need legal help',
-    Youth: 'I need youth support',
-  },
-  es: {
-    Food: 'Necesito comida',
-    Housing: 'Necesito ayuda con vivienda',
-    Mental: 'Necesito apoyo de salud mental',
-    Benefits: 'Necesito ayuda con beneficios',
-    Legal: 'Necesito ayuda legal',
-    Youth: 'Necesito apoyo para jóvenes',
-  },
-};
 
 const FIELD_ALIASES = {
   name: ['name', 'resource name', 'program name', 'organization name', 'org name'],
@@ -278,8 +246,6 @@ const CATEGORY_ALIASES = {
   health: 'Medical',
   'domestic violence': 'Domestic Violence',
 };
-
-const QUICK_CATEGORIES = ['Food', 'Housing', 'Mental', 'Benefits', 'Legal', 'Youth'];
 
 function getReportHref(resource) {
   const name = getLocalizedValue(resource, 'name');
@@ -623,19 +589,6 @@ function showMoreResults() {
   renderCards();
 }
 
-function renderShortcuts() {
-  const container = document.getElementById('shortcut-row');
-  if (!container) return;
-
-  const available = QUICK_CATEGORIES.filter(category => resources.some(resource => normalizeCategory(resource) === category));
-  container.innerHTML = available.map(category => `
-    <button class="shortcut-chip ${activeCategory === category ? 'active' : ''}" type="button" data-category="${escapeAttr(category)}" aria-pressed="${activeCategory === category ? 'true' : 'false'}">
-      <span>${escapeHTML((QUICK_LABELS[lang] && QUICK_LABELS[lang][category]) || (CAT_LABELS[lang][category] || category))}</span>
-      <span class="chip-count">${resources.filter(resource => normalizeCategory(resource) === category).length}</span>
-    </button>
-  `).join('');
-}
-
 function renderResultsContext(query, visibleCount) {
   const container = document.getElementById('results-context');
   if (!container) return;
@@ -815,7 +768,6 @@ function renderLoadError() {
   document.getElementById('results-info').textContent = '';
   document.getElementById('results-context').innerHTML = '';
   document.getElementById('category-share').innerHTML = '';
-  document.getElementById('shortcut-row').innerHTML = '';
   document.getElementById('filters').innerHTML = '';
   updateSearchClearButton();
   updateStatusNotice(true);
@@ -846,7 +798,7 @@ async function loadData() {
     if (!resources.length) throw new Error('No resources found in sheet');
     hasLoadError = false;
     updateStatusNotice(false);
-    buildFilters(); renderShortcuts(); renderCards();
+    buildFilters(); renderCards();
   } catch (e) {
     renderLoadError();
   }
@@ -1132,7 +1084,6 @@ function renderCards() {
   document.getElementById('results-info').textContent = query
     ? `${T[lang].showing(filtered.length)} · ${T[lang].bestMatches}`
     : T[lang].showing(filtered.length);
-  document.getElementById('results-note').textContent = T[lang].resultsNote;
   renderResultsContext(rawQuery, filtered.length);
   renderCategoryShare();
   updateSearchClearButton();
@@ -1172,19 +1123,12 @@ function setLang(l) {
   document.getElementById('clear-search').textContent = T[l].clearSearch;
   document.getElementById('site-title').childNodes[0].textContent = T[l].siteTitle + ' ';
   document.getElementById('site-subtitle').textContent = T[l].siteSub;
-  document.getElementById('intro-eyebrow').textContent = T[l].introEyebrow;
   document.getElementById('intro-title').textContent = T[l].introTitle;
   document.getElementById('intro-copy').textContent = T[l].introCopy;
-  document.getElementById('intro-point-search').textContent = T[l].introPointSearch;
-  document.getElementById('intro-point-browse').textContent = T[l].introPointBrowse;
-  document.getElementById('intro-point-share').textContent = T[l].introPointShare;
-  document.getElementById('finder-label-shortcuts').textContent = T[l].finderLabelShortcuts;
-  document.getElementById('finder-hint-shortcuts').textContent = T[l].finderHintShortcuts;
   document.getElementById('finder-label-search').textContent = T[l].finderLabelSearch;
   document.getElementById('finder-hint-search').textContent = T[l].finderHintSearch;
   document.getElementById('finder-label-filters').textContent = T[l].finderLabelFilters;
   updateStatusNotice(document.getElementById('status-notice').classList.contains('show'));
-  document.getElementById('results-note').textContent = T[l].resultsNote;
   document.getElementById('footer-title').textContent = T[l].footerTitle;
   document.getElementById('footer-contact').innerHTML = `${escapeHTML(T[l].footerContact)} <a href="tel:+13103950220">(310) 395-0220</a>`;
   document.getElementById('footer-note').textContent = T[l].footerNote;
@@ -1192,7 +1136,7 @@ function setLang(l) {
     renderLoadError();
     return;
   }
-  buildFilters(); renderShortcuts(); renderCards();
+  buildFilters(); renderCards();
 }
 
 if (sharedCategoryKey) {

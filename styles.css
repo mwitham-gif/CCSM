@@ -164,7 +164,7 @@
   /* ── SEARCH + FILTER ── */
   .controls {
     max-width: 900px;
-    margin: 18px auto 0;
+    margin: 14px auto 0;
     padding: 0 16px;
     position: relative;
   }
@@ -178,7 +178,20 @@
   }
 
   .finder-section + .finder-section {
-    margin-top: 14px;
+    margin-top: 12px;
+  }
+
+  #finder-label-search {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
 
   .finder-label {
@@ -199,46 +212,9 @@
     line-height: 1.45;
   }
 
-  .shortcut-row {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .shortcut-chip {
-    border: 1px solid #c9d6df;
-    background: #f7fafc;
-    color: #24394f;
-    border-radius: 8px;
-    min-height: 44px;
-    padding: 0 13px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: none;
-    transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease, background-color 0.18s ease;
-  }
-
-  .shortcut-chip:hover {
-    transform: translateY(-1px);
-    border-color: #b7cade;
-    color: #1a5276;
-  }
-
-  .shortcut-chip.active {
-    border-color: #17405f;
-    background: #17405f;
-    color: #ffffff;
-    box-shadow: 0 6px 14px rgba(23,64,95,0.18);
-  }
-
   .intro-panel {
     max-width: 900px;
-    margin: 18px auto 0;
+    margin: 14px auto 0;
     padding: 0 16px;
   }
 
@@ -248,15 +224,6 @@
     border-radius: 8px;
     padding: 18px 18px 16px;
     box-shadow: var(--shadow-soft);
-  }
-
-  .intro-eyebrow {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: #80521d;
-    margin-bottom: 8px;
   }
 
   .intro-title {
@@ -273,27 +240,6 @@
     line-height: 1.55;
     color: #38495a;
     max-width: 62ch;
-  }
-
-  .intro-points {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 14px;
-  }
-
-  .intro-point {
-    display: inline-flex;
-    align-items: center;
-    gap: 0;
-    min-height: 34px;
-    padding: 0 11px;
-    border-radius: 8px;
-    background: #ffffff;
-    border: 1px solid #ead6ae;
-    color: #32475a;
-    font-size: 12px;
-    font-weight: 700;
   }
 
   .search-wrap {
@@ -425,8 +371,7 @@
     transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
   }
 
-  .filter-btn.active .chip-count,
-  .shortcut-chip.active .chip-count {
+  .filter-btn.active .chip-count {
     background: rgba(255,255,255,0.18);
     color: #ffffff;
   }
@@ -458,20 +403,6 @@
     letter-spacing: 0.01em;
     color: #354b60;
     font-weight: 700;
-  }
-
-  .results-note {
-    width: fit-content;
-    max-width: calc(100% - 32px);
-    margin: 4px auto 18px;
-    padding: 7px 12px;
-    font-size: 12px;
-    color: #526171;
-    text-align: center;
-    border-radius: 8px;
-    background: #ffffff;
-    border: 1px solid #d7e0e7;
-    box-shadow: none;
   }
 
   .results-context {
@@ -1250,7 +1181,6 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   @media (prefers-reduced-motion: reduce) {
-    .shortcut-chip,
     .filter-btn,
     .chip-count,
     .toast,
@@ -1304,7 +1234,6 @@
   body.share-mode .intro-panel,
   body.share-mode .results-row,
   body.share-mode .results-info,
-  body.share-mode .results-note,
   body.share-mode .results-context,
   body.share-mode footer {
     display: none;
@@ -1406,15 +1335,10 @@
       backdrop-filter: none;
     }
 
-    .finder-section:nth-child(1) {
-      display: none;
-    }
-
     .finder-section:nth-child(3) {
       order: 3;
     }
 
-    #finder-label-search,
     #finder-hint-search,
     #finder-label-filters {
       position: absolute;
@@ -1454,7 +1378,6 @@
       min-height: 30px;
     }
 
-    .shortcut-row,
     .filters {
       flex-wrap: nowrap;
       overflow-x: auto;
@@ -1465,21 +1388,13 @@
       gap: 8px;
     }
 
-    .shortcut-row::-webkit-scrollbar,
     .filters::-webkit-scrollbar {
       display: none;
     }
 
-    .shortcut-chip,
     .filter-btn {
       flex-shrink: 0;
       scroll-snap-align: start;
-    }
-
-    .shortcut-chip {
-      min-height: 42px;
-      padding: 0 12px;
-      font-size: 12px;
     }
 
     .filter-btn {
@@ -1501,192 +1416,6 @@
       line-height: 1.35;
     }
 
-    .results-note {
-      display: none;
-    }
-
-    .results-context {
-      padding: 0 12px;
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .results-pills {
-      gap: 7px;
-    }
-
-    .results-pill {
-      min-height: 28px;
-      padding: 0 10px;
-      font-size: 11px;
-    }
-
-    .results-reset {
-      min-height: 30px;
-      font-size: 11px;
-    }
-
-    .category-share {
-      justify-content: stretch;
-      width: 100%;
-    }
-
-    .btn-share.top-share-btn {
-      width: 100%;
-      min-height: 44px;
-      justify-content: center;
-      font-size: 11px;
-    }
-
-    .grid {
-      grid-template-columns: 1fr;
-      gap: 12px;
-      padding: 0 12px calc(72px + env(safe-area-inset-bottom));
-    }
-
-    .card {
-      border-radius: 8px;
-      padding: 16px 14px 14px;
-      gap: 12px;
-      box-shadow: 0 6px 16px rgba(23,64,95,0.07);
-    }
-
-    .card::before {
-      height: 64px;
-    }
-
-    .card-header {
-      gap: 10px;
-      padding-bottom: 9px;
-    }
-
-    .card-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 8px;
-      font-size: 18px;
-    }
-
-    .card-name {
-      max-width: none;
-      font-size: 1.12rem;
-      line-height: 1.16;
-      text-wrap: pretty;
-    }
-
-    .card-category {
-      margin-top: 7px;
-      min-height: 25px;
-      padding: 0 9px 0 7px;
-      font-size: 9px;
-      letter-spacing: 0.08em;
-    }
-
-    .card-tags {
-      margin-top: 8px;
-      gap: 6px;
-    }
-
-    .card-tag {
-      min-height: 23px;
-      padding: 0 8px;
-      font-size: 10px;
-      box-shadow: none;
-    }
-
-    .card-desc {
-      font-size: 14px;
-      line-height: 1.56;
-    }
-
-    .card-details {
-      gap: 7px;
-      padding: 11px 11px 10px;
-      border-radius: 15px;
-    }
-
-    .card-actions {
-      grid-template-columns: 1fr;
-      gap: 9px;
-      padding-top: 4px;
-      order: 3;
-    }
-
-    .card-details {
-      order: 4;
-    }
-
-    .btn-call,
-    .btn-web {
-      min-height: 52px;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    .btn-call {
-      padding: 9px 14px 8px;
-    }
-
-    .btn-call-number {
-      font-size: 14px;
-    }
-
-    .btn-web {
-      box-shadow: 0 2px 0 #cad8fb, 0 10px 18px rgba(41,79,150,0.08);
-    }
-
-    .card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding-top: 12px;
-      order: 5;
-    }
-
-    .card-footer .share-wrap,
-    .card-footer .btn-report {
-      width: auto;
-    }
-
-    .card-footer .btn-share,
-    .card-footer .btn-report {
-      min-height: 28px;
-      width: auto;
-      justify-content: flex-start;
-      border-radius: 0;
-      border: none;
-      background: transparent;
-      padding: 0;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .card-footer .btn-share {
-      color: #5a7086;
-    }
-
-    .card-footer .btn-report {
-      color: #8a5b23;
-    }
-
-    .share-menu {
-      left: 0;
-      right: auto;
-      min-width: 148px;
-      bottom: calc(100% + 6px);
-      padding: 6px;
-      border-radius: 8px;
-    }
-
-    .share-wrap.align-right .share-menu {
-      right: 0;
-      left: auto;
-    }
-  }
-
   @media (max-width: 480px) {
     h1 { font-size: 1.04rem; max-width: 9.5ch; }
     .header-inner { padding: 12px 12px 11px; }
@@ -1698,7 +1427,6 @@
     .share-subheading { font-size: 13px; }
     .share-meta-pill { min-height: 28px; padding: 0 10px; font-size: 10px; }
     .search-wrap input { padding: 14px 68px 14px 39px; border-radius: 8px; }
-    .shortcut-chip { min-height: 36px; }
     .filter-btn { min-height: 44px; }
     .results-row { padding: 0 10px; margin-top: 14px; }
     .results-context { padding: 0 10px; }
