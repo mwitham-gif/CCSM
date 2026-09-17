@@ -125,6 +125,33 @@ git push origin main
 
 Pages can take a minute or two to refresh.
 
+### Bump The Asset Version When Markup And Script Change Together
+
+`index.html` loads the assets with a version query:
+
+```html
+<link rel="stylesheet" href="styles.css?v=2">
+<script src="app.js?v=2" defer></script>
+```
+
+**If a change edits `index.html` and `app.js` together, raise both numbers
+to the next version in the same commit.**
+
+Pages serves `index.html` with a short cache lifetime, but a visitor's
+browser can hold `app.js` and `styles.css` for much longer. Without the
+bump, a returning visitor can end up running yesterday's script against
+today's markup. Changing the number makes the URL a cache miss, so the two
+always arrive as a matched pair.
+
+This matters most when an element is removed from `index.html`. A script
+that still expects it will write to something that is not there. `app.js`
+guards its lookups so a missing element is skipped rather than fatal, but
+the version bump is what keeps the pair honest; the guards are the safety
+net underneath it.
+
+A CSS-only or script-only change does not need a bump, though one is
+harmless.
+
 ## Pre-Flyer QA Checklist
 
 Before printing or distributing a flyer QR code:
@@ -137,6 +164,8 @@ Before printing or distributing a flyer QR code:
 - Tap a call button.
 - Tap a website button.
 - Switch to Spanish and back to English.
+- Reload once with a hard refresh and once normally, so a cached copy of the
+  previous `app.js` would show up.
 - Text the live link to yourself and confirm the preview looks right.
 - Try a broken shared URL like `?share=missing-resource` and confirm the fallback is helpful.
 
@@ -147,3 +176,7 @@ Before printing or distributing a flyer QR code:
 - If a filter looks odd, check the `category` spelling.
 - If a call or website button is missing, check whether `phone` or `website` is blank.
 - If the page looks stale after a push, wait a minute and hard refresh.
+- If the page loads but shows no resources and no outage message, suspect a
+  cached `app.js` running against newer markup. Open the browser console: a
+  `TypeError` naming a null element confirms it. Bump the asset version in
+  `index.html` as described under Deploying.
