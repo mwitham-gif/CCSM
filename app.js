@@ -546,6 +546,19 @@ function getShareModeResource() {
   return resources.find(resource => getField(resource, 'name') === shareResourceKey) || null;
 }
 
+// Elements are addressed by id throughout. Guard every write so that markup
+// drifting from this script — a cached copy of either one, or an id renamed in
+// index.html — degrades to a no-op instead of throwing and halting page setup.
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
+function setHTML(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = value;
+}
+
 function getSearchQuery() {
   const input = document.getElementById('search');
   return input ? input.value.trim() : '';
@@ -714,7 +727,7 @@ function renderSharePage() {
 
   document.body.classList.add('share-mode');
   filtered_cache = resource ? [resource] : [];
-  resultsInfo.textContent = '';
+  if (resultsInfo) resultsInfo.textContent = '';
   if (resultsContext) resultsContext.innerHTML = '';
 
   if (!resource) {
@@ -765,10 +778,10 @@ function renderLoadError() {
   activeCategory = 'All';
   visibleResultLimit = INITIAL_RESULT_LIMIT;
 
-  document.getElementById('results-info').textContent = '';
-  document.getElementById('results-context').innerHTML = '';
-  document.getElementById('category-share').innerHTML = '';
-  document.getElementById('filters').innerHTML = '';
+  setText('results-info', '');
+  setHTML('results-context', '');
+  setHTML('category-share', '');
+  setHTML('filters', '');
   updateSearchClearButton();
   updateStatusNotice(true);
 
@@ -1029,6 +1042,8 @@ function toBoldUnicode(value) {
 function buildFilters() {
   const categories = ['All', ...new Set(resources.map(normalizeCategory))];
   const container = document.getElementById('filters');
+  if (!container) return;
+
   const totalCount = resources.length;
   container.innerHTML = categories.map(cat => `
     <button class="filter-btn ${cat === activeCategory ? 'active' : ''}"
@@ -1081,9 +1096,9 @@ function renderCards() {
   });
 
   filtered_cache = filtered;
-  document.getElementById('results-info').textContent = query
+  setText('results-info', query
     ? `${T[lang].showing(filtered.length)} · ${T[lang].bestMatches}`
-    : T[lang].showing(filtered.length);
+    : T[lang].showing(filtered.length));
   renderResultsContext(rawQuery, filtered.length);
   renderCategoryShare();
   updateSearchClearButton();
@@ -1115,23 +1130,33 @@ function showLoading() {
 
 function setLang(l) {
   lang = l;
-  document.getElementById('btn-en').classList.toggle('active', l === 'en');
-  document.getElementById('btn-es').classList.toggle('active', l === 'es');
-  document.getElementById('btn-en').setAttribute('aria-pressed', l === 'en' ? 'true' : 'false');
-  document.getElementById('btn-es').setAttribute('aria-pressed', l === 'es' ? 'true' : 'false');
-  document.getElementById('search').placeholder = T[l].search;
-  document.getElementById('clear-search').textContent = T[l].clearSearch;
-  document.getElementById('site-title').childNodes[0].textContent = T[l].siteTitle + ' ';
-  document.getElementById('site-subtitle').textContent = T[l].siteSub;
-  document.getElementById('intro-title').textContent = T[l].introTitle;
-  document.getElementById('intro-copy').textContent = T[l].introCopy;
-  document.getElementById('finder-label-search').textContent = T[l].finderLabelSearch;
-  document.getElementById('finder-hint-search').textContent = T[l].finderHintSearch;
-  document.getElementById('finder-label-filters').textContent = T[l].finderLabelFilters;
-  updateStatusNotice(document.getElementById('status-notice').classList.contains('show'));
-  document.getElementById('footer-title').textContent = T[l].footerTitle;
-  document.getElementById('footer-contact').innerHTML = `${escapeHTML(T[l].footerContact)} <a href="tel:+13103950220">(310) 395-0220</a>`;
-  document.getElementById('footer-note').textContent = T[l].footerNote;
+  for (const [id, code] of [['btn-en', 'en'], ['btn-es', 'es']]) {
+    const button = document.getElementById(id);
+    if (!button) continue;
+    button.classList.toggle('active', l === code);
+    button.setAttribute('aria-pressed', l === code ? 'true' : 'false');
+  }
+
+  const input = document.getElementById('search');
+  if (input) input.placeholder = T[l].search;
+
+  const siteTitle = document.getElementById('site-title');
+  if (siteTitle && siteTitle.childNodes[0]) siteTitle.childNodes[0].textContent = T[l].siteTitle + ' ';
+
+  setText('clear-search', T[l].clearSearch);
+  setText('site-subtitle', T[l].siteSub);
+  setText('intro-title', T[l].introTitle);
+  setText('intro-copy', T[l].introCopy);
+  setText('finder-label-search', T[l].finderLabelSearch);
+  setText('finder-hint-search', T[l].finderHintSearch);
+  setText('finder-label-filters', T[l].finderLabelFilters);
+
+  const notice = document.getElementById('status-notice');
+  updateStatusNotice(Boolean(notice && notice.classList.contains('show')));
+
+  setText('footer-title', T[l].footerTitle);
+  setHTML('footer-contact', `${escapeHTML(T[l].footerContact)} <a href="tel:+13103950220">(310) 395-0220</a>`);
+  setText('footer-note', T[l].footerNote);
   if (hasLoadError) {
     renderLoadError();
     return;
