@@ -13,6 +13,8 @@ https://mwitham-gif.github.io/CCSM/
 - `index.html` - page shell, metadata, CSP, and static layout
 - `styles.css` - visual design, responsive layout, accessibility states
 - `app.js` - Google Sheet loading, CSV parsing, search/filter/share behavior
+- `analytics.js` - Google Analytics bootstrap, kept out of `index.html` so the
+  Content Security Policy does not need to allow inline scripts
 - `ccsm_logo_web.png` - logo and social preview image
 
 ## How It Works
@@ -22,15 +24,25 @@ https://mwitham-gif.github.io/CCSM/
 3. `app.js` fetches the CSV, normalizes rows, and renders resource cards.
 4. GitHub Pages serves the static files from `main`.
 
-The app intentionally does not use a backend, build step, analytics script, external font request, or client-side framework.
+The app intentionally does not use a backend, build step, external font request, or client-side framework. The only third-party script is Google Analytics.
 
 ## Privacy And Security Defaults
 
-- No Google Analytics or third-party tracking.
+- Google Analytics 4 (property `G-FT2K5G6SYR`) records page views. It sets its
+  own cookies and reports to Google. This is the one exception to the rules
+  below, and it is worth keeping in mind for an audience that reaches the site
+  by scanning a flyer for housing, food, or legal help.
+- No other third-party tracking, and no advertising tags.
 - No external fonts.
 - Search terms are not stored in the URL after initial load.
-- A Content Security Policy limits scripts and styles to this site.
-- Live data fetches are limited to the published Google Sheet host.
+- A Content Security Policy limits scripts and styles to this site, with
+  `googletagmanager.com` allowed for the analytics loader. Analytics code lives
+  in `analytics.js` rather than inline, so the policy still forbids inline
+  scripts.
+- Apart from analytics, live data fetches are limited to the published Google
+  Sheet host.
+- If analytics is blocked, by a content blocker or a network, the directory
+  loads and works normally. Nothing about finding a resource depends on it.
 - If the sheet cannot load, the site shows an outage message with Resident Services contact information instead of sample/demo data.
 
 ## Recommended Sheet Columns
@@ -172,6 +184,10 @@ Before printing or distributing a flyer QR code:
 ## If Something Looks Wrong
 
 - If no resources load, check whether the Google Sheet is still published as CSV.
+- If analytics stops reporting, check that the CSP in `index.html` still allows
+  `googletagmanager.com` under `script-src`, and that `analytics.js` is loaded.
+  A console message beginning "Refused to load the script" means the CSP is the
+  cause.
 - If a resource is missing, make sure the row has a `name`.
 - If a filter looks odd, check the `category` spelling.
 - If a call or website button is missing, check whether `phone` or `website` is blank.

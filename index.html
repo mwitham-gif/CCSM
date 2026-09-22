@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://docs.google.com https://*.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://docs.google.com https://*.googleusercontent.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <meta name="description" content="Find local Santa Monica resources for food, housing, health, legal help, benefits, and family support.">
 <meta property="og:title" content="Community Resources · Community Corp Santa Monica">
 <meta property="og:description" content="Find local Santa Monica resources for food, housing, health, legal help, benefits, and family support.">
@@ -18,7 +18,10 @@
 <meta name="twitter:image" content="https://mwitham-gif.github.io/CCSM/ccsm_logo_web.png">
 <link rel="canonical" href="https://mwitham-gif.github.io/CCSM/">
 <title>Community Resources · Community Corp Santa Monica</title>
-<link rel="stylesheet" href="styles.css?v=2">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FT2K5G6SYR"></script>
+<script src="analytics.js?v=3" defer></script>
+<link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
 <a class="skip-link" href="#search">Skip to search</a>
@@ -86,6 +89,6 @@
   <div id="footer-note" class="footer-line">Services, hours, and eligibility can change. Please confirm details with providers before visiting.</div>
 </footer>
 
-<script src="app.js?v=2" defer></script>
+<script src="app.js?v=3" defer></script>
 </body>
 </html>
