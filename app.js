@@ -57,7 +57,9 @@ const T = {
     share: 'Share',
     shareEmail: 'Email',
     shareCopyLink: 'Copy link',
+    shareCopyAll: 'Copy all resources',
     linkCopied: 'Link copied',
+    resourcesCopied: 'Resources copied',
     copyPrompt: 'Copy this link:',
     shareBack: 'Back to full directory',
     shareEyebrow: 'Shared from Community Resources',
@@ -128,7 +130,9 @@ Thank you for keeping this resource up to date!`,
     share: 'Compartir',
     shareEmail: 'Correo',
     shareCopyLink: 'Copiar enlace',
+    shareCopyAll: 'Copiar todos los recursos',
     linkCopied: 'Enlace copiado',
+    resourcesCopied: 'Recursos copiados',
     copyPrompt: 'Copie este enlace:',
     shareBack: 'Volver al directorio completo',
     shareEyebrow: 'Compartido desde Recursos Comunitarios',
@@ -366,7 +370,7 @@ function getCategoryShareData(category) {
   };
 }
 
-function getCategoryShareEmailHref(category) {
+function getCategoryShareText(category) {
   const shareData = getCategoryShareData(category);
   const categoryResources = resources.filter(resource => normalizeCategory(resource) === category);
   const lines = [
@@ -380,9 +384,13 @@ function getCategoryShareEmailHref(category) {
     'View resources:',
     shareData.url,
   ].filter((line, index, array) => line || (index > 0 && array[index - 1] !== ''));
+  return lines.join('\n');
+}
+
+function getCategoryShareEmailHref(category) {
   return getEmailComposeHref({
-    subject: shareData.title,
-    body: lines.join('\n'),
+    subject: getCategoryShareData(category).title,
+    body: getCategoryShareText(category),
   });
 }
 
@@ -488,6 +496,51 @@ async function copyCategoryLink() {
   }
 }
 
+// window.prompt flattens newlines, so multi-line text falls back to a hidden
+// textarea and execCommand when the async clipboard API is unavailable.
+function copyTextWithSelection(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  let copied = false;
+  try {
+    copied = document.execCommand('copy');
+  } catch (error) {
+    copied = false;
+  }
+  textarea.remove();
+  return copied;
+}
+
+async function copyCategoryResources() {
+  if (activeCategory === 'All') return;
+
+  const text = getCategoryShareText(activeCategory);
+
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+      closeShareMenus();
+      showToast(T[lang].resourcesCopied);
+      return;
+    }
+  } catch (error) {
+    // Fall through to the selection-based copy below.
+  }
+
+  if (copyTextWithSelection(text)) {
+    closeShareMenus();
+    showToast(T[lang].resourcesCopied);
+    return;
+  }
+
+  window.prompt(T[lang].copyPrompt, getCategorySharePageUrl(activeCategory));
+}
+
 document.addEventListener('click', event => {
   const langButton = event.target.closest('[data-lang]');
   if (langButton) {
@@ -528,10 +581,11 @@ document.addEventListener('click', event => {
     if (action === 'clear-search') clearSearch();
     if (action === 'clear-all') clearAllFilters();
     if (action === 'copy-category') copyCategoryLink();
+    if (action === 'copy-category-all') copyCategoryResources();
     if (action === 'show-more') showMoreResults();
     if (action === 'retry-load') loadData();
     if (action === 'back-to-directory') window.location.href = getBasePageUrl();
-    if (action !== 'copy-category') closeShareMenus();
+    if (action !== 'copy-category' && action !== 'copy-category-all') closeShareMenus();
     return;
   }
 
@@ -647,6 +701,7 @@ function renderCategoryShare() {
       </button>
       <div class="share-menu" id="share-menu-category">
         <a class="share-option" href="${escapeAttr(shareEmailHref)}" target="_blank" rel="noopener">${escapeHTML(T[lang].shareEmail)}</a>
+        <button class="share-option" type="button" data-action="copy-category-all">${escapeHTML(T[lang].shareCopyAll)}</button>
         <button class="share-option" type="button" data-action="copy-category">${escapeHTML(T[lang].shareCopyLink)}</button>
       </div>
     </div>
