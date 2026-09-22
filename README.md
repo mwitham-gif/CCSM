@@ -13,7 +13,7 @@ https://mwitham-gif.github.io/CCSM/
 - `index.html` - page shell, metadata, CSP, and static layout
 - `styles.css` - visual design, responsive layout, accessibility states
 - `app.js` - Google Sheet loading, CSV parsing, search/filter/share behavior
-- `analytics.js` - Google Analytics bootstrap, kept out of `index.html` so the
+- `analytics.js` - Google Analytics bootstrap and custom events, kept out of `index.html` so the
   Content Security Policy does not need to allow inline scripts
 - `ccsm_logo_web.png` - logo and social preview image
 
@@ -29,7 +29,12 @@ The app intentionally does not use a backend, build step, external font request,
 ## Privacy And Security Defaults
 
 - Google Analytics 4 (property `G-FT2K5G6SYR`) records page views. It sets its
-  own cookies and reports to Google. This is the one exception to the rules
+  own cookies and reports to Google. `analytics.js` also pushes three custom
+  events to `dataLayer`: `resource_click` (call, website, email, and report
+  links on a card), `filter_select` (support-area filter buttons), and
+  `resource_search` (the search box, 1.5s after typing stops). Search terms
+  are sent to Google as typed, so anything a visitor enters there leaves the
+  site. This is the one exception to the rules
   below, and it is worth keeping in mind for an audience that reaches the site
   by scanning a flyer for housing, food, or legal help.
 - No other third-party tracking, and no advertising tags.
