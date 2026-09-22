@@ -419,7 +419,12 @@
   .results-pills {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 8px;
+  }
+
+  .results-pills .btn-share.top-share-btn {
+    min-height: 30px;
   }
 
   .results-pill {
@@ -480,12 +485,6 @@
   .toast.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0) scale(1);
-  }
-
-  .category-share {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
   }
 
   /* ── RESOURCE GRID ── */

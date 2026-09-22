@@ -677,25 +677,19 @@ function renderResultsContext(query, visibleCount) {
   }
 
   container.innerHTML = `
-    <div class="results-pills">${pills.join('')}</div>
+    <div class="results-pills">${pills.join('')}${getCategoryShareMarkup()}</div>
     <button class="results-reset" type="button" data-action="clear-all">${escapeHTML(T[lang].resetFilters)}</button>
   `;
 }
 
-function renderCategoryShare() {
-  const container = document.getElementById('category-share');
-  if (!container) return;
-
-  if (shareResourceKey || activeCategory === 'All') {
-    container.innerHTML = '';
-    return;
-  }
+function getCategoryShareMarkup() {
+  if (shareResourceKey || activeCategory === 'All') return '';
 
   const label = CAT_LABELS[lang][activeCategory] || activeCategory;
   const shareEmailHref = getCategoryShareEmailHref(activeCategory);
 
-  container.innerHTML = `
-    <div class="share-wrap align-right">
+  return `
+    <div class="share-wrap">
       <button class="btn-share top-share-btn" type="button" data-share-menu="category" aria-label="${escapeAttr(`${T[lang].share} ${label}`)}" aria-expanded="false">
         ${escapeHTML(T[lang].share)} ${escapeHTML(label)}
       </button>
@@ -835,7 +829,6 @@ function renderLoadError() {
 
   setText('results-info', '');
   setHTML('results-context', '');
-  setHTML('category-share', '');
   setHTML('filters', '');
   updateSearchClearButton();
   updateStatusNotice(true);
@@ -1122,7 +1115,6 @@ function renderCards() {
   if (shareResourceKey) {
     updateSearchClearButton();
     renderSharePage();
-    renderCategoryShare();
     return;
   }
 
@@ -1155,7 +1147,6 @@ function renderCards() {
     ? `${T[lang].showing(filtered.length)} · ${T[lang].bestMatches}`
     : T[lang].showing(filtered.length));
   renderResultsContext(rawQuery, filtered.length);
-  renderCategoryShare();
   updateSearchClearButton();
   updateDirectoryUrl();
 
