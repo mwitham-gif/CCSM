@@ -173,6 +173,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const shareResourceKey = urlParams.get('share');
 const sharedCategoryKey = urlParams.get('category');
 const initialSearchQuery = urlParams.get('q') || '';
+const initialLang = urlParams.get('lang') === 'es' ? 'es' : 'en';
 
 const ICONS = {
   Food:'🥦', Mental:'🧠', Rental:'🏠', Legal:'⚖️', Benefits:'📋', Other:'🤝',
@@ -283,6 +284,7 @@ function updateDirectoryUrl() {
   const params = new URLSearchParams();
 
   if (activeCategory !== 'All') params.set('category', activeCategory);
+  if (lang === 'es') params.set('lang', 'es');
 
   const next = params.toString()
     ? `${getBasePageUrl()}?${params.toString()}`
@@ -1203,6 +1205,7 @@ function setLang(l) {
   setText('footer-title', T[l].footerTitle);
   setHTML('footer-contact', `${escapeHTML(T[l].footerContact)} <a href="tel:+13103950220">(310) 395-0220</a>`);
   setText('footer-note', T[l].footerNote);
+  updateDirectoryUrl();
   if (hasLoadError) {
     renderLoadError();
     return;
@@ -1220,5 +1223,7 @@ if (initialSearchQuery) {
 }
 
 document.getElementById('search')?.addEventListener('input', handleSearchInput);
+
+if (initialLang === 'es') setLang('es');
 
 loadData();
