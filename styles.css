@@ -1416,7 +1416,7 @@
     }
 
   @media (max-width: 480px) {
-    h1 { font-size: 1.04rem; max-width: 9.5ch; }
+    h1 { font-size: 1.04rem; max-width: 14ch; }
     .header-inner { padding: 12px 12px 11px; }
     .header-logo { height: 30px; }
     .lang-toggle button { min-height: 30px; padding: 0 10px; font-size: 11px; }
