@@ -296,9 +296,11 @@ function getCategorySharePageUrl(category) {
 function updateDirectoryUrl() {
   if (shareResourceKey) return;
 
+  // The category stays out of the URL so a reload always starts on "All".
+  // A shared ?category= link still opens on that category, then this
+  // clears it from the address bar.
   const params = new URLSearchParams();
 
-  if (activeCategory !== 'All') params.set('category', activeCategory);
   if (lang === 'es') params.set('lang', 'es');
 
   const next = params.toString()
