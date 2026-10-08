@@ -39,12 +39,15 @@ gtag('config', 'G-FT2K5G6SYR');
     var link = target.closest('.card .card-actions a[href], .card .card-footer a[href]');
     if (link) {
       var card = link.closest('.card');
+      // Domestic violence clicks are counted by category only. Which shelter
+      // or hotline someone contacted never leaves the device.
+      var sensitive = !!card.querySelector('.cat-DomesticViolence');
       window.dataLayer.push({
         event: 'resource_click',
-        resource_name: cleanText(card.querySelector('.card-name')),
+        resource_name: sensitive ? '(withheld)' : cleanText(card.querySelector('.card-name')),
         resource_category: cleanText(card.querySelector('.card-category')),
         click_type: getClickType(link),
-        link_url: link.href
+        link_url: sensitive ? '(withheld)' : link.href
       });
       return;
     }
@@ -60,6 +63,7 @@ gtag('config', 'G-FT2K5G6SYR');
   }, true);
 
   var SEARCH_DEBOUNCE_MS = 1500;
+  var SENSITIVE_SEARCH = /abus|violen|\bdv\b|domestic|dom[eé]stic|shelter|refugio|maltrat|assault|asalto|stalk|acoso|traffick|trata/i;
   var searchTimer = null;
   var lastSearchTerm = '';
 
@@ -72,6 +76,8 @@ gtag('config', 'G-FT2K5G6SYR');
       var term = input.value.trim();
       if (!term || term === lastSearchTerm) return;
       lastSearchTerm = term;
+      // Searches about abuse are counted without the words typed.
+      if (SENSITIVE_SEARCH.test(term)) term = '(withheld)';
       window.dataLayer.push({ event: 'resource_search', search_term: term });
     }, SEARCH_DEBOUNCE_MS);
   });

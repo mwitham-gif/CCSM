@@ -15,7 +15,9 @@ https://mwitham-gif.github.io/CCSM/
 - `app.js` - Google Sheet loading, CSV parsing, search/filter/share behavior
 - `analytics.js` - Google Analytics bootstrap and custom events, kept out of `index.html` so the
   Content Security Policy does not need to allow inline scripts
+- `gtm.js` - Google Tag Manager container loader (`GTM-KXVVJCML`)
 - `ccsm_logo_web.png` - logo and social preview image
+- `favicon-32.png`, `apple-touch-icon.png` - browser tab and home-screen icons
 
 ## How It Works
 
@@ -24,7 +26,7 @@ https://mwitham-gif.github.io/CCSM/
 3. `app.js` fetches the CSV, normalizes rows, and renders resource cards.
 4. GitHub Pages serves the static files from `main`.
 
-The app intentionally does not use a backend, build step, external font request, or client-side framework. The only third-party script is Google Analytics.
+The app intentionally does not use a backend, build step, external font request, or client-side framework. The only third-party scripts are Google Analytics and Google Tag Manager.
 
 ## Privacy And Security Defaults
 
@@ -34,10 +36,19 @@ The app intentionally does not use a backend, build step, external font request,
   links on a card), `filter_select` (support-area filter buttons), and
   `resource_search` (the search box, 1.5s after typing stops). Search terms
   are sent to Google as typed, so anything a visitor enters there leaves the
-  site. This is the one exception to the rules
+  site. Two exceptions protect domestic violence survivors: clicks on a
+  domestic violence resource send only the category (name and link are
+  `(withheld)`), and searches containing abuse-related words send
+  `(withheld)` instead of the words typed. This is the one exception to the rules
   below, and it is worth keeping in mind for an audience that reaches the site
   by scanning a flyer for housing, food, or legal help.
+- Google Tag Manager (`GTM-KXVVJCML`) also loads and sends events to the same
+  GA4 property. If click counts look doubled in GA4, check the container's
+  tags against the `dataLayer` events above.
 - No other third-party tracking, and no advertising tags.
+- A Quick exit button stays on screen (bottom right). It replaces the page in
+  history with weather.com, so Back does not return here. There is no
+  keyboard shortcut on purpose: Esc already clears search and closes menus.
 - No external fonts.
 - Search terms are not stored in the URL after initial load.
 - A Content Security Policy limits scripts and styles to this site, with

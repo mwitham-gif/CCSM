@@ -57,6 +57,8 @@ const T = {
     share: 'Share',
     shareEmail: 'Email',
     shareCopyLink: 'Copy link',
+    quickExit: 'Quick exit',
+    quickExitHint: 'Leave this site now',
     shareCopyAll: 'Copy all resources',
     linkCopied: 'Link copied',
     resourcesCopied: 'Resources copied',
@@ -130,6 +132,8 @@ Thank you for keeping this resource up to date!`,
     share: 'Compartir',
     shareEmail: 'Correo',
     shareCopyLink: 'Copiar enlace',
+    quickExit: 'Salida rápida',
+    quickExitHint: 'Salir de este sitio ahora',
     shareCopyAll: 'Copiar todos los recursos',
     linkCopied: 'Enlace copiado',
     resourcesCopied: 'Recursos copiados',
@@ -628,6 +632,20 @@ document.addEventListener('click', event => {
 
   closeShareMenus();
 });
+// Quick exit: replaces this page in history (so Back does not return here)
+// with a neutral site. Safety feature for anyone browsing domestic violence
+// resources on a shared or monitored phone. No keyboard shortcut on purpose:
+// Esc already clears search and closes menus, so a double press would eject
+// people by accident.
+const QUICK_EXIT_URL = 'https://weather.com/';
+
+function quickExit() {
+  document.body.style.display = 'none';
+  window.location.replace(QUICK_EXIT_URL);
+}
+
+document.getElementById('quick-exit')?.addEventListener('click', quickExit);
+
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape') closeShareMenus();
 });
@@ -745,7 +763,9 @@ function renderResourceCard(resource, i, query = '') {
   const desc = getLocalizedValue(resource, 'description');
   const notes = getLocalizedValue(resource, 'notes');
   const tags = getLocalizedTags(resource);
-  const phone = getField(resource, 'phone');
+  // A phone cell like "Email hotline via website" has nothing to dial.
+  const rawPhone = getField(resource, 'phone');
+  const phone = rawPhone.replace(/\D/g, '').length >= 3 ? rawPhone : '';
   const website = normalizeWebsiteUrl(getField(resource, 'website'));
   const address = getField(resource, 'address');
   const hours = getField(resource, 'hours');
@@ -1214,6 +1234,7 @@ function showLoading() {
 
 function setLang(l) {
   lang = l;
+  document.documentElement.lang = l;
   for (const [id, code] of [['btn-en', 'en'], ['btn-es', 'es']]) {
     const button = document.getElementById(id);
     if (!button) continue;
@@ -1229,6 +1250,8 @@ function setLang(l) {
 
   setText('clear-search', T[l].clearSearch);
   setText('site-subtitle', T[l].siteSub);
+  setText('quick-exit-label', T[l].quickExit);
+  document.getElementById('quick-exit')?.setAttribute('title', T[l].quickExitHint);
   setText('intro-title', T[l].introTitle);
   setText('intro-copy', T[l].introCopy);
   setText('finder-label-search', T[l].finderLabelSearch);

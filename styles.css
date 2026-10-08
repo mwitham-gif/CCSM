@@ -287,7 +287,6 @@
     top: 50%;
     transform: translateY(-50%);
     color: var(--muted);
-    font-size: 18px;
   }
 
   .clear-search {
@@ -1315,10 +1314,11 @@
     }
 
     .lang-toggle button {
-      min-height: 32px;
+      min-height: 44px;
+      min-width: 44px;
       padding: 0 11px;
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
     }
 
     .intro-panel {
@@ -1443,7 +1443,7 @@
     h1 { font-size: 1.04rem; max-width: 14ch; }
     .header-inner { padding: 12px 12px 11px; }
     .header-logo { height: 30px; }
-    .lang-toggle button { min-height: 30px; padding: 0 10px; font-size: 11px; }
+    .lang-toggle button { min-height: 44px; min-width: 44px; padding: 0 10px; font-size: 12px; }
     .controls { padding: 0 10px; }
     .share-shell { padding: 18px 18px 17px; border-radius: 8px; }
     .share-heading { font-size: 1.45rem; }
@@ -1460,4 +1460,42 @@
     .btn-call, .btn-web { min-height: 44px; }
     .btn-call-number { font-size: 13px; white-space: nowrap; }
     .card-footer { gap: 8px; }
+  }
+
+  /* ── QUICK EXIT ──
+   * Always on screen, bottom right, so it is one tap away while someone is
+   * reading a domestic violence resource. Dark and calm rather than red, so
+   * it is findable without drawing a passer-by's eye. */
+  .quick-exit {
+    position: fixed;
+    right: 14px;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    z-index: 250;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 16px 0 13px;
+    border: 2px solid #ffffff;
+    border-radius: 999px;
+    background: var(--text);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+  }
+
+  .quick-exit:hover {
+    background: var(--ocean-deep);
+  }
+
+  /* Keep the last card and the footer clear of the floating button. */
+  footer {
+    padding-bottom: calc(28px + 64px);
+  }
+
+  @media print {
+    .quick-exit { display: none; }
   }
