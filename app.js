@@ -1169,7 +1169,21 @@ function setCategory(cat) {
   buildFilters(); renderCards();
 }
 
+// Quick exit shows only where someone is looking at domestic violence help:
+// the Domestic violence filter, or a shared domestic violence resource.
+function updateQuickExit() {
+  const button = document.getElementById('quick-exit');
+  if (!button) return;
+  const shared = getShareModeResource();
+  const onDvPage = shared
+    ? normalizeCategory(shared) === 'Domestic Violence'
+    : !shareResourceKey && activeCategory === 'Domestic Violence';
+  button.hidden = !onDvPage;
+  document.body.classList.toggle('has-quick-exit', onDvPage);
+}
+
 function renderCards() {
+  updateQuickExit();
   if (shareResourceKey) {
     updateSearchClearButton();
     renderSharePage();

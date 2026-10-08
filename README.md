@@ -46,7 +46,9 @@ The app intentionally does not use a backend, build step, external font request,
   GA4 property. If click counts look doubled in GA4, check the container's
   tags against the `dataLayer` events above.
 - No other third-party tracking, and no advertising tags.
-- A Quick exit button stays on screen (bottom right). It replaces the page in
+- On domestic violence views only (the Domestic violence filter, or a shared
+  domestic violence resource), a Quick exit button stays on screen (bottom
+  right). It replaces the page in
   history with weather.com, so Back does not return here. There is no
   keyboard shortcut on purpose: Esc already clears search and closes menus.
 - No external fonts.
