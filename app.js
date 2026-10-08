@@ -62,7 +62,7 @@ const T = {
     resourcesCopied: 'Resources copied',
     copyPrompt: 'Copy this link:',
     shareBack: 'Back to full directory',
-    shareEyebrow: 'Shared from Community Resources',
+    shareEyebrow: 'Shared from the Santa Monica Resource Guide',
     shareHeading: 'A resource someone wanted to share with you',
     shareSubheading: 'Review the details below, then call, visit the website, or pass this resource along to someone else.',
     shareMetaCommunity: 'Santa Monica resource guide',
@@ -74,7 +74,7 @@ const T = {
     reportBody: name =>
 `Hi CCSM,
 
-I noticed some information for "${name}" on the CCSM Community Resources page may be outdated.
+I noticed some information for "${name}" in the CCSM Santa Monica Resource Guide may be outdated.
 
 𝗪𝗵𝗮𝘁 𝘀𝗵𝗼𝘂𝗹𝗱 𝗯𝗲 𝘂𝗽𝗱𝗮𝘁𝗲𝗱:
 
@@ -135,7 +135,7 @@ Thank you for keeping this resource up to date!`,
     resourcesCopied: 'Recursos copiados',
     copyPrompt: 'Copie este enlace:',
     shareBack: 'Volver al directorio completo',
-    shareEyebrow: 'Compartido desde Recursos Comunitarios',
+    shareEyebrow: 'Compartido desde la Guía de Recursos de Santa Mónica',
     shareHeading: 'Un recurso que alguien quiso compartir con usted',
     shareSubheading: 'Revise los detalles abajo y luego llame, visite el sitio web o comparta este recurso con otra persona.',
     shareMetaCommunity: 'Guía de recursos de Santa Mónica',
@@ -147,7 +147,7 @@ Thank you for keeping this resource up to date!`,
     reportBody: name =>
 `Hola,
 
-Noté que la información de "${name}" en la página de Recursos Comunitarios puede estar desactualizada.
+Noté que la información de "${name}" en la Guía de Recursos de Santa Mónica de CCSM puede estar desactualizada.
 
 𝗤𝘂é 𝗱𝗲𝗯𝗲 𝗮𝗰𝘁𝘂𝗮𝗹𝗶𝘇𝗮𝗿𝘀𝗲:
 
@@ -381,7 +381,7 @@ function getShareEmailHref(resource) {
 function getCategoryShareData(category) {
   const label = CAT_LABELS[lang][category] || category;
   return {
-    title: `${label} · Community Resources`,
+    title: `${label} · ${T[lang].siteTitle}`,
     text: `Browse ${label.toLowerCase()} resources.`,
     url: getCategorySharePageUrl(category),
   };
@@ -797,7 +797,7 @@ function renderSharePage() {
   if (resultsContext) resultsContext.innerHTML = '';
 
   if (!resource) {
-    document.title = `${T[lang].shareMissingTitle} · Community Resources`;
+    document.title = `${T[lang].shareMissingTitle} · ${T[lang].siteTitle}`;
     updateGridMarkup(`<div class="empty">
       <div class="empty-icon">🔍</div>
       <h3>${escapeHTML(T[lang].shareMissingTitle)}</h3>
@@ -807,7 +807,7 @@ function renderSharePage() {
     return true;
   }
 
-  document.title = `${getLocalizedValue(resource, 'name')} · Community Resources`;
+  document.title = `${getLocalizedValue(resource, 'name')} · ${T[lang].siteTitle}`;
   const shareMeta = [
     T[lang].shareMetaCommunity,
     T[lang].shareMetaUpdated
