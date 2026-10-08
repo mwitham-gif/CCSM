@@ -201,6 +201,21 @@ const CAT_LABELS = {
 };
 
 
+// Filter pills run most urgent first, so the needs that can't wait are
+// visible without scrolling on a phone. Categories not listed here (new
+// ones added in the sheet) follow in sheet order; "Other" is always last.
+const CATEGORY_ORDER = [
+  'Domestic Violence', 'Food', 'Rental', 'Housing', 'Medical', 'Mental',
+  'Benefits', 'Seniors', 'Disability', 'Legal', 'Childcare', 'Youth',
+  'Employment', 'Transportation', 'Education',
+];
+
+function categoryRank(category) {
+  if (category === 'Other') return Infinity;
+  const index = CATEGORY_ORDER.indexOf(category);
+  return index === -1 ? CATEGORY_ORDER.length : index;
+}
+
 const FIELD_ALIASES = {
   name: ['name', 'resource name', 'program name', 'organization name', 'org name'],
   name_es: ['name_es', 'name es', 'resource name es', 'resource name spanish', 'program name es', 'nombre', 'nombre_es'],
@@ -1090,7 +1105,8 @@ function toBoldUnicode(value) {
 }
 
 function buildFilters() {
-  const categories = ['All', ...new Set(resources.map(normalizeCategory))];
+  const sheetOrder = [...new Set(resources.map(normalizeCategory))];
+  const categories = ['All', ...sheetOrder.sort((a, b) => categoryRank(a) - categoryRank(b))];
   const container = document.getElementById('filters');
   if (!container) return;
 
