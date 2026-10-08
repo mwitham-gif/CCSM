@@ -58,6 +58,7 @@ const T = {
     shareEmail: 'Email',
     shareCopyLink: 'Copy link',
     quickExit: 'Quick exit',
+    jumpToFilters: 'Back to search and filters',
     quickExitHint: 'Leave this site now',
     shareCopyAll: 'Copy all resources',
     linkCopied: 'Link copied',
@@ -133,6 +134,7 @@ Thank you for keeping this resource up to date!`,
     shareEmail: 'Correo',
     shareCopyLink: 'Copiar enlace',
     quickExit: 'Salida rápida',
+    jumpToFilters: 'Volver a búsqueda y filtros',
     quickExitHint: 'Salir de este sitio ahora',
     shareCopyAll: 'Copiar todos los recursos',
     linkCopied: 'Enlace copiado',
@@ -632,6 +634,69 @@ document.addEventListener('click', event => {
 
   closeShareMenus();
 });
+// Jump back to search and filters (phones only). Appears once the filters
+// are off screen and the visitor scrolls back UP, the moment they are
+// looking for the top; it hides again while they scroll down to read.
+const JUMP_SHOW_DELTA = 8;
+let jumpLastY = window.scrollY;
+let jumpTicking = false;
+
+function updateJumpLabel(rawQuery, count) {
+  const label = rawQuery
+    ? `“${rawQuery}”`
+    : (activeCategory === 'All' ? T[lang].all : (CAT_LABELS[lang][activeCategory] || activeCategory));
+  setText('jump-filters-label', `${label} · ${count}`);
+  const button = document.getElementById('jump-filters');
+  if (button) {
+    button.setAttribute('aria-label', `${T[lang].jumpToFilters}: ${label}, ${count}`);
+    button.title = T[lang].jumpToFilters;
+  }
+}
+
+function setJumpVisible(visible) {
+  const button = document.getElementById('jump-filters');
+  if (!button) return;
+  button.classList.toggle('is-visible', visible);
+  button.tabIndex = visible ? 0 : -1;
+  button.setAttribute('aria-hidden', visible ? 'false' : 'true');
+}
+
+function updateJumpButton() {
+  jumpTicking = false;
+  const controls = document.querySelector('.controls');
+  const y = window.scrollY;
+  const delta = y - jumpLastY;
+  jumpLastY = y;
+  if (!controls || shareResourceKey || window.innerWidth > 640) {
+    setJumpVisible(false);
+    return;
+  }
+  const filtersBottom = controls.getBoundingClientRect().bottom + y;
+  if (y < filtersBottom + 120) setJumpVisible(false);
+  else if (delta <= -JUMP_SHOW_DELTA) setJumpVisible(true);
+  else if (delta >= JUMP_SHOW_DELTA) setJumpVisible(false);
+}
+
+window.addEventListener('scroll', () => {
+  if (jumpTicking) return;
+  jumpTicking = true;
+  requestAnimationFrame(updateJumpButton);
+}, { passive: true });
+
+document.getElementById('jump-filters')?.addEventListener('click', () => {
+  const controls = document.querySelector('.controls');
+  const finder = document.querySelector('.finder-card');
+  if (!controls) return;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  setJumpVisible(false);
+  controls.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  // Move focus for screen readers without opening the phone keyboard.
+  if (finder) {
+    finder.setAttribute('tabindex', '-1');
+    finder.focus({ preventScroll: true });
+  }
+});
+
 // Quick exit: replaces this page in history (so Back does not return here)
 // with a neutral site. Safety feature for anyone browsing domestic violence
 // resources on a shared or monitored phone. No keyboard shortcut on purpose:
@@ -1215,6 +1280,7 @@ function renderCards() {
   });
 
   filtered_cache = filtered;
+  updateJumpLabel(rawQuery, filtered.length);
   setText('results-info', query
     ? `${T[lang].showing(filtered.length)} · ${T[lang].bestMatches}`
     : T[lang].showing(filtered.length));

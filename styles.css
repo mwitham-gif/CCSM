@@ -1564,3 +1564,118 @@
   @media print {
     .quick-exit { display: none; }
   }
+
+  /* ── JUMP TO SEARCH & FILTERS (phones) ──
+   * Same frosted pill family as Quick exit. Sits bottom-centre in thumb
+   * reach, shows where you are ("Food support · 13"), and slides in only
+   * when app.js adds .is-visible (scrolling back up past the filters). */
+  .jump-filters {
+    display: none;
+  }
+
+  .finder-card:focus {
+    outline: none;
+  }
+
+  @media (max-width: 640px) {
+    .jump-filters {
+      position: fixed;
+      left: 50%;
+      bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+      z-index: 240;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      max-width: calc(100vw - 32px);
+      min-height: 46px;
+      padding: 0 16px 0 15px;
+      border: 1px solid rgba(23,52,79,0.10);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.94);
+      -webkit-backdrop-filter: saturate(1.6) blur(12px);
+      backdrop-filter: saturate(1.6) blur(12px);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 650;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      cursor: pointer;
+      box-shadow:
+        0 1px 1px rgba(23,52,79,0.04),
+        0 4px 10px rgba(23,52,79,0.08),
+        0 14px 32px rgba(23,52,79,0.14);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translate(-50%, 16px) scale(0.96);
+      transition: opacity 0.2s ease, transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.24s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .jump-filters.is-visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translate(-50%, 0) scale(1);
+      transition: opacity 0.2s ease, transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s;
+    }
+
+    .jump-filters:active {
+      transform: translate(-50%, 0) scale(0.97);
+    }
+
+    .jump-filters-search {
+      color: var(--ocean);
+      flex-shrink: 0;
+    }
+
+    .jump-filters-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .jump-filters-arrow {
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    /* On domestic violence views Quick exit owns the right corner. */
+    body.has-quick-exit .jump-filters {
+      left: 14px;
+      max-width: calc(100vw - 14px - 150px - 12px);
+      transform: translateY(16px) scale(0.96);
+    }
+
+    body.has-quick-exit .jump-filters.is-visible {
+      transform: none;
+    }
+
+    body.has-quick-exit .jump-filters {
+      padding-right: 14px;
+      gap: 7px;
+    }
+
+    body.has-quick-exit .jump-filters-arrow {
+      display: none;
+    }
+
+    body.has-quick-exit .jump-filters:active {
+      transform: scale(0.97);
+    }
+
+    body.share-mode .jump-filters {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) and (prefers-reduced-motion: reduce) {
+    .jump-filters,
+    .jump-filters.is-visible {
+      transition: none;
+    }
+  }
+
+  @media print {
+    .jump-filters { display: none; }
+  }
