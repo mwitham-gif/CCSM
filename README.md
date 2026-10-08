@@ -15,7 +15,6 @@ https://mwitham-gif.github.io/CCSM/
 - `app.js` - Google Sheet loading, CSV parsing, search/filter/share behavior
 - `analytics.js` - Google Analytics bootstrap and custom events, kept out of `index.html` so the
   Content Security Policy does not need to allow inline scripts
-- `gtm.js` - Google Tag Manager container loader (`GTM-KXVVJCML`)
 - `ccsm_logo_web.png` - logo and social preview image
 - `favicon-32.png`, `apple-touch-icon.png` - browser tab and home-screen icons
 
@@ -26,13 +25,13 @@ https://mwitham-gif.github.io/CCSM/
 3. `app.js` fetches the CSV, normalizes rows, and renders resource cards.
 4. GitHub Pages serves the static files from `main`.
 
-The app intentionally does not use a backend, build step, external font request, or client-side framework. The only third-party scripts are Google Analytics and Google Tag Manager.
+The app intentionally does not use a backend, build step, external font request, or client-side framework. The only third-party script is Google Analytics. Google Tag Manager was removed in October 2026: its three tags duplicated every link tap and leaked search text.
 
 ## Privacy And Security Defaults
 
 - Google Analytics 4 (property `G-FT2K5G6SYR`) records page views. It sets its
-  own cookies and reports to Google. `analytics.js` also pushes three custom
-  events to `dataLayer`: `resource_click` (call, website, email, and report
+  own cookies and reports to Google. `analytics.js` also sends three custom
+  events with `gtag()`: `resource_click` (call, website, email, and report
   links on a card), `filter_select` (support-area filter buttons), and
   `resource_search` (the search box, 1.5s after typing stops). Search terms
   are sent to Google as typed, so anything a visitor enters there leaves the
@@ -42,9 +41,12 @@ The app intentionally does not use a backend, build step, external font request,
   `(withheld)` instead of the words typed. This is the one exception to the rules
   below, and it is worth keeping in mind for an audience that reaches the site
   by scanning a flyer for housing, food, or legal help.
-- Google Tag Manager (`GTM-KXVVJCML`) also loads and sends events to the same
-  GA4 property. If click counts look doubled in GA4, check the container's
-  tags against the `dataLayer` events above.
+- In GA4, turn off Enhanced measurement → Outbound clicks for this stream.
+  `resource_click` covers the same taps with the privacy rules above; the
+  built-in `click` event would record domestic violence websites' addresses.
+- To see the event parameters in reports, register them as event-scoped
+  custom dimensions (Admin → Custom definitions): `resource_name`,
+  `resource_category`, `click_type`, `filter_name`, `search_term`.
 - No other third-party tracking, and no advertising tags.
 - On domestic violence views only (the Domestic violence filter, or a shared
   domestic violence resource), a Quick exit button stays on screen (bottom

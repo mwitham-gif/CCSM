@@ -14,7 +14,9 @@ function gtag() { dataLayer.push(arguments); }
 gtag('js', new Date());
 gtag('config', 'G-FT2K5G6SYR');
 
-// Custom GA4 events, pushed straight onto the dataLayer. Everything below uses
+// Custom GA4 events, sent with gtag() so they reach GA4 with their
+// parameters (a plain dataLayer push would need a Tag Manager tag to forward
+// it, and the old container never did). Everything below uses
 // document-level delegation because app.js renders cards and filter buttons
 // from the sheet after load, and re-renders them on search, filter, and
 // language changes. Listeners use the capture phase so they read the clicked
@@ -42,8 +44,7 @@ gtag('config', 'G-FT2K5G6SYR');
       // Domestic violence clicks are counted by category only. Which shelter
       // or hotline someone contacted never leaves the device.
       var sensitive = !!card.querySelector('.cat-DomesticViolence');
-      window.dataLayer.push({
-        event: 'resource_click',
+      gtag('event', 'resource_click', {
         resource_name: sensitive ? '(withheld)' : cleanText(card.querySelector('.card-name')),
         resource_category: cleanText(card.querySelector('.card-category')),
         click_type: getClickType(link),
@@ -54,8 +55,7 @@ gtag('config', 'G-FT2K5G6SYR');
 
     var filterButton = target.closest('#filters .filter-btn[data-category]');
     if (filterButton) {
-      window.dataLayer.push({
-        event: 'filter_select',
+      gtag('event', 'filter_select', {
         filter_name: cleanText(filterButton.querySelector('span:first-child')),
         filter_group: 'category'
       });
@@ -78,7 +78,7 @@ gtag('config', 'G-FT2K5G6SYR');
       lastSearchTerm = term;
       // Searches about abuse are counted without the words typed.
       if (SENSITIVE_SEARCH.test(term)) term = '(withheld)';
-      window.dataLayer.push({ event: 'resource_search', search_term: term });
+      gtag('event', 'resource_search', { search_term: term });
     }, SEARCH_DEBOUNCE_MS);
   });
 })();
