@@ -38,8 +38,14 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   :focus-visible {
-    outline: 3px solid rgba(46,134,193,0.28);
+    outline: 3px solid #005eb8;
     outline-offset: 3px;
+  }
+
+  /* The blue ring would vanish on the blue header and footer. */
+  header :focus-visible,
+  footer :focus-visible {
+    outline-color: #ffffff;
   }
 
   body {
@@ -79,7 +85,7 @@
     top: 0;
     z-index: 100;
     border-bottom: 1px solid rgba(255,255,255,0.16);
-    box-shadow: 0 8px 18px rgba(14,33,54,0.14);
+    box-shadow: 0 8px 18px rgba(0,58,115,0.18);
   }
 
   .header-inner {
@@ -283,7 +289,7 @@
     transform: translateY(-50%);
     border: none;
     background: transparent;
-    color: #7b8898;
+    color: #526171;
     font-size: 13px;
     font-weight: 600;
     padding: 7px 10px;
@@ -467,7 +473,7 @@
     left: 50%;
     bottom: 22px;
     transform: translateX(-50%) translateY(12px) scale(0.97);
-    background: rgba(24, 58, 85, 0.9);
+    background: rgba(0, 58, 115, 0.94);
     color: #ffffff;
     padding: 11px 14px;
     border-radius: 14px;
@@ -876,7 +882,7 @@
     padding: 0 4px;
     border: none;
     background: transparent;
-    color: #7f8ea0;
+    color: #526171;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -983,7 +989,7 @@
 
   .card-empty-actions {
     font-size: 12px;
-    color: #7d8da0;
+    color: #526171;
     padding-top: 2px;
   }
 
@@ -1033,7 +1039,7 @@
 
   .empty-action:hover {
     border-color: #b6c9db;
-    color: #1e4867;
+    color: #004a93;
   }
 
   .empty-link {
@@ -1118,7 +1124,7 @@
 
   .share-eyebrow {
     margin-top: 14px;
-    color: #698298;
+    color: #526171;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.14em;
@@ -1129,7 +1135,7 @@
     margin-top: 10px;
     font-family: Georgia, "Times New Roman", serif;
     font-size: clamp(1.5rem, 3.4vw, 2rem);
-    color: #173f5e;
+    color: #17344f;
     letter-spacing: -0.02em;
     line-height: 1.08;
   }
