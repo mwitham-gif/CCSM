@@ -594,11 +594,12 @@
   .icon-Other { background: #f3f4f6; }
 
   .card-name {
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 1.22rem;
-    font-weight: 600;
-    line-height: 1.14;
-    letter-spacing: 0;
+    font-family: inherit;
+    font-size: 1.25rem;
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+    font-variant-numeric: lining-nums;
     color: var(--text);
     max-width: none;
     text-wrap: balance;
@@ -1449,7 +1450,7 @@
     .results-context { padding: 0 10px; }
     .grid { padding: 0 10px calc(68px + env(safe-area-inset-bottom)); gap: 11px; }
     .card { padding: 16px 13px 14px; border-radius: 8px; }
-    .card-name { font-size: 1rem; }
+    .card-name { font-size: 1.06rem; }
     .card-details { padding: 10px 10px 9px; }
     .btn-call, .btn-web { min-height: 44px; }
     .btn-call-number { font-size: 13px; white-space: nowrap; }
