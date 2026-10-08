@@ -205,7 +205,7 @@ const CAT_LABELS = {
 // visible without scrolling on a phone. Categories not listed here (new
 // ones added in the sheet) follow in sheet order; "Other" is always last.
 const CATEGORY_ORDER = [
-  'Domestic Violence', 'Food', 'Rental', 'Housing', 'Medical', 'Mental',
+  'Food', 'Rental', 'Housing', 'Medical', 'Domestic Violence', 'Mental',
   'Benefits', 'Seniors', 'Disability', 'Legal', 'Childcare', 'Youth',
   'Employment', 'Transportation', 'Education',
 ];
