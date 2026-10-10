@@ -634,9 +634,10 @@ document.addEventListener('click', event => {
 
   closeShareMenus();
 });
-// Jump back to search and filters (phones only). Appears once the filters
-// are off screen and the visitor scrolls back UP, the moment they are
-// looking for the top; it hides again while they scroll down to read.
+// Jump back to search and filters. Appears once the filters are off screen
+// and the visitor scrolls back UP, the moment they are looking for the top;
+// it hides again while they scroll down to read. CSS puts it top-centre on
+// laptops and bottom-centre on phones.
 const JUMP_SHOW_DELTA = 8;
 let jumpLastY = window.scrollY;
 let jumpTicking = false;
@@ -667,7 +668,7 @@ function updateJumpButton() {
   const y = window.scrollY;
   const delta = y - jumpLastY;
   jumpLastY = y;
-  if (!controls || shareResourceKey || window.innerWidth > 640) {
+  if (!controls || shareResourceKey) {
     setJumpVisible(false);
     return;
   }
@@ -677,24 +678,53 @@ function updateJumpButton() {
   else if (delta >= JUMP_SHOW_DELTA) setJumpVisible(false);
 }
 
+// The header is sticky, so the pill and the scroll target sit just below it.
+function updateHeaderHeight() {
+  const header = document.querySelector('header');
+  if (header) document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
+}
+updateHeaderHeight();
+window.addEventListener('resize', updateHeaderHeight);
+window.addEventListener('load', updateHeaderHeight);
+
 window.addEventListener('scroll', () => {
   if (jumpTicking) return;
   jumpTicking = true;
   requestAnimationFrame(updateJumpButton);
 }, { passive: true });
 
-document.getElementById('jump-filters')?.addEventListener('click', () => {
+function jumpToFilters({ focusSearch = false } = {}) {
   const controls = document.querySelector('.controls');
   const finder = document.querySelector('.finder-card');
+  const input = document.getElementById('search');
   if (!controls) return;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   setJumpVisible(false);
   controls.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-  // Move focus for screen readers without opening the phone keyboard.
-  if (finder) {
+  if (focusSearch && input) {
+    input.focus({ preventScroll: true });
+    input.select();
+  } else if (finder) {
+    // Move focus for screen readers without opening the phone keyboard.
     finder.setAttribute('tabindex', '-1');
     finder.focus({ preventScroll: true });
   }
+}
+
+// Laptops with a mouse get the search box focused, ready to type; touch
+// screens only move focus to the card so no keyboard pops up.
+document.getElementById('jump-filters')?.addEventListener('click', () => {
+  jumpToFilters({ focusSearch: window.matchMedia('(hover: hover) and (pointer: fine)').matches });
+});
+
+// "/" jumps to the search box from anywhere, as on GitHub and YouTube.
+document.addEventListener('keydown', event => {
+  if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey || event.isComposing) return;
+  const target = event.target;
+  if (target instanceof HTMLElement && (target.isContentEditable || target.closest('input, textarea, select'))) return;
+  if (shareResourceKey) return;
+  event.preventDefault();
+  jumpToFilters({ focusSearch: true });
 });
 
 // Quick exit: replaces this page in history (so Back does not return here)
