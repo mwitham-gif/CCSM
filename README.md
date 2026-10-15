@@ -111,9 +111,14 @@ either way.
   turned off in the page code. This is the one exception to the rules
   below, and it is worth keeping in mind for an audience that reaches the site
   by scanning a flyer for housing, food, or legal help.
-- In GA4, turn off Enhanced measurement → Outbound clicks for this stream.
-  `resource_click` covers the same taps with the privacy rules above; the
-  built-in `click` event would record domestic violence websites' addresses.
+- GA4's Enhanced measurement → Outbound clicks can stay on: it records the
+  address of links to other sites. Domestic violence listings have no such
+  links: their Visit website, Email and Report actions (and the Share email
+  for the Domestic violence list) are buttons that open the same address in
+  a new tab, which that tracking does not see. `resource_click` still counts
+  those taps, with the name and address withheld. Keep it that way: a plain
+  link on a domestic violence listing would send its address to Google (the
+  safety checks fail if one appears).
 - To see the event parameters in reports, register them as event-scoped
   custom dimensions (Admin → Custom definitions): `resource_name`,
   `resource_category`, `click_type`, `filter_name`, `search_term`; and

@@ -335,6 +335,32 @@ const CATEGORY_ALIASES = {
   'domestic violence': 'Domestic Violence',
 };
 
+// Domestic violence listings never use plain web links. Google Analytics'
+// automatic "outbound click" tracking records the full address of every link
+// to another site, which would reveal which shelter or hotline someone
+// opened (and, for Gmail compose links, the listing's name). On these
+// listings the same actions are buttons that open the address in a new tab,
+// which that tracking does not see. analytics.js still counts the tap, with
+// the name and address withheld.
+function isProtectedCategory(category) {
+  return category === 'Domestic Violence';
+}
+
+function getExternalLink(href, className, content, { protect = false, attrs = '' } = {}) {
+  if (protect) {
+    return `<button class="${className}" type="button" data-open-url="${escapeAttr(href)}"${attrs}>${content}</button>`;
+  }
+  return `<a class="${className}" href="${escapeAttr(href)}" target="_blank" rel="noopener"${attrs}>${content}</a>`;
+}
+
+function openProtectedUrl(url) {
+  if (/^(mailto|tel):/i.test(url)) {
+    window.location.href = url;
+    return;
+  }
+  if (/^https:\/\//i.test(url)) window.open(url, '_blank', 'noopener,noreferrer');
+}
+
 function getReportHref(resource) {
   const name = getLocalizedValue(resource, 'name');
   const boldName = toBoldUnicode(name);
@@ -740,6 +766,13 @@ window.addEventListener('afterprint', () => {
 });
 
 document.addEventListener('click', event => {
+  const protectedLink = event.target.closest('[data-open-url]');
+  if (protectedLink) {
+    openProtectedUrl(protectedLink.dataset.openUrl);
+    closeShareMenus();
+    return;
+  }
+
   const langButton = event.target.closest('[data-lang]');
   if (langButton) {
     setLang(langButton.dataset.lang);
@@ -1053,6 +1086,7 @@ function getCategoryShareMarkup() {
 
   const label = CAT_LABELS[lang][activeCategory] || activeCategory;
   const shareEmailHref = getCategoryShareEmailHref(activeCategory);
+  const protect = isProtectedCategory(activeCategory);
 
   return `
     <div class="share-wrap">
@@ -1060,7 +1094,7 @@ function getCategoryShareMarkup() {
         ${escapeHTML(T[lang].share)} ${escapeHTML(label)}
       </button>
       <div class="share-menu" id="share-menu-category">
-        <a class="share-option" href="${escapeAttr(shareEmailHref)}" target="_blank" rel="noopener">${escapeHTML(T[lang].shareEmail)}</a>
+        ${getExternalLink(shareEmailHref, 'share-option', escapeHTML(T[lang].shareEmail), { protect })}
         <button class="share-option" type="button" data-action="copy-category-all">${escapeHTML(T[lang].shareCopyAll)}</button>
         <button class="share-option" type="button" data-action="copy-category">${escapeHTML(T[lang].shareCopyLink)}</button>
         <button class="share-option" type="button" data-action="print-category">${escapeHTML(T[lang].sharePrint)}</button>
@@ -1091,6 +1125,7 @@ function renderResourceCard(resource, i, query = '') {
   const hasLongDesc = desc.length > 190;
   const hasLongNotes = notes.length > 120;
   const encodedName = encodeURIComponent(name);
+  const protect = isProtectedCategory(cat);
 
   return `
     <div class="card">
@@ -1120,7 +1155,7 @@ function renderResourceCard(resource, i, query = '') {
       <div class="${actionClass}">
         ${actionCount ? `<div class="card-section-label">${escapeHTML(T[lang].contactLabel)}</div>` : `<div class="card-empty-actions">${escapeHTML(T[lang].noContact)}</div>`}
         ${phone   ? `<a class="btn-call" href="tel:${escapeAttr(normalizePhoneHref(phone))}"><span class="btn-call-label">${escapeHTML(T[lang].call)}</span><span class="btn-call-number">${escapeHTML(phone)}</span></a>` : ''}
-        ${website ? `<a class="btn-web" href="${escapeAttr(website)}" target="_blank" rel="noopener">${escapeHTML(T[lang].website)}</a>` : ''}
+        ${website ? getExternalLink(website, 'btn-web', escapeHTML(T[lang].website), { protect }) : ''}
       </div>
       <div class="card-footer">
         <div class="share-wrap">
@@ -1128,12 +1163,12 @@ function renderResourceCard(resource, i, query = '') {
             ${escapeHTML(T[lang].share)}
           </button>
           <div class="share-menu" id="share-menu-${i}">
-            <a class="share-option" href="${escapeAttr(shareEmailHref)}" target="_blank" rel="noopener">${escapeHTML(T[lang].shareEmail)}</a>
+            ${getExternalLink(shareEmailHref, 'share-option', escapeHTML(T[lang].shareEmail), { protect })}
             <button class="share-option" type="button" data-copy-index="${i}">${escapeHTML(T[lang].shareCopyLink)}</button>
             <button class="share-option" type="button" data-print-index="${i}">${escapeHTML(T[lang].sharePrint)}</button>
           </div>
         </div>
-        <a class="btn-report" href="${escapeAttr(reportHref)}" target="_blank" rel="noopener" aria-label="${escapeAttr(`${T[lang].reportBtn}: ${name}`)}">${escapeHTML(T[lang].reportBtn)}</a>
+        ${getExternalLink(reportHref, 'btn-report', escapeHTML(T[lang].reportBtn), { protect, attrs: ` aria-label="${escapeAttr(`${T[lang].reportBtn}: ${name}`)}"` })}
       </div>
     </div>`;
 }
