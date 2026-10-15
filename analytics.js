@@ -45,7 +45,7 @@ gtag('config', 'G-FT2K5G6SYR', {
 
   function getClickType(link) {
     if (link.classList.contains('btn-report')) return 'report';
-    var href = link.getAttribute('href') || link.getAttribute('data-open-url') || '';
+    var href = link.getAttribute('href') || '';
     if (/^tel:/i.test(href)) return 'call';
     if (/^mailto:/i.test(href)) return 'email';
     return 'website';
@@ -55,9 +55,7 @@ gtag('config', 'G-FT2K5G6SYR', {
     var target = event.target;
     if (!(target instanceof Element)) return;
 
-    // [data-open-url]: the buttons app.js uses instead of links on domestic
-    // violence listings, so Google's own outbound-click tracking skips them.
-    var link = target.closest('.card .card-actions a[href], .card .card-footer a[href], .card [data-open-url]');
+    var link = target.closest('.card .card-actions a[href], .card .card-footer a[href]');
     if (link) {
       var card = link.closest('.card');
       // Domestic violence clicks are counted by category only. Which shelter

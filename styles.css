@@ -886,15 +886,6 @@
     white-space: nowrap;
   }
 
-  /* Domestic violence listings use buttons in place of these links (app.js). */
-  button.btn-web,
-  button.btn-report,
-  button.share-option {
-    -webkit-appearance: none;
-    appearance: none;
-    line-height: inherit;
-  }
-
   .btn-web  {
     background: #ffffff;
     color: var(--ocean);

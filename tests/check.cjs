@@ -174,18 +174,6 @@ async function browserChecks() {
     // Quick exit and the safety note on the domestic violence view.
     await page.click('[data-category="Domestic Violence"]');
     await page.waitForTimeout(200);
-    const dvLinks = await page.evaluate(() => Array.from(document.querySelectorAll('#grid .card a[href], #results-context a[href]'))
-      .map(a => a.getAttribute('href')).filter(href => /^https?:/i.test(href)));
-    check('domestic violence listings have no web links for Google to record', dvLinks.length === 0, dvLinks.join(' | '));
-    check('domestic violence listings still offer Visit website, Email and Report',
-      (await page.locator('#grid .card button.btn-web[data-open-url]').count()) > 0
-      && (await page.locator('#grid .card button.btn-report[data-open-url]').count()) > 0
-      && (await page.locator('#grid .card button.share-option[data-open-url]').count()) > 0);
-    await page.evaluate(() => { window.__opened = []; window.open = (url, target, features) => { window.__opened.push([url, target, features]); return null; }; });
-    await page.click('#grid .card button.btn-web');
-    const opened = await page.evaluate(() => window.__opened);
-    check('Visit website on a domestic violence listing opens the site in a new tab',
-      opened.length === 1 && /^https:\/\//.test(opened[0][0]) && opened[0][1] === '_blank' && /noopener/.test(opened[0][2]), JSON.stringify(opened));
     check('Quick exit shows on the domestic violence view', await page.locator('#quick-exit').isVisible());
     check('Browsing safely note shows on the domestic violence view', await page.locator('#safety-tip').isVisible());
     await page.click('[data-category="Food"]');
@@ -237,7 +225,7 @@ async function browserChecks() {
     await second.page.fill('#search', '');
     await second.page.click('[data-category="Domestic Violence"]');
     await second.page.waitForTimeout(200);
-    await second.page.evaluate(() => { window.open = () => null; });
+    await second.page.evaluate(() => document.querySelector('.card .btn-web')?.addEventListener('click', event => event.preventDefault()));
     await second.page.click('.card .btn-web');
     const click = await second.page.evaluate(() => (window.dataLayer || []).map(entry => Array.from(entry)).filter(entry => entry[1] === 'resource_click').pop());
     check('a click on a domestic violence listing withholds its name and link',
@@ -251,7 +239,6 @@ async function browserChecks() {
   {
     const { context, page, problems } = await openWith('tests/fixtures/sample.csv');
     check('the directory loads', (await page.locator('.card').count()) > 0);
-    check('other listings keep ordinary web links (so outbound clicks are counted)', (await page.locator('#grid .card a.btn-web[href^="https://"]').count()) > 0);
     await page.fill('#search', 'groceries');
     await page.waitForTimeout(200);
     check('food searches start with the Pantry Locator', /Pantry Locator/.test(await page.locator('.card-name').first().innerText()));
