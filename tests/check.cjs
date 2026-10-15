@@ -250,6 +250,25 @@ async function browserChecks() {
     check('A+ makes the text larger', await page.evaluate(() => document.documentElement.classList.contains('text-large')));
     check('A+ never makes the page scroll sideways', await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth));
     await page.click('#btn-text-size');
+    // A Share menu near the top of the screen must open downward, fully visible.
+    await page.click('[data-category="Food"]');
+    await page.waitForTimeout(200);
+    await page.evaluate(() => {
+      const button = document.querySelector('[data-share-menu="category"]');
+      const header = document.querySelector('header');
+      window.scrollBy(0, button.getBoundingClientRect().top - Math.max(0, header.getBoundingClientRect().bottom) - 10);
+    });
+    await page.click('[data-share-menu="category"]');
+    const menuBox = await page.evaluate(() => {
+      const box = document.querySelector('.share-menu.show').getBoundingClientRect();
+      const header = document.querySelector('header').getBoundingClientRect();
+      return { top: box.top, bottom: box.bottom, right: box.right, limit: Math.max(0, header.bottom), width: document.documentElement.clientWidth, height: innerHeight };
+    });
+    check('a Share menu near the top of the screen stays fully visible',
+      menuBox.top >= menuBox.limit && menuBox.bottom <= menuBox.height && menuBox.right <= menuBox.width, JSON.stringify(menuBox));
+    await page.keyboard.press('Escape');
+    await page.click('[data-category="All"]');
+    await page.waitForTimeout(200);
     await page.evaluate(() => { window.print = () => { window.__printed = true; }; });
     await page.click('[data-category="Food"]');
     await page.click('[data-share-menu="category"]');

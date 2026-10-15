@@ -482,7 +482,7 @@ function getCategoryShareEmailHref(category) {
 }
 
 function closeShareMenus() {
-  document.querySelectorAll('.share-menu.show').forEach(menu => menu.classList.remove('show'));
+  document.querySelectorAll('.share-menu.show').forEach(menu => menu.classList.remove('show', 'open-down', 'open-left'));
   document.querySelectorAll('.btn-share[aria-expanded="true"]').forEach(button => button.setAttribute('aria-expanded', 'false'));
 }
 
@@ -497,7 +497,19 @@ function toggleShareMenu(idx, event, button) {
   if (!isOpen) {
     menu.classList.add('show');
     button.setAttribute('aria-expanded', 'true');
+    keepMenuOnScreen(menu);
   }
+}
+
+// Share menus open upward from their button. Near the top of the screen
+// (or under the sticky header on larger screens) that would push the first
+// options out of sight, so open downward instead; likewise keep the menu
+// inside the screen's right edge.
+function keepMenuOnScreen(menu) {
+  const header = document.querySelector('header');
+  const headerBottom = header ? Math.max(0, header.getBoundingClientRect().bottom) : 0;
+  if (menu.getBoundingClientRect().top < headerBottom + 8) menu.classList.add('open-down');
+  if (menu.getBoundingClientRect().right > document.documentElement.clientWidth - 8) menu.classList.add('open-left');
 }
 
 function getSectionStateKey(resourceName, section) {

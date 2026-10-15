@@ -999,6 +999,17 @@
     display: block;
   }
 
+  /* Set by app.js when the menu would leave the screen. */
+  .share-menu.open-down {
+    bottom: auto;
+    top: calc(100% + 8px);
+  }
+
+  .share-menu.open-left {
+    left: auto;
+    right: 0;
+  }
+
   .share-option {
     width: 100%;
     border: none;
