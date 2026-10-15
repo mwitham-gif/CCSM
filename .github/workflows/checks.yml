@@ -1,0 +1,36 @@
+# Safety checks: run tests/check.cjs on every push and pull request.
+# A red X on a commit means the change weakened the site's security rules,
+# let sheet text run as code or slip in an unsafe link, or broke a privacy
+# rule. See tests/check.cjs for the full list.
+name: Safety checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check JavaScript syntax
+        run: |
+          node --check app.js
+          node --check analytics.js
+          node --check sw.js
+      - name: Install the test browser
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Run safety checks
+        run: node tests/check.cjs

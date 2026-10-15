@@ -1,0 +1,8 @@
+name,name_es,category,description,description_es,address,address_es,phone,website,hours,hours_es,notes,notes_es,tags
+"<img src=x onerror=""window.__pwned='name'"">Food Bank",,Food,"<script>window.__pwned='desc'</script> Free groceries",,"123 Main St <svg onload=""window.__pwned='addr'"">",,(310) 555-0100,javascript:window.__pwned='href',Mon–Fri 9am–5pm,,"</span><b onmouseover=""window.__pwned='notes'"">x</b>",,"<i>tag</i>, Walk-ins"
+Data Link Pantry,,Food,Has a data URL website.,,1 Oak Ave Los Angeles CA 90045,,(310) 555-0101,data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==,,,,,
+Vbscript Clinic,,Medical,Has a vbscript website.,,2 Elm St Los Angeles CA 90045,,"(310) 555-0102"" onclick=""window.__pwned='phone'",vbscript:msgbox(1),,,,,
+"Quote ' Breaker"" data-x=""1",,Legal,"Name with quotes ' "" and ampersands &amp; &lt;",,3 Pine St,,(310) 555-0103,https://example.org/?a=1&b=<2>,,,,,
+Safe House,Casa Segura,Domestic Violence,Confidential shelter.,Refugio confidencial.,Confidential,Confidencial,(800) 555-0199,https://example.org/dv,24/7,24/7,,,
+Protocol Relative,,Other,Uses a protocol-relative link.,,4 Ash St,,(310) 555-0104,//evil.example/phish,,,,,
+name,name_es,category,description,description_es,address,address_es,phone,website,hours,hours_es,notes,notes_es,tags

@@ -174,6 +174,50 @@
     color: var(--ocean);
   }
 
+  .header-tools {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  /* A+ : same frosted pill as the language toggle. */
+  .text-size-btn {
+    min-height: 40px;
+    min-width: 44px;
+    margin-top: 2px;
+    padding: 0 12px;
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.13);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    color: white;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .text-size-plus {
+    font-size: 11px;
+    vertical-align: super;
+    margin-left: 1px;
+  }
+
+  .text-size-btn.active {
+    background: #ffffff;
+    color: var(--ocean);
+  }
+
+  /* Larger text: the whole page grows 20%, like a browser zoom. */
+  html.text-large body { zoom: 1.2; }
+
+  @media print {
+    html.text-large body { zoom: 1; }
+    .header-tools { display: none; }
+  }
+
   /* ── SEARCH + FILTER ── */
   .controls {
     max-width: 900px;
@@ -1313,6 +1357,11 @@
       margin-top: 0;
     }
 
+    .text-size-btn {
+      margin-top: 0;
+      min-height: 44px;
+    }
+
     .lang-toggle button {
       min-height: 44px;
       min-width: 44px;
@@ -1556,6 +1605,51 @@
     .quick-exit:hover { transform: none; }
   }
 
+  /* Browsing safely: shown with Quick exit on domestic violence views. */
+  .safety-tip {
+    max-width: 868px;
+    margin: 0 auto 18px;
+    padding: 14px 18px;
+    border: 1px solid #e7c3d9;
+    border-left: 4px solid var(--c-DomesticViolence);
+    border-radius: 0 10px 10px 0;
+    background: #fdf6fa;
+    color: var(--text-body);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .safety-tip[hidden] { display: none; }
+
+  .safety-tip-title {
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .safety-tip ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .safety-tip li + li { margin-top: 3px; }
+
+  .safety-tip-urgent {
+    margin-top: 8px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  @media (max-width: 920px) {
+    .safety-tip { margin-left: 16px; margin-right: 16px; }
+  }
+
+  body.share-mode .safety-tip { max-width: 648px; margin-top: 18px; }
+
+  @media print {
+    .safety-tip { display: none; }
+  }
+
   /* Keep the footer clear of the floating button. */
   body.has-quick-exit footer {
     padding-bottom: calc(28px + 72px);
@@ -1723,4 +1817,217 @@
 
   @media print {
     .jump-filters { display: none; }
+  }
+
+  /* ── PRINT OR SAVE AS PDF ──
+   * app.js fills #print-sheet and adds .printing-sheet to body before calling
+   * window.print(). Letter or A4, large type, brand blue header rule, each
+   * listing marked with its category color, and a QR code back to the live
+   * guide. A normal Ctrl+P (no class) prints the page as is. */
+  .print-sheet { display: none; }
+
+  @media print {
+    @page { margin: 0.55in 0.6in; }
+
+    body.printing-sheet {
+      background: #fff;
+      min-height: 0;
+    }
+
+    body.printing-sheet > *:not(.print-sheet) { display: none !important; }
+
+    body.printing-sheet .print-sheet {
+      display: block;
+      color: #1a2633;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 11.5pt;
+      line-height: 1.4;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .ps-top {
+      display: flex;
+      align-items: center;
+      gap: 14pt;
+      padding-bottom: 10pt;
+      border-bottom: 3pt solid var(--ocean);
+    }
+
+    .ps-logo {
+      height: 44pt;
+      width: auto;
+    }
+
+    .ps-brand { margin-left: auto; text-align: right; }
+
+    .ps-brand-name {
+      font-size: 13pt;
+      font-weight: 700;
+      color: var(--ocean);
+    }
+
+    .ps-brand-sub {
+      font-size: 9pt;
+      color: #526171;
+    }
+
+    .ps-title { padding: 18pt 0 12pt; }
+
+    .ps-eyebrow {
+      font-size: 9.5pt;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ocean);
+    }
+
+    .ps-title h1 {
+      font-family: inherit;
+      font-size: 26pt;
+      line-height: 1.15;
+      font-weight: 750;
+      letter-spacing: -0.01em;
+      color: #17344f;
+      margin: 3pt 0 0;
+    }
+
+    .ps-lede {
+      font-size: 14pt;
+      line-height: 1.4;
+      color: #263748;
+      margin: 8pt 0 0;
+      max-width: 34em;
+    }
+
+    .ps-meta {
+      margin-top: 8pt;
+      font-size: 9.5pt;
+      color: #526171;
+    }
+
+    .ps-item {
+      --ps-cat: #005eb8;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin: 0 0 8pt;
+      padding: 9pt 12pt 10pt 14pt;
+      border: 0.75pt solid #d7e0e7;
+      border-left: 5pt solid var(--ps-cat);
+      border-radius: 6pt;
+      background: #fbfcfd;
+    }
+
+    .ps-item.pc-Food { --ps-cat: var(--c-Food); }
+    .ps-item.pc-Rental { --ps-cat: var(--c-Rental); }
+    .ps-item.pc-Housing { --ps-cat: var(--c-Housing); }
+    .ps-item.pc-Medical { --ps-cat: var(--c-Medical); }
+    .ps-item.pc-DomesticViolence { --ps-cat: var(--c-DomesticViolence); }
+    .ps-item.pc-Mental { --ps-cat: var(--c-Mental); }
+    .ps-item.pc-Benefits { --ps-cat: var(--c-Benefits); }
+    .ps-item.pc-Seniors { --ps-cat: var(--c-Seniors); }
+    .ps-item.pc-Disability { --ps-cat: var(--c-Disability); }
+    .ps-item.pc-Legal { --ps-cat: var(--c-Legal); }
+    .ps-item.pc-Childcare { --ps-cat: var(--c-Childcare); }
+    .ps-item.pc-Youth { --ps-cat: var(--c-Youth); }
+    .ps-item.pc-Employment { --ps-cat: var(--c-Employment); }
+    .ps-item.pc-Transportation { --ps-cat: var(--c-Transportation); }
+    .ps-item.pc-Education { --ps-cat: var(--c-Education); }
+    .ps-item.pc-Other { --ps-cat: var(--c-Other); }
+
+    .ps-item h2 {
+      font-size: 14pt;
+      line-height: 1.25;
+      font-weight: 700;
+      color: #17344f;
+      margin: 0 0 3pt;
+    }
+
+    .ps-desc {
+      margin: 0 0 6pt;
+      color: #263748;
+    }
+
+    .ps-grid {
+      display: grid;
+      grid-template-columns: 0.8fr 1.1fr 1.1fr;
+      gap: 5pt 16pt;
+    }
+
+    .ps-field { min-width: 0; }
+    .ps-wide { grid-column: 1 / -1; }
+
+    .ps-label {
+      display: block;
+      font-size: 8pt;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #526171;
+    }
+
+    .ps-value {
+      display: block;
+      overflow-wrap: anywhere;
+    }
+
+    .ps-call .ps-value {
+      font-size: 13.5pt;
+      white-space: nowrap;
+      font-weight: 700;
+      color: #17344f;
+    }
+
+    .ps-web .ps-value { font-weight: 600; }
+
+    /* One resource on its own page: roomier, bigger type. */
+    .ps-single {
+      padding: 16pt 18pt 18pt 20pt;
+      font-size: 13.5pt;
+    }
+
+    .ps-single .ps-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 14pt 24pt;
+    }
+    .ps-single .ps-call .ps-value { font-size: 20pt; }
+
+    .ps-foot {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      display: flex;
+      align-items: center;
+      gap: 16pt;
+      margin-top: 16pt;
+      padding: 12pt 14pt;
+      border-top: 3pt solid var(--ocean);
+      background: #f2f7fc;
+      border-radius: 0 0 6pt 6pt;
+    }
+
+    .ps-qr {
+      width: 78pt;
+      height: 78pt;
+      flex: none;
+    }
+
+    .ps-foot-text { font-size: 10.5pt; color: #263748; }
+
+    .ps-foot-title {
+      font-size: 13pt;
+      font-weight: 700;
+      color: var(--ocean);
+    }
+
+    .ps-foot-url {
+      font-weight: 700;
+      color: #17344f;
+      margin-top: 2pt;
+    }
+
+    .ps-foot-help {
+      margin-top: 5pt;
+      font-size: 9.5pt;
+      color: #526171;
+    }
   }

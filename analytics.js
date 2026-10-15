@@ -12,7 +12,24 @@
 window.dataLayer = window.dataLayer || [];
 function gtag() { dataLayer.push(arguments); }
 gtag('js', new Date());
-gtag('config', 'G-FT2K5G6SYR');
+
+// A shared link (?share=Name) names one resource, possibly a domestic violence
+// shelter, and an old ?q= link carries whatever was typed. Neither goes to
+// Google: the page view is reported with those values withheld, and a shared
+// page is titled generically (app.js retitles it with the resource name).
+var pageParams = new URLSearchParams(window.location.search);
+var isSharePage = pageParams.has('share');
+if (isSharePage) pageParams.set('share', '(withheld)');
+pageParams.delete('q');
+var pageQuery = pageParams.toString();
+
+gtag('config', 'G-FT2K5G6SYR', {
+  page_location: window.location.origin + window.location.pathname + (pageQuery ? '?' + pageQuery : ''),
+  page_title: isSharePage ? 'Shared resource' : document.title,
+  // Visits are counted, never joined to Google accounts or used for ads.
+  allow_google_signals: false,
+  allow_ad_personalization_signals: false
+});
 
 // Custom GA4 events, sent with gtag() so they reach GA4 with their
 // parameters (a plain dataLayer push would need a Tag Manager tag to forward
@@ -63,7 +80,18 @@ gtag('config', 'G-FT2K5G6SYR');
   }, true);
 
   var SEARCH_DEBOUNCE_MS = 1500;
-  var SENSITIVE_SEARCH = /abus|violen|\bdv\b|domestic|dom[eé]stic|shelter|refugio|maltrat|assault|asalto|stalk|acoso|traffick|trata/i;
+  // Searches that could expose someone are counted without the words typed:
+  // abuse, immigration status, self-harm, and sexual or reproductive health.
+  var SENSITIVE_SEARCH = new RegExp([
+    'abus', 'violen', '\\bdv\\b', 'domestic', 'dom[eé]stic', 'shelter', 'refugio', 'maltrat',
+    'assault', 'asalto', 'stalk', 'acoso', 'traffick', '\\btrata\\b', '\\brape', 'violaci',
+    'immigra', 'inmigra', 'undocumented', 'indocumentad', 'deport', '\\bice\\b', 'asylum', 'asilo',
+    'visa', 'daca', 'green card', 'citizenship', 'ciudadan',
+    'suicid', 'self.?harm', 'overdose', 'sobredosis',
+    '\\bhiv', '\\bvih', '\\bstd\\b', '\\bsti\\b', 'pregnan', 'embaraz', 'abort'
+  ].join('|'), 'i');
+  // People sometimes type their own phone number, email or case number.
+  var PERSONAL_DETAILS = /@|\d[\d\s().-]{5,}\d/;
   var searchTimer = null;
   var lastSearchTerm = '';
 
@@ -76,9 +104,15 @@ gtag('config', 'G-FT2K5G6SYR');
       var term = input.value.trim();
       if (!term || term === lastSearchTerm) return;
       lastSearchTerm = term;
-      // Searches about abuse are counted without the words typed.
-      if (SENSITIVE_SEARCH.test(term)) term = '(withheld)';
-      gtag('event', 'resource_search', { search_term: term });
+      if (SENSITIVE_SEARCH.test(term) || PERSONAL_DETAILS.test(term)) term = '(withheld)';
+      // app.js records how many listings matched on #grid. A search that
+      // found nothing points to a need the directory does not cover yet.
+      var grid = document.getElementById('grid');
+      var count = grid ? Number(grid.getAttribute('data-result-count')) : NaN;
+      var params = { search_term: term };
+      if (!isNaN(count)) params.result_count = count;
+      gtag('event', 'resource_search', params);
+      if (count === 0) gtag('event', 'search_no_results', { search_term: term });
     }, SEARCH_DEBOUNCE_MS);
   });
 })();

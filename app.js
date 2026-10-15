@@ -7,7 +7,7 @@ const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbAtpa7kK10y
 const MAX_CSV_BYTES = 500000;
 
 // Recommended Google Sheet columns:
-// name, name_es, category, description, description_es, address, phone, website, hours, notes, notes_es, tags, tags_es
+// name, name_es, category, description, description_es, address, address_es, phone, website, hours, hours_es, notes, notes_es, tags, tags_es
 // The importer also accepts several human-friendly variations like "Name", "Resource Name", or "Phone Number".
 
 const T = {
@@ -57,6 +57,27 @@ const T = {
     share: 'Share',
     shareEmail: 'Email',
     shareCopyLink: 'Copy link',
+    sharePrint: 'Print or save as PDF',
+    printedOn: date => `Printed ${date}`,
+    printPhone: 'Phone',
+    printWebsite: 'Website',
+    printListEyebrow: 'Resource list',
+    printCount: n => `${n} resource${n===1?'':'s'}`,
+    printScanTitle: 'Scan for the full guide',
+    printScanBody: 'Always up to date, in English and Spanish.',
+    printCallFirst: 'Please call before visiting. Hours, services and eligibility can change.',
+    printHelp: 'Questions? Resident Services: (310) 395-0220.',
+    textLarger: 'Larger text',
+    textSmaller: 'Normal text size',
+    safetyTitle: 'Browsing safely',
+    safetyTips: [
+      'If someone checks this phone or computer, they may be able to see the sites you visit.',
+      'A private or incognito window keeps this visit out of your history. You can also delete this site from your history afterwards.',
+      'A phone or computer at a library, at work, or at a friend\'s home is safer than a shared one.',
+      'Quick exit (bottom right) leaves this site at once and erases the copy saved on this device.',
+    ],
+    safetyUrgent: 'In danger right now? Call 911.',
+    offlineNotice: 'You are offline. This is the list saved on this device, so some details may have changed since.',
     quickExit: 'Quick exit',
     jumpToFilters: 'Back to search and filters',
     quickExitHint: 'Leave this site now',
@@ -133,6 +154,27 @@ Thank you for keeping this resource up to date!`,
     share: 'Compartir',
     shareEmail: 'Correo',
     shareCopyLink: 'Copiar enlace',
+    sharePrint: 'Imprimir o guardar como PDF',
+    printedOn: date => `Impreso el ${date}`,
+    printPhone: 'Teléfono',
+    printWebsite: 'Sitio web',
+    printListEyebrow: 'Lista de recursos',
+    printCount: n => `${n} recurso${n===1?'':'s'}`,
+    printScanTitle: 'Escanee para ver la guía completa',
+    printScanBody: 'Siempre actualizada, en inglés y español.',
+    printCallFirst: 'Llame antes de visitar. Los horarios, servicios y requisitos pueden cambiar.',
+    printHelp: '¿Preguntas? Servicios para Residentes: (310) 395-0220.',
+    textLarger: 'Letra más grande',
+    textSmaller: 'Tamaño de letra normal',
+    safetyTitle: 'Navegar de forma segura',
+    safetyTips: [
+      'Si alguien revisa este teléfono o computadora, podría ver los sitios que usted visita.',
+      'Una ventana privada o de incógnito no guarda esta visita en su historial. También puede borrar este sitio de su historial después.',
+      'Un teléfono o computadora en una biblioteca, en el trabajo o en casa de una amistad es más seguro que uno compartido.',
+      'Salida rápida (abajo a la derecha) sale de este sitio de inmediato y borra la copia guardada en este dispositivo.',
+    ],
+    safetyUrgent: '¿Está en peligro ahora? Llame al 911.',
+    offlineNotice: 'No tiene conexión. Esta es la lista guardada en este dispositivo, así que algunos detalles pueden haber cambiado.',
     quickExit: 'Salida rápida',
     jumpToFilters: 'Volver a búsqueda y filtros',
     quickExitHint: 'Salir de este sitio ahora',
@@ -247,9 +289,11 @@ const FIELD_ALIASES = {
   description: ['description', 'service description', 'summary', 'details'],
   description_es: ['description_es', 'description es', 'service description es', 'descripcion', 'descripcion_es'],
   address: ['address', 'location', 'street address'],
+  address_es: ['address_es', 'address es', 'direccion', 'direccion_es', 'dirección'],
   phone: ['phone', 'phone number', 'telephone', 'contact phone'],
   website: ['website', 'web site', 'url', 'link'],
   hours: ['hours', 'service hours', 'open hours', 'availability'],
+  hours_es: ['hours_es', 'hours es', 'horario', 'horario_es', 'horarios'],
   notes: ['notes', 'note', 'eligibility', 'requirements', 'instructions'],
   notes_es: ['notes_es', 'notes es', 'eligibility es', 'requirements es', 'notas', 'notas_es'],
   tags: ['tags', 'tag', 'highlights', 'quick tags', 'quick_tag', 'quick tags'],
@@ -338,7 +382,7 @@ function getResourceShareData(resource) {
   const name = getLocalizedValue(resource, 'name');
   const description = getLocalizedValue(resource, 'description');
   const website = normalizeWebsiteUrl(getField(resource, 'website'));
-  const address = getField(resource, 'address');
+  const address = getLocalizedValue(resource, 'address');
   const phone = getField(resource, 'phone');
   const parts = [description, address, phone].filter(Boolean);
   const shareUrl = getSharePageUrl(resource);
@@ -355,7 +399,7 @@ function getResourceEmailLines(resource, includeShareUrl = true) {
   const website = normalizeWebsiteUrl(getField(resource, 'website'));
   const lines = [
     shareData.title,
-    getField(resource, 'address'),
+    getLocalizedValue(resource, 'address'),
     getField(resource, 'phone'),
     getLocalizedValue(resource, 'description'),
     website,
@@ -442,10 +486,9 @@ function closeShareMenus() {
   document.querySelectorAll('.btn-share[aria-expanded="true"]').forEach(button => button.setAttribute('aria-expanded', 'false'));
 }
 
-function toggleShareMenu(idx, event) {
+function toggleShareMenu(idx, event, button) {
   event.stopPropagation();
   const menu = document.getElementById(`share-menu-${idx}`);
-  const button = event.currentTarget;
   if (!menu) return;
 
   const isOpen = menu.classList.contains('show');
@@ -584,6 +627,118 @@ async function copyCategoryResources() {
   window.prompt(T[lang].copyPrompt, getCategorySharePageUrl(activeCategory));
 }
 
+// Print or save as PDF. Builds a branded, large-type page in #print-sheet:
+// phone numbers and web addresses written out in full and a QR code back to
+// the live guide, so it works on paper, in a PDF, or handed across a desk.
+// styles.css shows only that sheet while body has .printing-sheet; a normal
+// Ctrl+P is unaffected.
+const PRINT_QR_SRC = 'flyer/ccsm-qr.svg';
+const PRINT_LOGO_SRC = 'ccsm_logo_web.png';
+
+// Fetch the QR code ahead of time so it is ready the moment Print is tapped.
+[PRINT_QR_SRC, PRINT_LOGO_SRC].forEach(src => { new Image().src = src; });
+
+function getPrintField(label, value, extraClass = '') {
+  if (!value) return '';
+  return `<div class="ps-field ${extraClass}"><span class="ps-label">${escapeHTML(label)}</span><span class="ps-value">${escapeHTML(value)}</span></div>`;
+}
+
+function getPrintItemMarkup(resource, { single = false } = {}) {
+  const cat = normalizeCategory(resource);
+  const website = normalizeWebsiteUrl(getField(resource, 'website'))
+    .replace(/^https?:\/\//i, '').replace(/^www\./i, '').replace(/\/$/, '');
+  const desc = getLocalizedValue(resource, 'description');
+
+  return `
+    <section class="ps-item pc-${escapeAttr(getCategoryClass(cat))}${single ? ' ps-single' : ''}">
+      ${single ? '' : `<h2>${escapeHTML(getLocalizedValue(resource, 'name'))}</h2>`}
+      ${desc && !single ? `<p class="ps-desc">${escapeHTML(desc)}</p>` : ''}
+      <div class="ps-grid">
+        ${getPrintField(T[lang].call, getField(resource, 'phone'), 'ps-call')}
+        ${single ? getPrintField(T[lang].printWebsite, website, 'ps-web') : ''}
+        ${getPrintField(T[lang].addressLabel, getLocalizedValue(resource, 'address'))}
+        ${getPrintField(T[lang].hoursLabel, getLocalizedValue(resource, 'hours'))}
+        ${single ? '' : getPrintField(T[lang].printWebsite, website, 'ps-web ps-wide')}
+        ${getPrintField(T[lang].notesLabel, getLocalizedValue(resource, 'notes'), 'ps-wide')}
+      </div>
+    </section>`;
+}
+
+async function printResources(list, { title, eyebrow, lede = '', single = false }) {
+  const sheet = document.getElementById('print-sheet');
+  if (!sheet || !list.length) return;
+  closeShareMenus();
+
+  const date = new Date().toLocaleDateString(lang === 'es' ? 'es-US' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const siteUrl = getBasePageUrl().replace(/^https?:\/\//, '').replace(/\/$/, '');
+  const meta = single ? T[lang].printedOn(date) : `${T[lang].printCount(list.length)} · ${T[lang].printedOn(date)}`;
+
+  sheet.innerHTML = `
+    <div class="ps-top">
+      <img class="ps-logo" src="${PRINT_LOGO_SRC}" alt="Community Corporation of Santa Monica">
+      <div class="ps-brand">
+        <div class="ps-brand-name">${escapeHTML(T[lang].siteTitle)}</div>
+        <div class="ps-brand-sub">${escapeHTML(T[lang].footerTitle)}</div>
+      </div>
+    </div>
+    <div class="ps-title">
+      <div class="ps-eyebrow">${escapeHTML(eyebrow)}</div>
+      <h1>${escapeHTML(title)}</h1>
+      ${lede ? `<p class="ps-lede">${escapeHTML(lede)}</p>` : ''}
+      <div class="ps-meta">${escapeHTML(meta)}</div>
+    </div>
+    <div class="ps-list">
+      ${list.map(resource => getPrintItemMarkup(resource, { single })).join('')}
+    </div>
+    <div class="ps-foot">
+      <img class="ps-qr" src="${PRINT_QR_SRC}" alt="">
+      <div class="ps-foot-text">
+        <div class="ps-foot-title">${escapeHTML(T[lang].printScanTitle)}</div>
+        <div>${escapeHTML(T[lang].printScanBody)}</div>
+        <div class="ps-foot-url">${escapeHTML(siteUrl)}</div>
+        <div class="ps-foot-help">${escapeHTML(T[lang].printHelp)} ${escapeHTML(T[lang].printCallFirst)}</div>
+      </div>
+    </div>`;
+
+  // Wait (briefly) for the logo and QR code, or they can print blank.
+  const images = Array.from(sheet.querySelectorAll('img'));
+  await Promise.race([
+    Promise.all(images.map(img => (img.decode ? img.decode() : Promise.resolve()).catch(() => {}))),
+    new Promise(resolve => setTimeout(resolve, 1500)),
+  ]);
+
+  document.body.classList.add('printing-sheet');
+  window.print();
+}
+
+function printResource(resource) {
+  const cat = normalizeCategory(resource);
+  printResources([resource], {
+    single: true,
+    eyebrow: CAT_LABELS[lang][cat] || cat,
+    title: getLocalizedValue(resource, 'name'),
+    lede: getLocalizedValue(resource, 'description'),
+  });
+}
+
+function printCategory() {
+  if (activeCategory === 'All') return;
+  const pins = getCategoryPins(activeCategory);
+  const list = resources
+    .filter(resource => normalizeCategory(resource) === activeCategory)
+    .sort((a, b) => getPinRank(b, pins) - getPinRank(a, pins) || compareText(getLocalizedValue(a, 'name'), getLocalizedValue(b, 'name')));
+  printResources(list, {
+    eyebrow: T[lang].printListEyebrow,
+    title: CAT_LABELS[lang][activeCategory] || activeCategory,
+  });
+}
+
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('printing-sheet');
+  const sheet = document.getElementById('print-sheet');
+  if (sheet) sheet.innerHTML = '';
+});
+
 document.addEventListener('click', event => {
   const langButton = event.target.closest('[data-lang]');
   if (langButton) {
@@ -601,13 +756,20 @@ document.addEventListener('click', event => {
 
   const shareButton = event.target.closest('[data-share-menu]');
   if (shareButton) {
-    toggleShareMenu(shareButton.dataset.shareMenu, event);
+    toggleShareMenu(shareButton.dataset.shareMenu, event, shareButton);
     return;
   }
 
   const copyButton = event.target.closest('[data-copy-index]');
   if (copyButton) {
     copyResourceLink(Number(copyButton.dataset.copyIndex));
+    return;
+  }
+
+  const printButton = event.target.closest('[data-print-index]');
+  if (printButton) {
+    const resource = filtered_cache[Number(printButton.dataset.printIndex)];
+    if (resource) printResource(resource);
     return;
   }
 
@@ -625,6 +787,7 @@ document.addEventListener('click', event => {
     if (action === 'clear-all') clearAllFilters();
     if (action === 'copy-category') copyCategoryLink();
     if (action === 'copy-category-all') copyCategoryResources();
+    if (action === 'print-category') printCategory();
     if (action === 'show-more') showMoreResults();
     if (action === 'retry-load') loadData();
     if (action === 'back-to-directory') window.location.href = getBasePageUrl();
@@ -677,6 +840,33 @@ function updateJumpButton() {
   else if (delta <= -JUMP_SHOW_DELTA) setJumpVisible(true);
   else if (delta >= JUMP_SHOW_DELTA) setJumpVisible(false);
 }
+
+// Larger text (the A+ button in the header). Scales the whole page by 20%,
+// like a browser zoom, so every part grows together. The choice is
+// remembered on this device only; if storage is blocked it simply resets.
+const TEXT_SIZE_KEY = 'ccsm-large-text';
+
+function setLargeText(on, { save = true } = {}) {
+  document.documentElement.classList.toggle('text-large', on);
+  const button = document.getElementById('btn-text-size');
+  if (button) {
+    button.classList.toggle('active', on);
+    button.setAttribute('aria-pressed', on ? 'true' : 'false');
+    const label = on ? T[lang].textSmaller : T[lang].textLarger;
+    button.setAttribute('aria-label', label);
+    button.title = label;
+  }
+  if (save) {
+    try { window.localStorage.setItem(TEXT_SIZE_KEY, on ? '1' : '0'); } catch (error) { /* storage blocked */ }
+  }
+  updateHeaderHeight();
+}
+
+function isLargeText() {
+  return document.documentElement.classList.contains('text-large');
+}
+
+document.getElementById('btn-text-size')?.addEventListener('click', () => setLargeText(!isLargeText()));
 
 // The header is sticky, so the pill and the scroll target sit just below it.
 function updateHeaderHeight() {
@@ -732,11 +922,37 @@ document.addEventListener('keydown', event => {
 // resources on a shared or monitored phone. No keyboard shortcut on purpose:
 // Esc already clears search and closes menus, so a double press would eject
 // people by accident.
+//
+// It also erases the copy of the guide that sw.js saves for offline use, so
+// the phone keeps no stored trace of the directory beyond normal history.
+// The page hides at once; the erase gets a moment to finish before leaving,
+// and leaving never waits longer than that.
 const QUICK_EXIT_URL = 'https://weather.com/';
+const QUICK_EXIT_CLEANUP_MS = 250;
+
+function eraseOfflineCopy() {
+  const jobs = [];
+  if (window.caches) {
+    jobs.push(caches.keys().then(keys => Promise.all(keys.map(key => caches.delete(key)))));
+  }
+  if (navigator.serviceWorker) {
+    jobs.push(navigator.serviceWorker.getRegistrations()
+      .then(registrations => Promise.all(registrations.map(registration => registration.unregister()))));
+  }
+  return Promise.all(jobs).catch(() => {});
+}
 
 function quickExit() {
   document.body.style.display = 'none';
-  window.location.replace(QUICK_EXIT_URL);
+  document.title = '';
+  let left = false;
+  const leave = () => {
+    if (left) return;
+    left = true;
+    window.location.replace(QUICK_EXIT_URL);
+  };
+  eraseOfflineCopy().then(leave);
+  window.setTimeout(leave, QUICK_EXIT_CLEANUP_MS);
 }
 
 document.getElementById('quick-exit')?.addEventListener('click', quickExit);
@@ -847,6 +1063,7 @@ function getCategoryShareMarkup() {
         <a class="share-option" href="${escapeAttr(shareEmailHref)}" target="_blank" rel="noopener">${escapeHTML(T[lang].shareEmail)}</a>
         <button class="share-option" type="button" data-action="copy-category-all">${escapeHTML(T[lang].shareCopyAll)}</button>
         <button class="share-option" type="button" data-action="copy-category">${escapeHTML(T[lang].shareCopyLink)}</button>
+        <button class="share-option" type="button" data-action="print-category">${escapeHTML(T[lang].sharePrint)}</button>
       </div>
     </div>
   `;
@@ -862,8 +1079,8 @@ function renderResourceCard(resource, i, query = '') {
   const rawPhone = getField(resource, 'phone');
   const phone = rawPhone.replace(/\D/g, '').length >= 3 ? rawPhone : '';
   const website = normalizeWebsiteUrl(getField(resource, 'website'));
-  const address = getField(resource, 'address');
-  const hours = getField(resource, 'hours');
+  const address = getLocalizedValue(resource, 'address');
+  const hours = getLocalizedValue(resource, 'hours');
   const categoryClass = getCategoryClass(cat);
   const reportHref = getReportHref(resource);
   const shareEmailHref = getShareEmailHref(resource);
@@ -913,6 +1130,7 @@ function renderResourceCard(resource, i, query = '') {
           <div class="share-menu" id="share-menu-${i}">
             <a class="share-option" href="${escapeAttr(shareEmailHref)}" target="_blank" rel="noopener">${escapeHTML(T[lang].shareEmail)}</a>
             <button class="share-option" type="button" data-copy-index="${i}">${escapeHTML(T[lang].shareCopyLink)}</button>
+            <button class="share-option" type="button" data-print-index="${i}">${escapeHTML(T[lang].sharePrint)}</button>
           </div>
         </div>
         <a class="btn-report" href="${escapeAttr(reportHref)}" target="_blank" rel="noopener" aria-label="${escapeAttr(`${T[lang].reportBtn}: ${name}`)}">${escapeHTML(T[lang].reportBtn)}</a>
@@ -1012,9 +1230,28 @@ async function loadData() {
     hasLoadError = false;
     updateStatusNotice(false);
     buildFilters(); renderCards();
+    updateOfflineNotice();
   } catch (e) {
     renderLoadError();
   }
+}
+
+// sw.js keeps the last copy of the page and the sheet, so the guide still
+// opens with no signal. Say so, since that copy may be out of date.
+function updateOfflineNotice() {
+  const notice = document.getElementById('offline-notice');
+  if (!notice) return;
+  notice.textContent = T[lang].offlineNotice;
+  notice.classList.toggle('show', !navigator.onLine && resources.length > 0 && !hasLoadError);
+}
+
+window.addEventListener('online', updateOfflineNotice);
+window.addEventListener('offline', updateOfflineNotice);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
 }
 
 function parseCSV(text) {
@@ -1063,7 +1300,9 @@ function parseCSV(text) {
   if (!rows.length) return [];
 
   const headers = rows[0].map(value => value.trim());
-  return rows.slice(1).map(values => {
+  const headerKey = headers.join('|').toLowerCase();
+  // Skip repeats of the header row, which File > Import > Append leaves in the sheet.
+  return rows.slice(1).filter(values => values.map(v => v.trim()).join('|').toLowerCase() !== headerKey).map(values => {
     const obj = {};
     headers.forEach((header, index) => {
       obj[header] = (values[index] || '').trim();
@@ -1157,31 +1396,137 @@ function compareText(a, b) {
   return String(a || '').localeCompare(String(b || ''), undefined, { sensitivity: 'base' });
 }
 
-function getSearchScore(resource, query) {
-  if (!query) return 0;
+// Everyday words residents type, mapped to the support area they mean, in
+// English and Spanish. A search for "groceries", "eviction" or "comida" then
+// finds the Food, Rental or Food listings even when the listing never uses
+// that word. Words are matched without accents, so "medico" finds "médico".
+// To teach search a new word, add it to the right line.
+const SEARCH_CONCEPTS = [
+  { category: 'Food', words: ['food', 'groceries', 'grocery', 'hungry', 'hunger', 'meal', 'meals', 'eat', 'eating', 'pantry', 'pantries', 'calfresh', 'ebt', 'snap', 'wic', 'lunch', 'dinner', 'breakfast', 'comida', 'comidas', 'alimento', 'alimentos', 'despensa', 'hambre', 'comer', 'mercado', 'almuerzo', 'cena', 'desayuno'] },
+  { category: 'Rental', words: ['rent', 'rental', 'evict', 'eviction', 'evicted', 'landlord', 'lease', 'deposit', 'back rent', 'tenant', 'tenants', 'renta', 'alquiler', 'desalojo', 'desalojar', 'casero', 'arrendador', 'inquilino', 'inquilinos', 'deposito'] },
+  { category: 'Housing', words: ['housing', 'homeless', 'homelessness', 'unhoused', 'shelter', 'apartment', 'section 8', 'voucher', 'motel', 'sleeping in car', 'vivienda', 'sin hogar', 'desamparado', 'refugio', 'apartamento', 'casa', 'albergue'] },
+  { category: 'Medical', words: ['doctor', 'doctors', 'clinic', 'sick', 'health', 'healthcare', 'dental', 'dentist', 'teeth', 'tooth', 'glasses', 'vision', 'eye', 'insurance', 'medi-cal', 'medical', 'medicaid', 'medicare', 'prescription', 'pharmacy', 'medicine', 'pregnant', 'pregnancy', 'prenatal', 'vaccine', 'shots', 'medico', 'clinica', 'enfermo', 'enferma', 'salud', 'dentista', 'dientes', 'lentes', 'seguro medico', 'medicina', 'farmacia', 'embarazada', 'embarazo', 'vacuna'] },
+  { category: 'Mental', words: ['mental', 'depression', 'depressed', 'anxiety', 'anxious', 'stress', 'stressed', 'therapy', 'therapist', 'counseling', 'counselor', 'counsellor', 'suicide', 'suicidal', 'crisis', 'addiction', 'drugs', 'alcohol', 'sober', 'recovery', 'grief', 'trauma', '988', 'lonely', 'depresion', 'ansiedad', 'estres', 'terapia', 'terapeuta', 'consejeria', 'consejero', 'suicidio', 'adiccion', 'drogas', 'duelo', 'soledad'] },
+  { category: 'Domestic Violence', words: ['abuse', 'abused', 'abusive', 'violence', 'violent', 'hit', 'hits', 'hurt', 'hurts', 'unsafe', 'afraid', 'scared', 'restraining order', 'stalking', 'stalker', 'dv', 'abuso', 'violencia', 'maltrato', 'golpe', 'golpea', 'miedo', 'peligro', 'orden de restriccion', 'acoso'] },
+  { category: 'Legal', words: ['lawyer', 'lawyers', 'attorney', 'court', 'legal', 'law', 'immigration', 'immigrant', 'deport', 'deportation', 'citizenship', 'daca', 'green card', 'ticket', 'record', 'expunge', 'expungement', 'rights', 'sued', 'lawsuit', 'abogado', 'abogada', 'corte', 'inmigracion', 'inmigrante', 'ciudadania', 'derechos', 'ley', 'demanda'] },
+  { category: 'Benefits', words: ['benefits', 'calfresh', 'medi-cal', 'ssi', 'ssdi', 'social security', 'cash aid', 'calworks', 'gr', 'general relief', 'utility', 'utilities', 'bill', 'bills', 'electric', 'electricity', 'gas bill', 'water bill', 'phone', 'internet', 'lifeline', 'taxes', 'tax', 'beneficios', 'seguro social', 'ayuda en efectivo', 'luz', 'factura', 'facturas', 'cuentas', 'impuestos', 'telefono'] },
+  { category: 'Employment', words: ['job', 'jobs', 'work', 'working', 'employment', 'resume', 'hire', 'hiring', 'career', 'unemployed', 'unemployment', 'edd', 'interview', 'training', 'trabajo', 'trabajar', 'empleo', 'curriculum', 'desempleo', 'entrevista', 'capacitacion'] },
+  { category: 'Education', words: ['school', 'class', 'classes', 'ged', 'diploma', 'college', 'esl', 'english', 'computer', 'computers', 'library', 'learn', 'reading', 'tutor', 'escuela', 'clase', 'clases', 'ingles', 'computadora', 'biblioteca', 'aprender', 'universidad'] },
+  { category: 'Childcare', words: ['childcare', 'child care', 'daycare', 'day care', 'preschool', 'babysitter', 'babysitting', 'baby', 'babies', 'toddler', 'diapers', 'guarderia', 'preescolar', 'cuidado infantil', 'bebe', 'bebes', 'panales'] },
+  { category: 'Youth', words: ['youth', 'teen', 'teens', 'teenager', 'kids', 'children', 'after school', 'afterschool', 'tutoring', 'summer camp', 'camp', 'sports', 'jovenes', 'joven', 'adolescente', 'adolescentes', 'ninos', 'hijos', 'tutoria', 'campamento', 'deportes'] },
+  { category: 'Seniors', words: ['senior', 'seniors', 'elderly', 'older', 'aging', 'retired', 'retiree', 'grandparent', 'adulto mayor', 'adultos mayores', 'mayores', 'anciano', 'ancianos', 'tercera edad', 'jubilado', 'abuelos'] },
+  { category: 'Disability', words: ['disability', 'disabilities', 'disabled', 'wheelchair', 'blind', 'deaf', 'hearing', 'ihss', 'caregiver', 'autism', 'discapacidad', 'discapacitado', 'silla de ruedas', 'ciego', 'sordo', 'cuidador', 'autismo'] },
+  { category: 'Transportation', words: ['bus', 'buses', 'ride', 'rides', 'transport', 'transportation', 'metro', 'tap card', 'car', 'gas', 'parking', 'access paratransit', 'dial-a-ride', 'autobus', 'camion', 'transporte', 'carro', 'coche', 'viaje', 'pasaje'] },
+];
 
-  const name = getLocalizedValue(resource, 'name').toLowerCase();
-  const desc = getLocalizedValue(resource, 'description').toLowerCase();
-  const address = getField(resource, 'address').toLowerCase();
-  const notes = getLocalizedValue(resource, 'notes').toLowerCase();
-  const categoryLabel = (CAT_LABELS[lang][normalizeCategory(resource)] || normalizeCategory(resource)).toLowerCase();
+// Listings that always come first when a search is about a certain need, and
+// at the top of their support area's list (the Food support button).
+// Matched by a piece of the listing's English name, so small edits to the
+// name in the sheet do not break it. CalFresh, EBT and WIC searches are left
+// out on purpose: those residents want the benefit itself, not a pantry.
+const SEARCH_PINS = [
+  {
+    name: 'pantry locator',
+    category: 'Food',
+    words: ['food', 'foods', 'pantry', 'pantries', 'food bank', 'groceries', 'grocery', 'hungry', 'hunger', 'meal', 'meals', 'eat', 'comida', 'comidas', 'alimento', 'alimentos', 'despensa', 'despensas', 'banco de alimentos', 'hambre', 'comer', 'mercado'],
+  },
+];
+
+// Filler words that say nothing about the need ("I need help with rent").
+const SEARCH_STOPWORDS = new Set([
+  'a', 'an', 'and', 'the', 'for', 'to', 'of', 'in', 'on', 'at', 'with', 'my', 'me', 'i', 'im', 'we', 'our', 'is', 'it', 'can', 'cant', 'cannot', 'need', 'needs', 'help', 'get', 'find', 'where', 'how', 'want', 'pay', 'free', 'near', 'some', 'do', 'dont', 'have', 'no', 'not',
+  'el', 'la', 'los', 'las', 'un', 'una', 'y', 'de', 'del', 'para', 'por', 'con', 'en', 'mi', 'mis', 'yo', 'necesito', 'ayuda', 'quiero', 'donde', 'como', 'que', 'puedo', 'pagar', 'gratis', 'cerca', 'tengo', 'hay',
+]);
+
+function foldText(value) {
+  return String(value || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+}
+
+// One lowercase, accent-free string per listing, covering both languages, so
+// a Spanish word finds a listing while the page is in English and vice versa.
+const searchTextCache = new WeakMap();
+
+function getSearchText(resource) {
+  if (!searchTextCache.has(resource)) {
+    const cat = normalizeCategory(resource);
+    searchTextCache.set(resource, foldText([
+      'name', 'name_es', 'description', 'description_es', 'notes', 'notes_es', 'tags', 'tags_es', 'address', 'address_es',
+    ].map(key => getField(resource, key)).concat(CAT_LABELS.en[cat] || cat, CAT_LABELS.es[cat] || '').join(' \n ')));
+  }
+  return searchTextCache.get(resource);
+}
+
+function conceptWordMatches(word, token, phrase) {
+  if (word.includes(' ')) return phrase.includes(word);
+  if (token === word) return true;
+  // "evict" finds "eviction" and a half-typed "groc" finds "groceries".
+  if (token.length >= 4 && word.startsWith(token)) return true;
+  return word.length >= 4 && token.startsWith(word);
+}
+
+function parseSearchQuery(query) {
+  const phrase = foldText(query).trim().replace(/\s+/g, ' ');
+  const words = phrase.split(/[^a-z0-9]+/).filter(Boolean);
+  const tokens = words.filter(word => word.length >= 2 && !SEARCH_STOPWORDS.has(word));
+  const categories = new Set();
+  SEARCH_CONCEPTS.forEach(concept => {
+    if (concept.words.some(word => tokens.some(token => conceptWordMatches(word, token, phrase)))) {
+      categories.add(concept.category);
+    }
+  });
+  const pinned = SEARCH_PINS
+    .filter(pin => pin.words.some(word => tokens.some(token => conceptWordMatches(word, token, phrase))))
+    .map(pin => pin.name);
+  return { phrase, tokens, categories, pinned };
+}
+
+function getSearchScore(resource, search) {
+  if (!search || !search.phrase) return 0;
+  const { phrase, tokens, categories } = search;
+
+  const name = foldText(getField(resource, 'name')) + ' \n ' + foldText(getField(resource, 'name_es'));
+  const desc = foldText(getField(resource, 'description')) + ' \n ' + foldText(getField(resource, 'description_es'));
+  const text = getSearchText(resource);
+  const cat = normalizeCategory(resource);
 
   let score = 0;
 
-  if (name === query) score += 120;
-  else if (name.startsWith(query)) score += 90;
-  else if (name.includes(query)) score += 65;
+  // The whole search, as typed, still counts most.
+  if (name.split(' \n ').includes(phrase)) score += 120;
+  else if (name.startsWith(phrase)) score += 90;
+  else if (name.includes(phrase)) score += 65;
+  if (desc.includes(phrase)) score += 20;
+  if (text.includes(phrase)) score += 12;
 
-  if (categoryLabel.startsWith(query)) score += 48;
-  else if (categoryLabel.includes(query)) score += 34;
+  // Then each meaningful word on its own...
+  tokens.forEach(token => {
+    if (token.length < 3 && !/\d/.test(token)) return;
+    if (name.includes(token)) score += 14;
+    else if (text.includes(token)) score += 6;
+  });
 
-  if (desc.startsWith(query)) score += 24;
-  else if (desc.includes(query)) score += 16;
-
-  if (address.includes(query)) score += 10;
-  if (notes.includes(query)) score += 8;
+  // ...and the support area those words point to.
+  if (categories.has(cat)) score += 30;
 
   return score;
+}
+
+function getCategoryPins(category) {
+  return SEARCH_PINS.filter(pin => pin.category === category).map(pin => pin.name);
+}
+
+function getPinRank(resource, pinned) {
+  if (!pinned.length) return 0;
+  const name = foldText(getField(resource, 'name'));
+  const index = pinned.findIndex(pin => name.includes(pin));
+  return index === -1 ? 0 : pinned.length - index;
+}
+
+function getHighlightTerms(rawQuery) {
+  const trimmed = String(rawQuery || '').trim();
+  if (!trimmed) return [];
+  const words = trimmed.split(/\s+/).filter(word => word.length >= 3 && !SEARCH_STOPWORDS.has(foldText(word)));
+  return [trimmed, ...words];
 }
 
 function escapeHTML(value) {
@@ -1204,12 +1549,23 @@ function escapeRegExp(value) {
 
 function highlightMatch(value, query) {
   const text = String(value || '');
-  const trimmed = String(query || '').trim();
-  if (!trimmed) return escapeHTML(text);
+  const terms = (Array.isArray(query) ? query : [query])
+    .map(term => String(term || '').trim())
+    .filter(Boolean)
+    .sort((a, b) => b.length - a.length);
+  if (!terms.length) return escapeHTML(text);
 
-  const escapedText = escapeHTML(text);
-  const pattern = new RegExp(`(${escapeRegExp(escapeHTML(trimmed))})`, 'ig');
-  return escapedText.replace(pattern, '<mark class="match">$1</mark>');
+  // Match on the raw text and escape each piece, so a search like "amp" or
+  // "lt" cannot land inside an HTML entity and garble the card.
+  const pattern = new RegExp(terms.map(escapeRegExp).join('|'), 'ig');
+  let html = '';
+  let last = 0;
+  for (const match of text.matchAll(pattern)) {
+    html += escapeHTML(text.slice(last, match.index));
+    html += `<mark class="match">${escapeHTML(match[0])}</mark>`;
+    last = match.index + match[0].length;
+  }
+  return html + escapeHTML(text.slice(last));
 }
 
 function normalizePhoneHref(phone) {
@@ -1275,6 +1631,21 @@ function updateQuickExit() {
     : !shareResourceKey && activeCategory === 'Domestic Violence';
   button.hidden = !onDvPage;
   document.body.classList.toggle('has-quick-exit', onDvPage);
+  updateSafetyTip(onDvPage);
+}
+
+// "Browsing safely" note, shown wherever Quick exit is: the Domestic
+// violence filter and shared domestic violence listings.
+function updateSafetyTip(show) {
+  const tip = document.getElementById('safety-tip');
+  if (!tip) return;
+  tip.hidden = !show;
+  if (!show) return;
+  tip.setAttribute('aria-label', T[lang].safetyTitle);
+  tip.innerHTML = `
+    <div class="safety-tip-title">${escapeHTML(T[lang].safetyTitle)}</div>
+    <ul>${T[lang].safetyTips.map(item => `<li>${escapeHTML(item)}</li>`).join('')}</ul>
+    <div class="safety-tip-urgent">${escapeHTML(T[lang].safetyUrgent)}</div>`;
 }
 
 function renderCards() {
@@ -1287,29 +1658,28 @@ function renderCards() {
 
   const rawQuery = getSearchQuery();
   const query = rawQuery.toLowerCase();
-  const grid  = document.getElementById('grid');
+  const search = query ? parseSearchQuery(rawQuery) : null;
+  const pinned = search ? search.pinned : getCategoryPins(activeCategory);
+  const scores = new Map();
 
   const filtered = resources.filter(r => {
-    const cat = normalizeCategory(r);
-    const matchCat = activeCategory === 'All' || cat === activeCategory;
-    const name = getLocalizedValue(r, 'name').toLowerCase();
-    const desc = getLocalizedValue(r, 'description').toLowerCase();
-    const address = getField(r, 'address').toLowerCase();
-    const notes = getLocalizedValue(r, 'notes').toLowerCase();
-    const categoryLabel = (CAT_LABELS[lang][cat] || cat).toLowerCase();
-    const matchQ = !query || name.includes(query) || desc.includes(query) || address.includes(query) || notes.includes(query) || categoryLabel.includes(query);
-    return matchCat && matchQ;
+    const matchCat = activeCategory === 'All' || normalizeCategory(r) === activeCategory;
+    if (!matchCat) return false;
+    if (!search) return true;
+    const score = getSearchScore(r, search);
+    scores.set(r, score);
+    return score > 0 || getPinRank(r, pinned) > 0;
   }).sort((a, b) => {
-    if (!query) {
-      return compareText(getLocalizedValue(a, 'name'), getLocalizedValue(b, 'name'));
-    }
-
-    const scoreDiff = getSearchScore(b, query) - getSearchScore(a, query);
+    const pinDiff = getPinRank(b, pinned) - getPinRank(a, pinned);
+    if (pinDiff !== 0) return pinDiff;
+    const scoreDiff = search ? scores.get(b) - scores.get(a) : 0;
     if (scoreDiff !== 0) return scoreDiff;
     return compareText(getLocalizedValue(a, 'name'), getLocalizedValue(b, 'name'));
   });
 
   filtered_cache = filtered;
+  // analytics.js reads this to count searches that found nothing.
+  document.getElementById('grid')?.setAttribute('data-result-count', String(filtered.length));
   updateJumpLabel(rawQuery, filtered.length);
   setText('results-info', query
     ? `${T[lang].showing(filtered.length)} · ${T[lang].bestMatches}`
@@ -1321,8 +1691,8 @@ function renderCards() {
   if (!filtered.length) {
     updateGridMarkup(`<div class="empty">
       <div class="empty-icon">🔍</div>
-      <h3>${T[lang].noResults}</h3>
-      <p>${T[lang].noResultsSub}</p>
+      <h3>${escapeHTML(T[lang].noResults)}</h3>
+      <p>${escapeHTML(T[lang].noResultsSub)}</p>
       <button class="empty-action" type="button" data-action="clear-all">${escapeHTML(T[lang].noResultsReset)}</button>
     </div>`);
     return;
@@ -1334,12 +1704,13 @@ function renderCards() {
   const moreMarkup = remaining > 0
     ? `<div class="load-more-wrap"><button class="load-more-btn" type="button" data-action="show-more">${escapeHTML(T[lang].showMoreResults(Math.min(remaining, RESULT_LIMIT_INCREMENT)))}</button></div>`
     : '';
-  updateGridMarkup(visible.map((r, i) => renderResourceCard(r, i, rawQuery)).join('') + moreMarkup);
+  const highlightTerms = getHighlightTerms(rawQuery);
+  updateGridMarkup(visible.map((r, i) => renderResourceCard(r, i, highlightTerms)).join('') + moreMarkup);
 }
 
 function showLoading() {
   updateGridMarkup(`
-    <div class="loading"><div class="spinner"></div><div>${T[lang].loading}</div></div>`);
+    <div class="loading"><div class="spinner"></div><div>${escapeHTML(T[lang].loading)}</div></div>`);
 }
 
 function setLang(l) {
@@ -1374,6 +1745,8 @@ function setLang(l) {
   setText('footer-title', T[l].footerTitle);
   setHTML('footer-contact', `${escapeHTML(T[l].footerContact)} <a href="tel:+13103950220">(310) 395-0220</a>`);
   setText('footer-note', T[l].footerNote);
+  updateOfflineNotice();
+  setLargeText(isLargeText(), { save: false });
   updateDirectoryUrl();
   if (hasLoadError) {
     renderLoadError();
@@ -1392,6 +1765,10 @@ if (initialSearchQuery) {
 }
 
 document.getElementById('search')?.addEventListener('input', handleSearchInput);
+
+try {
+  if (window.localStorage.getItem(TEXT_SIZE_KEY) === '1') setLargeText(true, { save: false });
+} catch (error) { /* storage blocked: normal size */ }
 
 if (initialLang === 'es') setLang('es');
 
