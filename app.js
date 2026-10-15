@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // UPDATE THIS — staff inbox that receives "Report outdated info" emails
 // ─────────────────────────────────────────────────────────────────────────────
-const REPORT_EMAIL = 'mwitham@communitycorp.org';
+const REPORT_EMAIL = 'help@communitycorp.org';
 
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbAtpa7kK10yL2QtdLHRx9q2VbuEIPNG6S2uMbWhQ1GsLGoYA3NqFAlp_E_w8xUGRdcLxT4V3gbiJD/pub?output=csv';
 const MAX_CSV_BYTES = 500000;
