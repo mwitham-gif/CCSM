@@ -58,14 +58,13 @@ gtag('config', 'G-FT2K5G6SYR', {
     var link = target.closest('.card .card-actions a[href], .card .card-footer a[href]');
     if (link) {
       var card = link.closest('.card');
-      // Domestic violence clicks are counted by category only. Which shelter
-      // or hotline someone contacted never leaves the device.
-      var sensitive = !!card.querySelector('.cat-DomesticViolence');
+      // Every listing is counted in full, domestic violence listings included
+      // (an October 2026 decision: staff want to see which resources are used).
       gtag('event', 'resource_click', {
-        resource_name: sensitive ? '(withheld)' : cleanText(card.querySelector('.card-name')),
+        resource_name: cleanText(card.querySelector('.card-name')),
         resource_category: cleanText(card.querySelector('.card-category')),
         click_type: getClickType(link),
-        link_url: sensitive ? '(withheld)' : link.href
+        link_url: link.href
       });
       return;
     }

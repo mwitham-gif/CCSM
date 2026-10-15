@@ -80,8 +80,8 @@ green check or red X next to each commit). It fails if a change:
 - lets text from the sheet run as code, or lets a website cell become a
   `javascript:`, `data:` or other unsafe link (it loads a deliberately hostile
   sheet, `tests/fixtures/hostile.csv`, to prove this);
-- breaks a privacy rule: shared resource names, sensitive searches, or
-  domestic violence clicks reaching Google Analytics;
+- breaks a privacy rule: shared resource names or sensitive searches
+  reaching Google Analytics;
 - breaks Quick exit, the Browsing safely note, search, Spanish, printing or A+.
 
 `tests/fixtures/sample.csv` holds made-up listings for the everyday checks.
@@ -101,8 +101,7 @@ either way.
   `result_count`), plus `search_no_results` when a search matched nothing,
   which shows needs the directory does not cover yet. Search terms
   are sent to Google as typed, so anything a visitor enters there leaves the
-  site, with these exceptions: clicks on a domestic violence resource send
-  only the category (name and link are `(withheld)`); searches about abuse,
+  site, with these exceptions: searches about abuse,
   immigration status, self-harm, or sexual and reproductive health, and
   searches containing an email address or a phone-length number, send
   `(withheld)` instead of the words typed; and page views of a shared link
@@ -111,9 +110,11 @@ either way.
   turned off in the page code. This is the one exception to the rules
   below, and it is worth keeping in mind for an audience that reaches the site
   by scanning a flyer for housing, food, or legal help.
-- In GA4, turn off Enhanced measurement → Outbound clicks for this stream.
-  `resource_click` covers the same taps with the privacy rules above; the
-  built-in `click` event would record domestic violence websites' addresses.
+- Clicks are recorded in full for every listing, domestic violence listings
+  included: `resource_click` sends the listing's name, category and link, and
+  GA4's Enhanced measurement → Outbound clicks may stay on (it records the
+  address of every link to another site). This was a deliberate choice in
+  October 2026 so staff can see which resources residents use.
 - To see the event parameters in reports, register them as event-scoped
   custom dimensions (Admin → Custom definitions): `resource_name`,
   `resource_category`, `click_type`, `filter_name`, `search_term`; and

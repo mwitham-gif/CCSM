@@ -228,8 +228,8 @@ async function browserChecks() {
     await second.page.evaluate(() => document.querySelector('.card .btn-web')?.addEventListener('click', event => event.preventDefault()));
     await second.page.click('.card .btn-web');
     const click = await second.page.evaluate(() => (window.dataLayer || []).map(entry => Array.from(entry)).filter(entry => entry[1] === 'resource_click').pop());
-    check('a click on a domestic violence listing withholds its name and link',
-      Boolean(click) && click[2].resource_name === '(withheld)' && click[2].link_url === '(withheld)', JSON.stringify(click && click[2]));
+    check('a click on a domestic violence listing is counted with its name and link',
+      Boolean(click) && click[2].resource_name !== '(withheld)' && /^https:\/\//.test(click[2].link_url), JSON.stringify(click && click[2]));
     check('no errors (privacy checks)', problems.length === 0 && second.problems.length === 0, [...problems, ...second.problems].join(' | '));
     await second.context.close();
   }
