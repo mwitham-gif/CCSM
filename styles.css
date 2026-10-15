@@ -1838,7 +1838,11 @@
   .print-sheet { display: none; }
 
   @media print {
-    @page { margin: 0.55in 0.6in; }
+    /* Margins come from two places so the page keeps a clear border even
+       when Chrome's print dialog is set to Margins: None or Minimum (which
+       drops these @page margins): @page for the top and bottom of every
+       page, and padding on the sheet itself for the sides. */
+    @page { margin: 0.5in 0.35in; }
 
     body.printing-sheet {
       background: #fff;
@@ -1849,6 +1853,7 @@
 
     body.printing-sheet .print-sheet {
       display: block;
+      padding: 0.15in 0.3in 0;
       color: #1a2633;
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       font-size: 11.5pt;
