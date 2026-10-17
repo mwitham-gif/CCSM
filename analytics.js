@@ -73,8 +73,11 @@ gtag('config', 'G-FT2K5G6SYR', {
     var card = link.closest('.card');
     var name = (source && source.getAttribute('data-track-name')) || cleanText(card && card.querySelector('.card-name'));
     var category = (source && source.getAttribute('data-track-category')) || cleanText(card && card.querySelector('.card-category'));
+    // No name, no event: an unnameable click is dropped rather than recorded
+    // as 'unknown', so every resource_click in GA4 points at a named source.
+    if (!name) return null;
     return {
-      resource_name: name || UNKNOWN,
+      resource_name: name,
       resource_category: category || UNKNOWN,
       click_type: getClickType(link),
       link_url: link.href || link.getAttribute('href') || UNKNOWN
@@ -92,7 +95,9 @@ gtag('config', 'G-FT2K5G6SYR', {
   function trackResourceClick(link) {
     // Every listing is counted in full, domestic violence listings included
     // (an October 2026 decision: staff want to see which resources are used).
-    gtag('event', 'resource_click', getResourceParams(link));
+    var params = getResourceParams(link);
+    if (!params) return;
+    gtag('event', 'resource_click', params);
   }
 
   // A middle-click (open in a new tab) fires auxclick, not click.
