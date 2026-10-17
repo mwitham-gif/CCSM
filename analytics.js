@@ -13,19 +13,25 @@ window.dataLayer = window.dataLayer || [];
 function gtag() { dataLayer.push(arguments); }
 gtag('js', new Date());
 
+// One title for every view of the site, so GA4 reports a single page title.
+// Filters, search, the language toggle and shared links never change it, and
+// page_title is set explicitly for every event, so a browser's own page
+// translation (which rewrites document.title) cannot split the reports either.
+var SITE_TITLE = 'Santa Monica Resource Guide · Community Corp Santa Monica';
+document.title = SITE_TITLE;
+gtag('set', { page_title: SITE_TITLE });
+
 // A shared link (?share=Name) names one resource, possibly a domestic violence
 // shelter, and an old ?q= link carries whatever was typed. Neither goes to
-// Google: the page view is reported with those values withheld, and a shared
-// page is titled generically (app.js retitles it with the resource name).
+// Google: the page view is reported with those values withheld.
 var pageParams = new URLSearchParams(window.location.search);
-var isSharePage = pageParams.has('share');
-if (isSharePage) pageParams.set('share', '(withheld)');
+if (pageParams.has('share')) pageParams.set('share', '(withheld)');
 pageParams.delete('q');
 var pageQuery = pageParams.toString();
 
 gtag('config', 'G-FT2K5G6SYR', {
   page_location: window.location.origin + window.location.pathname + (pageQuery ? '?' + pageQuery : ''),
-  page_title: isSharePage ? 'Shared resource' : document.title,
+  page_title: SITE_TITLE,
   // Visits are counted, never joined to Google accounts or used for ads.
   allow_google_signals: false,
   allow_ad_personalization_signals: false
@@ -43,29 +49,66 @@ gtag('config', 'G-FT2K5G6SYR', {
     return el ? el.textContent.replace(/\s+/g, ' ').trim() : '';
   }
 
+  // Used when a link carries no listing name, so the event can still be
+  // traced back to the page that sent it through link_url.
+  var UNKNOWN = 'unknown';
+
   function getClickType(link) {
     if (link.classList.contains('btn-report')) return 'report';
+    // The Share menu's email link writes to a friend, not to the listing.
+    if (link.classList.contains('share-option')) return 'share_email';
     var href = link.getAttribute('href') || '';
     if (/^tel:/i.test(href)) return 'call';
     if (/^mailto:/i.test(href)) return 'email';
     return 'website';
   }
 
+  // app.js puts the listing's sheet name and category key on each card (and
+  // on the Resident Services fallback links) as data-track-name and
+  // data-track-category. Those stay in English whichever language is on
+  // screen, and a browser's own page translation never touches them, so one
+  // listing is one row in GA4. The visible text is only a fallback.
+  function getResourceParams(link) {
+    var source = link.closest('[data-track-name]');
+    var card = link.closest('.card');
+    var name = (source && source.getAttribute('data-track-name')) || cleanText(card && card.querySelector('.card-name'));
+    var category = (source && source.getAttribute('data-track-category')) || cleanText(card && card.querySelector('.card-category'));
+    return {
+      resource_name: name || UNKNOWN,
+      resource_category: category || UNKNOWN,
+      click_type: getClickType(link),
+      link_url: link.href || link.getAttribute('href') || UNKNOWN
+    };
+  }
+
+  // A resource link is any link on a listing card (directory, shared page or
+  // pinned listing alike) or any link marked with data-track-name.
+  function findResourceLink(target) {
+    var link = target.closest('a[href]');
+    if (!link || !(link.closest('.card') || link.closest('[data-track-name]'))) return null;
+    return link;
+  }
+
+  function trackResourceClick(link) {
+    // Every listing is counted in full, domestic violence listings included
+    // (an October 2026 decision: staff want to see which resources are used).
+    gtag('event', 'resource_click', getResourceParams(link));
+  }
+
+  // A middle-click (open in a new tab) fires auxclick, not click.
+  document.addEventListener('auxclick', function (event) {
+    if (event.button !== 1 || !(event.target instanceof Element)) return;
+    var link = findResourceLink(event.target);
+    if (link) trackResourceClick(link);
+  }, true);
+
   document.addEventListener('click', function (event) {
     var target = event.target;
     if (!(target instanceof Element)) return;
 
-    var link = target.closest('.card .card-actions a[href], .card .card-footer a[href]');
+    var link = findResourceLink(target);
     if (link) {
-      var card = link.closest('.card');
-      // Every listing is counted in full, domestic violence listings included
-      // (an October 2026 decision: staff want to see which resources are used).
-      gtag('event', 'resource_click', {
-        resource_name: cleanText(card.querySelector('.card-name')),
-        resource_category: cleanText(card.querySelector('.card-category')),
-        click_type: getClickType(link),
-        link_url: link.href
-      });
+      trackResourceClick(link);
       return;
     }
 

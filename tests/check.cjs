@@ -86,6 +86,9 @@ function staticChecks() {
   check('report emails go to help@communitycorp.org', /const REPORT_EMAIL = 'help@communitycorp\.org';/.test(app));
 }
 
+// The one tab and GA4 page title, whatever the view.
+const SITE_TITLE = 'Santa Monica Resource Guide · Community Corp Santa Monica';
+
 // ── Part 2: browser checks ────────────────────────────────────────────────
 const TYPES = { html: 'text/html', js: 'text/javascript', css: 'text/css', png: 'image/png', svg: 'image/svg+xml', webmanifest: 'application/manifest+json', csv: 'text/csv' };
 
@@ -198,6 +201,7 @@ async function browserChecks() {
     check('a shared link never sends the resource name', /share=%28withheld%29/.test(settings.page_location || '') && !/Safe/.test(JSON.stringify(settings)), JSON.stringify(settings));
     check('an old ?q= link never sends the search', !/secret/.test(JSON.stringify(settings)));
     check('Google signals and ad personalization stay off', settings.allow_google_signals === false && settings.allow_ad_personalization_signals === false);
+    check('a shared link keeps the fixed page title', settings.page_title === SITE_TITLE && (await page.title()) === SITE_TITLE, `${settings.page_title} / ${await page.title()}`);
     await context.close();
 
     const second = await openWith('tests/fixtures/hostile.csv');
@@ -275,6 +279,63 @@ async function browserChecks() {
     await page.click('[data-action="print-category"]');
     await page.waitForFunction(() => window.__printed, null, { timeout: 5000 }).catch(() => {});
     check('Print or save as PDF builds the printout', (await page.locator('#print-sheet .ps-item').count()) > 0);
+
+    // Every resource link sends a name, category, click type and link, in
+    // either language, and the page title never changes.
+    await page.evaluate(() => {
+      for (const type of ['click', 'auxclick']) {
+        document.addEventListener(type, event => { if (event.target.closest('a[href]')) event.preventDefault(); });
+      }
+      window.print = () => {};
+    });
+    const lastClick = () => page.evaluate(() => (window.dataLayer || []).map(entry => Array.from(entry))
+      .filter(entry => entry[0] === 'event' && entry[1] === 'resource_click').map(entry => entry[2]).pop());
+    const complete = params => Boolean(params) && ['resource_name', 'resource_category', 'click_type', 'link_url']
+      .every(key => typeof params[key] === 'string' && params[key] && params[key] !== 'unknown');
+    const expectedNames = {};
+    for (const l of ['en', 'es']) {
+      await page.click(`#btn-${l}`);
+      await page.fill('#search', 'groceries');
+      await page.waitForTimeout(200);
+      const card = page.locator('.card').first();
+      const expected = await card.getAttribute('data-track-name');
+      expectedNames[l] = expected;
+      for (const [selector, type] of [['.btn-call', 'call'], ['.btn-web', 'website'], ['.btn-report', 'report']]) {
+        await card.locator(selector).click();
+        const params = await lastClick();
+        check(`a ${type} click sends every parameter (${l})`, complete(params) && params.click_type === type && params.resource_name === expected, JSON.stringify(params));
+      }
+      await card.locator('.btn-share').click();
+      await card.locator('a.share-option').click();
+      const shared = await lastClick();
+      check(`a share-by-email click is told apart from contacting the listing (${l})`, complete(shared) && shared.click_type === 'share_email', JSON.stringify(shared));
+      await page.locator('#footer-contact a').click();
+      const footer = await lastClick();
+      check(`the Resident Services number is counted (${l})`, complete(footer) && footer.resource_name === 'CCSM Resident Services' && footer.click_type === 'call', JSON.stringify(footer));
+      await page.locator('.card .btn-web').first().click({ button: 'middle' });
+      const middle = await lastClick();
+      check(`a middle-click (new tab) is counted (${l})`, complete(middle) && middle.click_type === 'website', JSON.stringify(middle));
+      await page.click('[data-category="Food"]');
+      await page.fill('#search', '');
+      await page.waitForTimeout(200);
+      check(`the page title stays fixed after filter, search and language changes (${l})`, (await page.title()) === SITE_TITLE, await page.title());
+    }
+    check('English and Spanish clicks on a listing report the same name',
+      Boolean(expectedNames.en) && expectedNames.es === expectedNames.en, JSON.stringify(expectedNames));
+    // A link added later with no name still reports, as "unknown" with its address.
+    await page.evaluate(() => {
+      const card = document.querySelector('.card');
+      card.removeAttribute('data-track-name');
+      card.querySelector('.card-name').textContent = '';
+      const link = document.createElement('a');
+      link.href = 'https://example.org/added-later';
+      link.className = 'added-later';
+      link.textContent = 'Added later';
+      card.querySelector('.card-actions').appendChild(link);
+    });
+    await page.click('.added-later');
+    const fallback = await lastClick();
+    check('a link with no name reports "unknown" with its link_url', Boolean(fallback) && fallback.resource_name === 'unknown' && fallback.link_url === 'https://example.org/added-later', JSON.stringify(fallback));
     check('no errors (real listings)', problems.length === 0, problems.join(' | '));
     await context.close();
   }
