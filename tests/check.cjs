@@ -322,7 +322,8 @@ async function browserChecks() {
     }
     check('English and Spanish clicks on a listing report the same name',
       Boolean(expectedNames.en) && expectedNames.es === expectedNames.en, JSON.stringify(expectedNames));
-    // A link added later with no name still reports, as "unknown" with its address.
+    // A link added later with no name is not a named resource and should not
+    // create a resource_click event.
     await page.evaluate(() => {
       const card = document.querySelector('.card');
       card.removeAttribute('data-track-name');
@@ -333,9 +334,15 @@ async function browserChecks() {
       link.textContent = 'Added later';
       card.querySelector('.card-actions').appendChild(link);
     });
+    const unnamedClicksBefore = await page.evaluate(() => (window.dataLayer || [])
+      .map(entry => Array.from(entry))
+      .filter(entry => entry[0] === 'event' && entry[1] === 'resource_click').length);
     await page.click('.added-later');
-    const fallback = await lastClick();
-    check('a link with no name reports "unknown" with its link_url', Boolean(fallback) && fallback.resource_name === 'unknown' && fallback.link_url === 'https://example.org/added-later', JSON.stringify(fallback));
+    const unnamedClicksAfter = await page.evaluate(() => (window.dataLayer || [])
+      .map(entry => Array.from(entry))
+      .filter(entry => entry[0] === 'event' && entry[1] === 'resource_click').length);
+    check('a link with no name is not reported', unnamedClicksAfter === unnamedClicksBefore,
+      JSON.stringify({ before: unnamedClicksBefore, after: unnamedClicksAfter }));
     check('no errors (real listings)', problems.length === 0, problems.join(' | '));
     await context.close();
   }
