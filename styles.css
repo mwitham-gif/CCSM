@@ -425,6 +425,8 @@
     color: var(--ocean-dark);
   }
 
+  .filter-btn .tile-icon, .filter-btn .tile-change { display: none; }
+
   .chip-count {
     display: inline-flex;
     align-items: center;
@@ -1474,30 +1476,6 @@
       min-height: 30px;
     }
 
-    .filters {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      padding-bottom: 2px;
-      scroll-snap-type: x proximity;
-      gap: 8px;
-    }
-
-    .filters::-webkit-scrollbar {
-      display: none;
-    }
-
-    .filter-btn {
-      flex-shrink: 0;
-      scroll-snap-align: start;
-    }
-
-    .filter-btn {
-      min-height: 42px;
-      padding: 0 14px;
-      font-size: 12px;
-    }
 
     .results-row {
       padding: 0 12px;
@@ -1513,6 +1491,129 @@
     }
   }
 
+  /* Service-area tiles: phones and tablets. */
+  @media (max-width: 1024px) {
+    /* Service areas as a tile grid: big tap targets, no sideways scrolling. */
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      padding: 2px 0 4px;
+    }
+
+    .filter-btn.cat-tile {
+      position: relative;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 92px;
+      padding: 12px 12px 11px;
+      border-radius: 14px;
+      border: 1.5px solid #d8e3eb;
+      background: #ffffff;
+      white-space: normal;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-body);
+    }
+
+    .cat-tile:hover { transform: none; background: #ffffff; }
+    .cat-tile:active { transform: scale(0.97); }
+
+    .cat-tile .tile-icon {
+      display: inline-flex;
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--tile-bg);
+      color: var(--tile-color);
+    }
+
+    .cat-tile .tile-label { display: block; padding-right: 4px; }
+
+    .cat-tile .chip-count {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #eef3f7;
+    }
+
+    .cat-tile.active {
+      border-color: var(--tile-color);
+      background: var(--tile-bg);
+      box-shadow: 0 0 0 1px var(--tile-color);
+      color: var(--text-body);
+    }
+    .cat-tile.active:hover { background: var(--tile-bg); border-color: var(--tile-color); }
+    .cat-tile.active .tile-icon { background: #ffffff; }
+    .cat-tile.active .chip-count { background: #ffffff; color: var(--text-body); }
+
+    .cat-tile.tile-All {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      min-height: 60px;
+      padding: 10px 14px;
+    }
+    .cat-tile.tile-All .tile-label { flex: 1; font-size: 15px; }
+    .cat-tile.tile-All .chip-count { position: static; }
+
+    .tile-All { --tile-color: var(--ocean); --tile-bg: #e7f1fb; }
+    .tile-Food { --tile-color: var(--c-Food); --tile-bg: #fde8e2; }
+    .tile-Mental { --tile-color: var(--c-Mental); --tile-bg: #ede7f6; }
+    .tile-Rental { --tile-color: var(--c-Rental); --tile-bg: #eaf4dc; }
+    .tile-Housing { --tile-color: var(--c-Housing); --tile-bg: #e3f5e6; }
+    .tile-Legal { --tile-color: var(--c-Legal); --tile-bg: #eceef0; }
+    .tile-Benefits { --tile-color: var(--c-Benefits); --tile-bg: #fef3c7; }
+    .tile-Transportation { --tile-color: var(--c-Transportation); --tile-bg: #dff6f2; }
+    .tile-Education { --tile-color: var(--c-Education); --tile-bg: #ddf3f7; }
+    .tile-Employment { --tile-color: var(--c-Employment); --tile-bg: #f3e9df; }
+    .tile-Childcare { --tile-color: var(--c-Childcare); --tile-bg: #fce4ec; }
+    .tile-Youth { --tile-color: var(--c-Youth); --tile-bg: #d8f7ed; }
+    .tile-Seniors { --tile-color: var(--c-Seniors); --tile-bg: #f4ece4; }
+    .tile-Disability { --tile-color: var(--c-Disability); --tile-bg: #f0e5ff; }
+    .tile-Medical { --tile-color: var(--c-Medical); --tile-bg: #fde3e6; }
+    .tile-DomesticViolence { --tile-color: var(--c-DomesticViolence); --tile-bg: #f7e3f0; }
+    .tile-Other { --tile-color: var(--c-Other); --tile-bg: #f3f4f6; }
+
+    /* After choosing an area, shrink to that one tile (tap to change). */
+    .filters.is-collapsed .cat-tile:not(.active) { display: none; }
+    .filters.is-collapsed .cat-tile.active {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      min-height: 64px;
+      padding: 10px 14px;
+    }
+    .filters.is-collapsed .cat-tile.active .tile-label { flex: 1; font-size: 15px; }
+    .filters.is-collapsed .cat-tile.active .chip-count { position: static; }
+    .filter-btn .tile-change {
+      display: inline;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--tile-color);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      padding: 6px 2px 6px 6px;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .filters { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .filter-btn.cat-tile.tile-All { grid-column: span 4; }
+    .filter-btn.cat-tile { min-height: 104px; font-size: 15px; }
+  }
+
   @media (max-width: 480px) {
     h1 { font-size: 1.04rem; max-width: 14ch; }
     .header-inner { padding: 12px 12px 11px; }
@@ -1524,7 +1625,6 @@
     .share-subheading { font-size: 13px; }
     .share-meta-pill { min-height: 28px; padding: 0 10px; font-size: 10px; }
     .search-wrap input { padding: 14px 68px 14px 39px; border-radius: 8px; }
-    .filter-btn { min-height: 44px; }
     .results-row { padding: 0 10px; margin-top: 14px; }
     .results-context { padding: 0 10px; }
     .grid { padding: 0 10px calc(68px + env(safe-area-inset-bottom)); gap: 11px; }
