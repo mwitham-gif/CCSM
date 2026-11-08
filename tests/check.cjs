@@ -271,7 +271,7 @@ async function browserChecks() {
     check('a Share menu near the top of the screen stays fully visible',
       menuBox.top >= menuBox.limit && menuBox.bottom <= menuBox.height && menuBox.right <= menuBox.width, JSON.stringify(menuBox));
     await page.keyboard.press('Escape');
-    await page.click('[data-category="All"]');
+    await page.click('[data-category="Food"]'); // tapping the selected tile clears the filter
     await page.waitForTimeout(200);
     await page.evaluate(() => { window.print = () => { window.__printed = true; }; });
     await page.click('[data-category="Food"]');

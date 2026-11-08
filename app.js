@@ -1619,23 +1619,21 @@ function toBoldUnicode(value) {
 
 function buildFilters() {
   const sheetOrder = [...new Set(resources.map(normalizeCategory))];
-  const categories = ['All', ...sheetOrder.sort((a, b) => categoryRank(a) - categoryRank(b))];
+  // No "All" tile: with nothing selected the page lists every resource.
+  const categories = sheetOrder.sort((a, b) => categoryRank(a) - categoryRank(b));
   const container = document.getElementById('filters');
   if (!container) return;
 
-  const totalCount = resources.length;
   const collapsed = activeCategory !== 'All' && !filtersExpanded;
   container.classList.toggle('is-collapsed', collapsed);
   container.innerHTML = categories.map(cat => {
     const isActive = cat === activeCategory;
-    const label = cat === 'All' ? T[lang].all : (CAT_LABELS[lang][cat] || cat);
-    const count = cat === 'All' ? totalCount : resources.filter(resource => normalizeCategory(resource) === cat).length;
-    const icon = cat === 'All'
-      ? '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>'
-      : getCategoryIcon(cat);
+    const label = CAT_LABELS[lang][cat] || cat;
+    const count = resources.filter(resource => normalizeCategory(resource) === cat).length;
+    const icon = getCategoryIcon(cat);
     const change = isActive && collapsed ? `<span class="tile-change">${escapeHTML(T[lang].changeCategory)}</span>` : '';
     return `
-    <button class="filter-btn cat-tile tile-${cat === 'All' ? 'All' : getCategoryClass(cat)} ${isActive ? 'active' : ''}"
+    <button class="filter-btn cat-tile tile-${getCategoryClass(cat)} ${isActive ? 'active' : ''}"
       type="button"
       data-category="${escapeAttr(cat)}"
       aria-pressed="${isActive ? 'true' : 'false'}">
@@ -1649,9 +1647,13 @@ function buildFilters() {
 
 function setCategory(cat) {
   // Mobile tiles: tapping the selected tile while collapsed reopens the grid.
-  if (cat === activeCategory && cat !== 'All' && !filtersExpanded) {
+  // (Only where the grid actually collapses: phones and tablets.)
+  const compact = window.matchMedia('(max-width: 1024px)').matches;
+  if (compact && cat === activeCategory && cat !== 'All' && !filtersExpanded) {
     filtersExpanded = true; buildFilters(); return;
   }
+  // Tapping the selected tile again clears the filter.
+  if (cat === activeCategory) cat = 'All';
   activeCategory = cat;
   filtersExpanded = cat === 'All';
   visibleResultLimit = INITIAL_RESULT_LIMIT;

@@ -448,6 +448,24 @@
     color: var(--ocean-deep);
   }
 
+  /* Category colours for the service-area tiles (all screen sizes). */
+  .tile-Food { --tile-color: var(--c-Food); --tile-bg: #fde8e2; }
+  .tile-Mental { --tile-color: var(--c-Mental); --tile-bg: #ede7f6; }
+  .tile-Rental { --tile-color: var(--c-Rental); --tile-bg: #eaf4dc; }
+  .tile-Housing { --tile-color: var(--c-Housing); --tile-bg: #e3f5e6; }
+  .tile-Legal { --tile-color: var(--c-Legal); --tile-bg: #eceef0; }
+  .tile-Benefits { --tile-color: var(--c-Benefits); --tile-bg: #fef3c7; }
+  .tile-Transportation { --tile-color: var(--c-Transportation); --tile-bg: #dff6f2; }
+  .tile-Education { --tile-color: var(--c-Education); --tile-bg: #ddf3f7; }
+  .tile-Employment { --tile-color: var(--c-Employment); --tile-bg: #f3e9df; }
+  .tile-Childcare { --tile-color: var(--c-Childcare); --tile-bg: #fce4ec; }
+  .tile-Youth { --tile-color: var(--c-Youth); --tile-bg: #d8f7ed; }
+  .tile-Seniors { --tile-color: var(--c-Seniors); --tile-bg: #f4ece4; }
+  .tile-Disability { --tile-color: var(--c-Disability); --tile-bg: #f0e5ff; }
+  .tile-Medical { --tile-color: var(--c-Medical); --tile-bg: #fde3e6; }
+  .tile-DomesticViolence { --tile-color: var(--c-DomesticViolence); --tile-bg: #f7e3f0; }
+  .tile-Other { --tile-color: var(--c-Other); --tile-bg: #f3f4f6; }
+
   /* ── RESULTS INFO ── */
   .results-info {
     max-width: 900px;
@@ -1554,35 +1572,9 @@
     .cat-tile.active .tile-icon { background: #ffffff; }
     .cat-tile.active .chip-count { background: #ffffff; color: var(--text-body); }
 
-    .cat-tile.tile-All {
-      grid-column: 1 / -1;
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 12px;
-      min-height: 60px;
-      padding: 10px 14px;
-    }
-    .cat-tile.tile-All .tile-label { flex: 1; font-size: 15px; }
-    .cat-tile.tile-All .chip-count { position: static; }
+    /* Odd tile out on two columns fills the last row. */
+    .filters:not(.is-collapsed) > .cat-tile:last-child:nth-child(odd) { grid-column: 1 / -1; }
 
-    .tile-All { --tile-color: var(--ocean); --tile-bg: #e7f1fb; }
-    .tile-Food { --tile-color: var(--c-Food); --tile-bg: #fde8e2; }
-    .tile-Mental { --tile-color: var(--c-Mental); --tile-bg: #ede7f6; }
-    .tile-Rental { --tile-color: var(--c-Rental); --tile-bg: #eaf4dc; }
-    .tile-Housing { --tile-color: var(--c-Housing); --tile-bg: #e3f5e6; }
-    .tile-Legal { --tile-color: var(--c-Legal); --tile-bg: #eceef0; }
-    .tile-Benefits { --tile-color: var(--c-Benefits); --tile-bg: #fef3c7; }
-    .tile-Transportation { --tile-color: var(--c-Transportation); --tile-bg: #dff6f2; }
-    .tile-Education { --tile-color: var(--c-Education); --tile-bg: #ddf3f7; }
-    .tile-Employment { --tile-color: var(--c-Employment); --tile-bg: #f3e9df; }
-    .tile-Childcare { --tile-color: var(--c-Childcare); --tile-bg: #fce4ec; }
-    .tile-Youth { --tile-color: var(--c-Youth); --tile-bg: #d8f7ed; }
-    .tile-Seniors { --tile-color: var(--c-Seniors); --tile-bg: #f4ece4; }
-    .tile-Disability { --tile-color: var(--c-Disability); --tile-bg: #f0e5ff; }
-    .tile-Medical { --tile-color: var(--c-Medical); --tile-bg: #fde3e6; }
-    .tile-DomesticViolence { --tile-color: var(--c-DomesticViolence); --tile-bg: #f7e3f0; }
-    .tile-Other { --tile-color: var(--c-Other); --tile-bg: #f3f4f6; }
 
     /* After choosing an area, shrink to that one tile (tap to change). */
     .filters.is-collapsed .cat-tile:not(.active) { display: none; }
@@ -1610,9 +1602,26 @@
 
   @media (min-width: 641px) and (max-width: 1024px) {
     .filters { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .filter-btn.cat-tile.tile-All { grid-column: span 4; }
     .filter-btn.cat-tile { min-height: 104px; font-size: 15px; }
   }
+
+/* Desktop: 5x3 text tiles, same footprint as the old pills, no icons. */
+@media (min-width: 1025px) {
+  .filters { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; padding: 2px 0 0; }
+  .filter-btn.cat-tile {
+    position: relative; justify-content: space-between; gap: 8px;
+    min-height: 38px; padding: 4px 12px 4px 16px; border-radius: 10px;
+    border: 1px solid #d8e3eb; background: #ffffff; white-space: normal; text-align: left;
+    font-size: 13px; font-weight: 600; line-height: 1.15; color: var(--text-body); overflow: hidden;
+  }
+  .filter-btn.cat-tile::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--tile-color); }
+  .filter-btn.cat-tile .tile-label { flex: 1; text-align: left; }
+  .filter-btn.cat-tile .chip-count { flex: none; background: none; min-width: 0; padding: 0; height: auto; font-size: 12px; font-weight: 600; color: #6b7c8c; }
+  .filter-btn.cat-tile:hover { background: #f7fafc; border-color: var(--tile-color); transform: none; }
+  .filter-btn.cat-tile.active { background: var(--tile-bg); border-color: var(--tile-color); box-shadow: 0 0 0 1px var(--tile-color); color: var(--text-body); }
+  .filter-btn.cat-tile.active .chip-count { font-size: 0; }
+  .filter-btn.cat-tile.active .chip-count::after { content: "\2715"; font-size: 12px; color: var(--tile-color); }
+}
 
   @media (max-width: 480px) {
     h1 { font-size: 1.04rem; max-width: 14ch; }
