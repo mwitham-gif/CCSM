@@ -1353,7 +1353,6 @@
   }
 
   body.share-mode .controls,
-  body.share-mode .intro-panel,
   body.share-mode .results-row,
   body.share-mode .results-info,
   body.share-mode .results-context,
@@ -2187,3 +2186,33 @@
       color: #526171;
     }
   }
+
+/* ── COMPACT TOP: laptops and tablets (phones keep their own layout) ── */
+@media (min-width: 641px) {
+  .header-inner { padding: 12px 24px; }
+  .header-top { align-items: center; }
+  .header-brand { display: flex; align-items: center; gap: 18px; }
+  .header-logo { height: 46px; margin-bottom: 0; }
+  h1 { font-size: clamp(1.25rem, 2.6vw, 1.65rem); }
+  h1 .sub { white-space: nowrap; margin-top: 4px; font-size: 0.56em; }
+  .lang-toggle, .text-size-btn { margin-top: 0; }
+  .header-tools { align-items: center; }
+  .controls { margin-top: 18px; }
+  /* The example searches live in the placeholder; screen readers still get the hint. */
+  #finder-hint-search {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+  .finder-head {
+    position: relative; overflow: hidden;
+    margin: -22px -22px 18px; padding: 16px 22px 15px;
+    background: linear-gradient(135deg, #fff8e6 0%, #fffdf7 100%);
+    border-bottom: 1px solid #f0dfb2; border-radius: 20px 20px 0 0;
+  }
+  .finder-head::after { content: ""; position: absolute; width: 150px; height: 150px; right: -48px; top: -78px; border-radius: 50%; background: rgba(255,184,28,0.16); }
+  .finder-title { position: relative; z-index: 1; font-family: Georgia, "Times New Roman", serif; font-weight: 400; font-size: clamp(1.25rem, 3vw, 1.6rem); line-height: 1.15; color: var(--text); }
+  .results-row { margin-top: 20px; }
+}
+@media (max-width: 640px) {
+  .finder-head { display: none; }
+}

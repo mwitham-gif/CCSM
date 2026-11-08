@@ -27,6 +27,7 @@ const T = {
     introCopy: 'Search by keyword or choose a support area, then call or visit a provider directly for current details.',
     finderLabelSearch: 'Search the directory',
     finderHintSearch: 'Try food, rent, legal help, youth, a provider name, or an address.',
+    searchWide: 'Try food, rent, legal help, youth, a provider name, or an address',
     finderLabelFilters: 'Explore all support areas',
     activeCategory: 'Need',
     activeSearch: 'Search',
@@ -128,6 +129,7 @@ Thank you for keeping this resource up to date!`,
     introCopy: 'Busque por palabra clave o elija un área de apoyo, y luego llame o visite el sitio web del proveedor para confirmar detalles.',
     finderLabelSearch: 'Buscar en el directorio',
     finderHintSearch: 'Pruebe comida, renta, ayuda legal, juventud, nombre de proveedor o dirección.',
+    searchWide: 'Pruebe comida, renta, ayuda legal, jóvenes, un proveedor o una dirección',
     finderLabelFilters: 'Explorar todas las áreas de apoyo',
     activeCategory: 'Necesidad',
     activeSearch: 'Búsqueda',
@@ -1848,7 +1850,8 @@ function setLang(l) {
   }
 
   const input = document.getElementById('search');
-  if (input) input.placeholder = T[l].search;
+  phoneSearchPlaceholder = T[l].search;
+  updateSearchPlaceholder();
 
   const siteTitle = document.getElementById('site-title');
   if (siteTitle && siteTitle.childNodes[0]) siteTitle.childNodes[0].textContent = T[l].siteTitle + ' ';
@@ -1889,6 +1892,19 @@ if (initialSearchQuery) {
 }
 
 document.getElementById('search')?.addEventListener('input', handleSearchInput);
+
+// Laptops and tablets show the example searches as the placeholder (there is
+// no separate hint line there); phones keep the short one.
+let phoneSearchPlaceholder = document.getElementById('search')?.getAttribute('placeholder') || '';
+const wideScreenQuery = window.matchMedia('(min-width: 641px)');
+
+function updateSearchPlaceholder() {
+  const input = document.getElementById('search');
+  if (input) input.placeholder = wideScreenQuery.matches ? T[lang].searchWide : phoneSearchPlaceholder;
+}
+
+updateSearchPlaceholder();
+wideScreenQuery.addEventListener('change', updateSearchPlaceholder);
 
 try {
   if (window.localStorage.getItem(TEXT_SIZE_KEY) === '1') setLargeText(true, { save: false });
