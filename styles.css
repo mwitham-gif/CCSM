@@ -476,6 +476,7 @@
   }
 
   .results-row {
+    scroll-margin-top: calc(var(--header-h, 0px) + 12px);
     max-width: 1040px;
     margin: 28px auto 10px;
     padding: 0 24px;
@@ -587,6 +588,16 @@
     gap: 20px;
     transition: opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease;
   }
+
+  /* The count line flashes when the list changes. */
+  .results-info.is-fresh { animation: results-fresh 0.9s ease-out; border-radius: 6px; }
+  @keyframes results-fresh {
+    from { background: #fff1bf; }
+    to { background: rgba(255,241,191,0); }
+  }
+
+  .empty-active { font-weight: 700; color: var(--text-body); }
+  .empty-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
 
   .grid.is-updating {
     opacity: 0.72;
@@ -1291,6 +1302,7 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   @media (prefers-reduced-motion: reduce) {
+    .results-info.is-fresh { animation: none; }
     .filter-btn,
     .chip-count,
     .toast,

@@ -34,6 +34,9 @@ const T = {
     noResults: 'No resources found',
     noResultsSub: 'Try a different keyword, provider name, or support area.',
     noResultsReset: 'Show all resources',
+    resultsFor: (n, q) => `${n} result${n===1?'':'s'} for “${q}”`,
+    noResultsClearSearch: 'Clear search',
+    noResultsClearCategory: 'Clear filter',
     showMoreResults: n => `Show ${n} more resource${n===1?'':'s'}`,
     detailsLabel: 'Key details',
     contactLabel: 'Contact',
@@ -132,6 +135,9 @@ Thank you for keeping this resource up to date!`,
     noResults: 'No se encontraron recursos',
     noResultsSub: 'Intente con otra palabra clave, nombre de proveedor o área de apoyo.',
     noResultsReset: 'Mostrar todos los recursos',
+    resultsFor: (n, q) => `${n} resultado${n===1?'':'s'} para “${q}”`,
+    noResultsClearSearch: 'Borrar búsqueda',
+    noResultsClearCategory: 'Quitar filtro',
     showMoreResults: n => `Mostrar ${n} recurso${n===1?'':'s'} más`,
     detailsLabel: 'Detalles clave',
     contactLabel: 'Contacto',
@@ -533,6 +539,10 @@ function toggleCardSection(encodedResourceName, section) {
   if (expandedSections.has(key)) expandedSections.delete(key);
   else expandedSections.add(key);
   renderCards();
+  // The button is rebuilt; put focus back on its replacement.
+  const again = [...document.querySelectorAll('[data-toggle-section]')]
+    .find(button => button.dataset.resourceName === encodedResourceName && button.dataset.toggleSection === section);
+  if (again) again.focus({ preventScroll: true });
 }
 
 function showToast(message) {
@@ -546,19 +556,26 @@ function showToast(message) {
   }, 1800);
 }
 
+// The list dims for a moment while it changes, and the count line flashes,
+// so a change below the fold or on a small screen is still noticed.
+let gridUpdatingTimer = null;
+
 function updateGridMarkup(html) {
   const grid = document.getElementById('grid');
   if (!grid) return;
 
-  const commit = () => {
-    grid.innerHTML = html;
-    requestAnimationFrame(() => {
-      grid.classList.remove('is-updating');
-    });
-  };
-
   grid.classList.add('is-updating');
-  requestAnimationFrame(commit);
+  grid.innerHTML = html;
+  window.clearTimeout(gridUpdatingTimer);
+  gridUpdatingTimer = window.setTimeout(() => grid.classList.remove('is-updating'), 220);
+}
+
+function flashResultsInfo() {
+  const info = document.getElementById('results-info');
+  if (!info) return;
+  info.classList.remove('is-fresh');
+  void info.offsetWidth;
+  info.classList.add('is-fresh');
 }
 
 async function copyResourceLink(idx) {
@@ -804,6 +821,7 @@ document.addEventListener('click', event => {
     const action = actionButton.dataset.action;
     if (action === 'clear-search') clearSearch();
     if (action === 'clear-all') clearAllFilters();
+    if (action === 'clear-category') clearCategory();
     if (action === 'copy-category') copyCategoryLink();
     if (action === 'copy-category-all') copyCategoryResources();
     if (action === 'print-category') printCategory();
@@ -1010,10 +1028,40 @@ function updateSearchClearButton() {
   button.classList.toggle('show', Boolean(getSearchQuery()));
 }
 
+// On phones and tablets the results sit below the tiles, out of sight. Once
+// typing pauses, or a tile is chosen, glide to the results header. Laptops
+// already show the results, so nothing scrolls there.
+const SEARCH_SCROLL_DELAY_MS = 400;
+let searchScrollTimer = null;
+
+function scrollToResults() {
+  if (!window.matchMedia('(max-width: 1024px)').matches) return;
+  const row = document.querySelector('.results-row');
+  if (!row) return;
+  const header = document.querySelector('header');
+  const top = row.getBoundingClientRect().top;
+  const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+  if (top > headerBottom && top < window.innerHeight * 0.7) return;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  row.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+}
+
+function queueScrollToResults() {
+  window.clearTimeout(searchScrollTimer);
+  if (!getSearchQuery()) return;
+  searchScrollTimer = window.setTimeout(scrollToResults, SEARCH_SCROLL_DELAY_MS);
+}
+
+// Touching or wheeling the page means the visitor is steering; don't fight them.
+['touchstart', 'wheel'].forEach(name => {
+  window.addEventListener(name, () => window.clearTimeout(searchScrollTimer), { passive: true });
+});
+
 function handleSearchInput() {
   visibleResultLimit = INITIAL_RESULT_LIMIT;
   updateSearchClearButton();
   renderCards();
+  queueScrollToResults();
 }
 
 function clearSearch() {
@@ -1036,9 +1084,24 @@ function clearAllFilters() {
   renderCards();
 }
 
+function clearCategory() {
+  activeCategory = 'All';
+  filtersExpanded = true;
+  visibleResultLimit = INITIAL_RESULT_LIMIT;
+  buildFilters();
+  renderCards();
+}
+
 function showMoreResults() {
+  const firstNew = visibleResultLimit;
   visibleResultLimit += RESULT_LIMIT_INCREMENT;
   renderCards();
+  // The button is gone after rendering; start keyboard users at the first new card.
+  const card = document.querySelectorAll('#grid .card')[firstNew];
+  if (card) {
+    card.setAttribute('tabindex', '-1');
+    card.focus({ preventScroll: true });
+  }
 }
 
 function renderResultsContext(query, visibleCount) {
@@ -1650,14 +1713,24 @@ function setCategory(cat) {
   // (Only where the grid actually collapses: phones and tablets.)
   const compact = window.matchMedia('(max-width: 1024px)').matches;
   if (compact && cat === activeCategory && cat !== 'All' && !filtersExpanded) {
-    filtersExpanded = true; buildFilters(); return;
+    filtersExpanded = true; buildFilters(); focusCategoryTile(cat); return;
   }
   // Tapping the selected tile again clears the filter.
   if (cat === activeCategory) cat = 'All';
+  const previous = activeCategory;
   activeCategory = cat;
   filtersExpanded = cat === 'All';
   visibleResultLimit = INITIAL_RESULT_LIMIT;
   buildFilters(); renderCards();
+  // The tiles were rebuilt, so put focus back on the one that was used.
+  focusCategoryTile(cat === 'All' ? previous : cat);
+  if (cat !== 'All') scrollToResults();
+}
+
+function focusCategoryTile(category) {
+  const tile = [...document.querySelectorAll('#filters [data-category]')]
+    .find(button => button.dataset.category === category);
+  if (tile) tile.focus({ preventScroll: true });
 }
 
 // Quick exit shows only where someone is looking at domestic violence help:
@@ -1722,18 +1795,29 @@ function renderCards() {
   document.getElementById('grid')?.setAttribute('data-result-count', String(filtered.length));
   updateJumpLabel(rawQuery, filtered.length);
   setText('results-info', query
-    ? `${T[lang].showing(filtered.length)} · ${T[lang].bestMatches}`
+    ? `${T[lang].resultsFor(filtered.length, rawQuery)}${filtered.length ? ` · ${T[lang].bestMatches}` : ''}`
     : T[lang].showing(filtered.length));
+  flashResultsInfo();
   renderResultsContext(rawQuery, filtered.length);
   updateSearchClearButton();
   updateDirectoryUrl();
 
   if (!filtered.length) {
+    const categoryName = CAT_LABELS[lang][activeCategory] || activeCategory;
+    const active = [
+      rawQuery ? `${T[lang].activeSearch}: “${rawQuery}”` : '',
+      activeCategory !== 'All' ? `${T[lang].activeCategory}: ${categoryName}` : '',
+    ].filter(Boolean).join(' · ');
+    const resetButtons = [
+      rawQuery ? `<button class="empty-action" type="button" data-action="clear-search">${escapeHTML(T[lang].noResultsClearSearch)}</button>` : '',
+      activeCategory !== 'All' ? `<button class="empty-action" type="button" data-action="clear-category">${escapeHTML(T[lang].noResultsClearCategory)}</button>` : '',
+    ].join('') || `<button class="empty-action" type="button" data-action="clear-all">${escapeHTML(T[lang].noResultsReset)}</button>`;
     updateGridMarkup(`<div class="empty">
       <div class="empty-icon">🔍</div>
       <h3>${escapeHTML(T[lang].noResults)}</h3>
+      ${active ? `<p class="empty-active">${escapeHTML(active)}</p>` : ''}
       <p>${escapeHTML(T[lang].noResultsSub)}</p>
-      <button class="empty-action" type="button" data-action="clear-all">${escapeHTML(T[lang].noResultsReset)}</button>
+      <div class="empty-actions">${resetButtons}</div>
     </div>`);
     return;
   }
