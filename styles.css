@@ -425,7 +425,7 @@
     color: var(--ocean-dark);
   }
 
-  .filter-btn .tile-icon, .filter-btn .tile-change, .filter-btn .tile-desc { display: none; }
+  .filter-btn .tile-icon, .filter-btn .tile-change { display: none; }
 
   .chip-count {
     display: inline-flex;
@@ -1619,36 +1619,26 @@
     .filter-btn.cat-tile { min-height: 104px; font-size: 15px; }
   }
 
-/* Desktop: larger tiles with an icon, name, count and a short description. */
+/* Desktop: the same square-ish icon tiles as phones, five across. */
 @media (min-width: 1025px) {
-  .filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 68px; gap: 8px; padding: 2px 0 0; }
+  .filters { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 10px; padding: 2px 0 0; }
   .filter-btn.cat-tile {
-    position: relative; display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; grid-template-rows: auto auto;
-    column-gap: 12px; row-gap: 2px; align-content: center; align-items: center; justify-items: start;
-    height: 68px; min-height: 0; padding: 6px 12px 6px 16px; border-radius: 12px;
-    border: 1px solid #d8e3eb; background: #ffffff; white-space: normal; text-align: left;
-    font-size: 14px; font-weight: 700; line-height: 1.2; color: var(--text-body); overflow: hidden;
+    position: relative; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 10px;
+    min-height: 92px; padding: 12px 12px 11px; border-radius: 14px;
+    border: 1.5px solid #d8e3eb; background: #ffffff; white-space: normal; text-align: left;
+    font-size: 14px; font-weight: 700; line-height: 1.2; color: var(--text-body);
   }
-  .filter-btn.cat-tile::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--tile-color); }
   .filter-btn.cat-tile .tile-icon {
-    display: inline-flex; grid-row: 1 / span 2; width: 38px; height: 38px; border-radius: 10px;
+    display: inline-flex; width: 38px; height: 38px; border-radius: 11px;
     align-items: center; justify-content: center; background: var(--tile-bg); color: var(--tile-color);
   }
-  .filter-btn.cat-tile .tile-label { grid-column: 2; grid-row: 1; align-self: end; }
-  .filter-btn.cat-tile .tile-desc {
-    display: block; grid-column: 2 / span 2; grid-row: 2; align-self: start;
-    font-size: 12px; font-weight: 500; line-height: 1.25; color: #5b6b7b;
-  }
-  .filter-btn.cat-tile .chip-count {
-    grid-column: 3; grid-row: 1; justify-self: end; align-self: end;
-    background: none; min-width: 0; padding: 0; height: auto; font-size: 13px; font-weight: 700; color: #6b7c8c;
-  }
+  .filter-btn.cat-tile .tile-label { display: block; padding-right: 4px; }
+  .filter-btn.cat-tile .chip-count { position: absolute; top: 12px; right: 12px; background: #eef3f7; }
   .filter-btn.cat-tile:hover { background: #f7fafc; border-color: var(--tile-color); transform: none; }
-  .filter-btn.cat-tile.active { background: var(--tile-bg); border-color: var(--tile-color); box-shadow: 0 0 0 1px var(--tile-color); color: var(--text-body); }
+  .filter-btn.cat-tile:active { transform: scale(0.98); }
+  .filter-btn.cat-tile.active { border-color: var(--tile-color); background: var(--tile-bg); box-shadow: 0 0 0 1px var(--tile-color); color: var(--text-body); }
   .filter-btn.cat-tile.active .tile-icon { background: #ffffff; }
-  .filter-btn.cat-tile.active .tile-desc { color: var(--text-body); }
-  .filter-btn.cat-tile.active .chip-count { font-size: 0; }
-  .filter-btn.cat-tile.active .chip-count::after { content: "\2715"; font-size: 14px; color: var(--tile-color); }
+  .filter-btn.cat-tile.active .chip-count { background: #ffffff; color: var(--text-body); }
 }
 
   @media (max-width: 480px) {

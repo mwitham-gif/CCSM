@@ -280,26 +280,6 @@ const CAT_LABELS = {
 };
 
 
-// One short line under each tile name on laptops and desktops.
-const CAT_DESC = {
-  en: {
-    Food: 'Groceries and meals', Rental: 'Rent and tenant help', Housing: 'Shelter and housing',
-    Medical: 'Clinics and health care', 'Domestic Violence': 'Safety, shelter, advocacy', Mental: 'Counseling and crisis',
-    Benefits: 'Public benefits sign-up', Seniors: 'Services for older adults', Disability: 'Access and services',
-    Legal: 'Legal advice and aid', Childcare: 'Care and early learning', Youth: 'Teens and young adults',
-    Employment: 'Jobs and training', Transportation: 'Rides and transit help', Education: 'Classes and tutoring',
-    Other: 'More community resources',
-  },
-  es: {
-    Food: 'Víveres y comidas', Rental: 'Renta e inquilinos', Housing: 'Refugio y vivienda',
-    Medical: 'Clínicas y atención médica', 'Domestic Violence': 'Seguridad y refugio', Mental: 'Consejería y crisis',
-    Benefits: 'Inscripción a beneficios', Seniors: 'Para personas mayores', Disability: 'Acceso y servicios',
-    Legal: 'Asesoría y ayuda legal', Childcare: 'Cuidado y educación', Youth: 'Jóvenes y adolescentes',
-    Employment: 'Empleo y capacitación', Transportation: 'Transporte y tránsito', Education: 'Clases y tutoría',
-    Other: 'Más recursos comunitarios',
-  },
-};
-
 // Filter pills run most urgent first, so the needs that can't wait are
 // visible without scrolling on a phone. Categories not listed here (new
 // ones added in the sheet) follow in sheet order; "Other" is always last.
@@ -1722,7 +1702,6 @@ function buildFilters() {
       aria-pressed="${isActive ? 'true' : 'false'}">
       <span class="tile-icon">${icon}</span>
       <span class="tile-label">${escapeHTML(label)}</span>
-      <span class="tile-desc">${escapeHTML((CAT_DESC[lang] || {})[cat] || '')}</span>
       <span class="chip-count">${count}</span>
       ${change}
     </button>`;
