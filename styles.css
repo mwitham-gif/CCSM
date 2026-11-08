@@ -1572,9 +1572,6 @@
     .cat-tile.active .tile-icon { background: #ffffff; }
     .cat-tile.active .chip-count { background: #ffffff; color: var(--text-body); }
 
-    /* Odd tile out on two columns fills the last row. */
-    .filters:not(.is-collapsed) > .cat-tile:last-child:nth-child(odd) { grid-column: 1 / -1; }
-
 
     /* After choosing an area, shrink to that one tile (tap to change). */
     .filters.is-collapsed .cat-tile:not(.active) { display: none; }
@@ -1600,6 +1597,11 @@
     }
   }
 
+  /* Two-column phones: the odd tile out fills the last row. */
+  @media (max-width: 640px) {
+    .filters:not(.is-collapsed) > .cat-tile:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  }
+
   @media (min-width: 641px) and (max-width: 1024px) {
     .filters { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .filter-btn.cat-tile { min-height: 104px; font-size: 15px; }
@@ -1607,10 +1609,10 @@
 
 /* Desktop: 5x3 text tiles, same footprint as the old pills, no icons. */
 @media (min-width: 1025px) {
-  .filters { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; padding: 2px 0 0; }
+  .filters { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-auto-rows: 38px; gap: 8px; padding: 2px 0 0; }
   .filter-btn.cat-tile {
     position: relative; justify-content: space-between; gap: 8px;
-    min-height: 38px; padding: 4px 12px 4px 16px; border-radius: 10px;
+    height: 38px; min-height: 0; padding: 3px 12px 3px 16px; border-radius: 10px;
     border: 1px solid #d8e3eb; background: #ffffff; white-space: normal; text-align: left;
     font-size: 13px; font-weight: 600; line-height: 1.15; color: var(--text-body); overflow: hidden;
   }
