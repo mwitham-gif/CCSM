@@ -496,6 +496,26 @@
     font-weight: 700;
   }
 
+  /* ── CALL AHEAD NOTICE ── */
+  .call-ahead {
+    max-width: 1040px;
+    margin: 0 auto 12px;
+    padding: 0 24px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .grid-disclaimer {
+    max-width: 1040px;
+    margin: 20px auto 8px;
+    padding: 0 24px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--muted);
+    text-align: center;
+  }
+
   .results-context {
     max-width: 1040px;
     margin: 0 auto 18px;
@@ -1356,6 +1376,8 @@
   body.share-mode .results-row,
   body.share-mode .results-info,
   body.share-mode .results-context,
+  body.share-mode .call-ahead,
+  body.share-mode .grid-disclaimer,
   body.share-mode footer {
     display: none;
   }

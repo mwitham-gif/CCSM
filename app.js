@@ -62,6 +62,8 @@ const T = {
     footerTitle: 'Community Corporation of Santa Monica · Resident Services',
     footerContact: 'Need help using this directory? Call',
     footerNote: 'Services, hours, and eligibility can change. Please confirm details with providers before visiting.',
+    callAhead: 'Hours and services can change. Call ahead to check.',
+    gridDisclaimer: 'Hours, services, and eligibility can change. Please call the agency before visiting to make sure they can help you.',
     reportBtn: 'Report incorrect information',
     share: 'Share',
     shareEmail: 'Email',
@@ -164,6 +166,8 @@ Thank you for keeping this resource up to date!`,
     footerTitle: 'Community Corporation of Santa Monica · Servicios para Residentes',
     footerContact: '¿Necesita ayuda para usar este directorio? Llame al',
     footerNote: 'Los servicios, horarios y requisitos pueden cambiar. Confirme los detalles con los proveedores antes de visitar.',
+    callAhead: 'Los horarios y servicios pueden cambiar. Llame antes de ir.',
+    gridDisclaimer: 'Los horarios, servicios y requisitos pueden cambiar. Por favor llame a la agencia antes de visitar para confirmar que pueden ayudarle.',
     reportBtn: 'Reportar información incorrecta',
     share: 'Compartir',
     shareEmail: 'Correo',
@@ -1872,6 +1876,8 @@ function setLang(l) {
   setText('footer-title', T[l].footerTitle);
   setHTML('footer-contact', `${escapeHTML(T[l].footerContact)} <a href="tel:+13103950220" ${RESIDENT_SERVICES_TRACK}>(310) 395-0220</a>`);
   setText('footer-note', T[l].footerNote);
+  setText('call-ahead', T[l].callAhead);
+  setText('grid-disclaimer', T[l].gridDisclaimer);
   updateOfflineNotice();
   setLargeText(isLargeText(), { save: false });
   updateDirectoryUrl();
