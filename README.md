@@ -96,7 +96,7 @@ either way.
 - Google Analytics 4 (property `G-FT2K5G6SYR`; until October 2026 the Red Tail Crossing site also reported here, under page path `/CCSM-RedTail/`) records page views. It sets its
   own cookies and reports to Google. `analytics.js` also sends three custom
   events with `gtag()`: `resource_click` (call, website, report and
-  share-by-email links on a card, and the Resident Services number in the
+  share-by-email links on a card, and the Resident Services email in the
   footer and the could-not-load notice), `filter_select` (support-area filter buttons), and
   `resource_search` (the search box, 1.5s after typing stops, with
   `result_count`), plus `search_no_results` when a search matched nothing,
