@@ -61,7 +61,6 @@ const T = {
     siteSub: 'Food, rent, health care and more, close to home',
     footerTitle: 'Community Corporation of Santa Monica · Resident Services',
     footerContact: 'Need help using this directory? Call',
-    footerNote: 'Services, hours, and eligibility can change. Please confirm details with providers before visiting.',
     reportBtn: 'Report incorrect information',
     share: 'Share',
     shareEmail: 'Email',
@@ -163,7 +162,6 @@ Thank you for keeping this resource up to date!`,
     siteSub: 'Comida, renta, salud y más, cerca de casa',
     footerTitle: 'Community Corporation of Santa Monica · Servicios para Residentes',
     footerContact: '¿Necesita ayuda para usar este directorio? Llame al',
-    footerNote: 'Los servicios, horarios y requisitos pueden cambiar. Confirme los detalles con los proveedores antes de visitar.',
     reportBtn: 'Reportar información incorrecta',
     share: 'Compartir',
     shareEmail: 'Correo',
@@ -1871,7 +1869,6 @@ function setLang(l) {
 
   setText('footer-title', T[l].footerTitle);
   setHTML('footer-contact', `${escapeHTML(T[l].footerContact)} <a href="tel:+13103950220" ${RESIDENT_SERVICES_TRACK}>(310) 395-0220</a>`);
-  setText('footer-note', T[l].footerNote);
   updateOfflineNotice();
   setLargeText(isLargeText(), { save: false });
   updateDirectoryUrl();
