@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 const REPORT_EMAIL = 'help@communitycorp.org';
 
-// The Resident Services number shown when the sheet cannot load, and in the
+// The Resident Services email shown when the sheet cannot load, and in the
 // footer, is counted as a resource_click like any listing's Call button.
 const RESIDENT_SERVICES_TRACK = 'data-track-name="CCSM Resident Services" data-track-category="Resident Services"';
 
@@ -53,14 +53,14 @@ const T = {
     address: 'Address',
     notes: 'Notes',
     loading: 'Loading resources...',
-    loadErrorNotice: 'Resources could not load. Please call Resident Services at',
+    loadErrorNotice: 'Resources could not load. Please email Resident Services at',
     loadErrorTitle: 'We are having trouble loading resources',
-    loadErrorBody: 'Please check your connection and try again. If you need help now, call Resident Services.',
+    loadErrorBody: 'Please check your connection and try again. If you need help now, email Resident Services.',
     retry: 'Try again',
     siteTitle: 'Santa Monica Resource Guide',
     siteSub: 'Food, rent, health care and more, close to home',
     footerTitle: 'Community Corporation of Santa Monica · Resident Services',
-    footerContact: 'Need help using this directory? Call',
+    footerContact: 'Need help using this directory? Email',
     callAhead: 'Hours and services can change. Call ahead to check.',
     gridDisclaimer: 'Hours, services, and eligibility can change. Please call the agency before visiting to make sure they can help you.',
     reportBtn: 'Report incorrect information',
@@ -76,7 +76,7 @@ const T = {
     printScanTitle: 'Scan for the full guide',
     printScanBody: 'Always up to date, in English and Spanish.',
     printCallFirst: 'Please call before visiting. Hours, services and eligibility can change.',
-    printHelp: 'Questions? Resident Services: (310) 395-0220.',
+    printHelp: 'Questions? Resident Services: help@communitycorp.org.',
     textLarger: 'Larger text',
     textSmaller: 'Normal text size',
     safetyTitle: 'Browsing safely',
@@ -156,14 +156,14 @@ Thank you for keeping this resource up to date!`,
     address: 'Dirección',
     notes: 'Notas',
     loading: 'Cargando recursos...',
-    loadErrorNotice: 'No se pudieron cargar los recursos. Llame a Servicios para Residentes al',
+    loadErrorNotice: 'No se pudieron cargar los recursos. Envíe un correo a Servicios para Residentes a',
     loadErrorTitle: 'Tenemos problemas para cargar los recursos',
-    loadErrorBody: 'Revise su conexión e inténtelo de nuevo. Si necesita ayuda ahora, llame a Servicios para Residentes.',
+    loadErrorBody: 'Revise su conexión e inténtelo de nuevo. Si necesita ayuda ahora, escriba a Servicios para Residentes.',
     retry: 'Intentar de nuevo',
     siteTitle: 'Guía de Recursos de Santa Mónica',
     siteSub: 'Comida, renta, salud y más, cerca de casa',
     footerTitle: 'Community Corporation of Santa Monica · Servicios para Residentes',
-    footerContact: '¿Necesita ayuda para usar este directorio? Llame al',
+    footerContact: '¿Necesita ayuda para usar este directorio? Escriba a',
     callAhead: 'Los horarios y servicios pueden cambiar. Llame antes de ir.',
     gridDisclaimer: 'Los horarios, servicios y requisitos pueden cambiar. Por favor llame a la agencia antes de visitar para confirmar que pueden ayudarle.',
     reportBtn: 'Reportar información incorrecta',
@@ -179,7 +179,7 @@ Thank you for keeping this resource up to date!`,
     printScanTitle: 'Escanee para ver la guía completa',
     printScanBody: 'Siempre actualizada, en inglés y español.',
     printCallFirst: 'Llame antes de visitar. Los horarios, servicios y requisitos pueden cambiar.',
-    printHelp: '¿Preguntas? Servicios para Residentes: (310) 395-0220.',
+    printHelp: '¿Preguntas? Servicios para Residentes: help@communitycorp.org.',
     textLarger: 'Letra más grande',
     textSmaller: 'Tamaño de letra normal',
     safetyTitle: 'Navegar de forma segura',
@@ -1275,7 +1275,7 @@ function updateStatusNotice(show = false) {
   const notice = document.getElementById('status-notice');
   if (!notice) return;
 
-  notice.innerHTML = `<strong>${escapeHTML(T[lang].loadErrorNotice)}</strong> <a href="tel:+13103950220" ${RESIDENT_SERVICES_TRACK}>(310) 395-0220</a>.`;
+  notice.innerHTML = `<strong>${escapeHTML(T[lang].loadErrorNotice)}</strong> <a href="mailto:help@communitycorp.org" ${RESIDENT_SERVICES_TRACK}>help@communitycorp.org</a>.`;
   notice.classList.toggle('show', show);
 }
 
@@ -1296,7 +1296,7 @@ function renderLoadError() {
     <div class="empty-icon">!</div>
     <h3>${escapeHTML(T[lang].loadErrorTitle)}</h3>
     <p>${escapeHTML(T[lang].loadErrorBody)}</p>
-    <a class="empty-action empty-link" href="tel:+13103950220" ${RESIDENT_SERVICES_TRACK}>(310) 395-0220</a>
+    <a class="empty-action empty-link" href="mailto:help@communitycorp.org" ${RESIDENT_SERVICES_TRACK}>help@communitycorp.org</a>
     <button class="empty-action" type="button" data-action="retry-load">${escapeHTML(T[lang].retry)}</button>
   </div>`);
 }
@@ -1872,7 +1872,7 @@ function setLang(l) {
   updateStatusNotice(Boolean(notice && notice.classList.contains('show')));
 
   setText('footer-title', T[l].footerTitle);
-  setHTML('footer-contact', `${escapeHTML(T[l].footerContact)} <a href="tel:+13103950220" ${RESIDENT_SERVICES_TRACK}>(310) 395-0220</a>`);
+  setHTML('footer-contact', `${escapeHTML(T[l].footerContact)} <a href="mailto:help@communitycorp.org" ${RESIDENT_SERVICES_TRACK}>help@communitycorp.org</a>`);
   setText('call-ahead', T[l].callAhead);
   setText('grid-disclaimer', T[l].gridDisclaimer);
   updateOfflineNotice();

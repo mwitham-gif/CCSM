@@ -311,7 +311,7 @@ async function browserChecks() {
       check(`a share-by-email click is told apart from contacting the listing (${l})`, complete(shared) && shared.click_type === 'share_email', JSON.stringify(shared));
       await page.locator('#footer-contact a').click();
       const footer = await lastClick();
-      check(`the Resident Services number is counted (${l})`, complete(footer) && footer.resource_name === 'CCSM Resident Services' && footer.click_type === 'call', JSON.stringify(footer));
+      check(`the Resident Services email is counted (${l})`, complete(footer) && footer.resource_name === 'CCSM Resident Services' && footer.click_type === 'email', JSON.stringify(footer));
       await page.locator('.card .btn-web').first().click({ button: 'middle' });
       const middle = await lastClick();
       check(`a middle-click (new tab) is counted (${l})`, complete(middle) && middle.click_type === 'website', JSON.stringify(middle));
