@@ -498,22 +498,27 @@
 
   /* ── CALL AHEAD NOTICE ── */
   .call-ahead {
-    max-width: 1040px;
-    margin: 0 auto 12px;
-    padding: 0 24px;
-    font-size: 14px;
+    margin: 0;
+    font-size: 13px;
     font-weight: 600;
     color: var(--text-secondary);
+    text-align: right;
+  }
+
+  @media (max-width: 640px) {
+    .results-row { flex-wrap: wrap; }
+    .call-ahead { flex-basis: 100%; text-align: left; }
   }
 
   .grid-disclaimer {
-    max-width: 1040px;
-    margin: 20px auto 8px;
+    max-width: 640px;
+    margin: 28px auto 12px;
     padding: 0 24px;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.5;
-    color: var(--muted);
+    color: var(--text-secondary);
     text-align: center;
+    text-wrap: balance;
   }
 
   .results-context {
