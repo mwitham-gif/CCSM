@@ -862,6 +862,14 @@
     color: var(--text-body);
   }
 
+  .card-map-link {
+    color: var(--ocean);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .card-map-link:hover { color: var(--ocean-dark); }
+
   .card-detail-text.compact {
     display: -webkit-box;
     -webkit-line-clamp: 2;

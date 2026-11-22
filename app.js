@@ -42,6 +42,7 @@ const T = {
     detailsLabel: 'Key details',
     contactLabel: 'Contact',
     addressLabel: 'Where',
+    mapLabel: 'Open in Google Maps',
     hoursLabel: 'When',
     notesLabel: 'Details',
     noContact: 'Contact details unavailable',
@@ -145,6 +146,7 @@ Thank you for keeping this resource up to date!`,
     detailsLabel: 'Detalles clave',
     contactLabel: 'Contacto',
     addressLabel: 'Dónde',
+    mapLabel: 'Abrir en Google Maps',
     hoursLabel: 'Cuándo',
     notesLabel: 'Detalles',
     noContact: 'Datos de contacto no disponibles',
@@ -393,6 +395,16 @@ function updateDirectoryUrl() {
     : getBasePageUrl();
 
   window.history.replaceState({}, '', next);
+}
+
+// Turns a street address into a Google Maps search link. Only a cell that
+// reads as a street address (starts with a number, has a ZIP code) gets one,
+// so "Online", "Los Angeles County – phone only" and mixed notes such as
+// "Shelter locations confidential – call hotline" stay plain text.
+function getMapsUrl(address) {
+  const text = String(address || '').replace(/\s*\([^)]*\)/g, '').trim();
+  if (!/^\d{1,6}\s+\S/.test(text) || !/\b\d{5}\b/.test(text)) return '';
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(text)}`;
 }
 
 function getResourceShareData(resource) {
@@ -1167,6 +1179,7 @@ function renderResourceCard(resource, i, query = '') {
   const website = normalizeWebsiteUrl(getField(resource, 'website'));
   const address = getLocalizedValue(resource, 'address');
   const hours = getLocalizedValue(resource, 'hours');
+  const mapsUrl = getMapsUrl(address);
   const categoryClass = getCategoryClass(cat);
   const reportHref = getReportHref(resource);
   const shareEmailHref = getShareEmailHref(resource);
@@ -1202,7 +1215,7 @@ function renderResourceCard(resource, i, query = '') {
       ` : ''}
       <div class="card-details">
         <div class="card-section-label">${escapeHTML(T[lang].detailsLabel)}</div>
-        ${address ? `<div class="card-detail"><span class="icon"></span><span class="card-detail-content"><span class="card-detail-label">${escapeHTML(T[lang].addressLabel)}</span><span class="card-detail-text">${highlightMatch(address, query)}</span></span></div>` : ''}
+        ${address ? `<div class="card-detail"><span class="icon"></span><span class="card-detail-content"><span class="card-detail-label">${escapeHTML(T[lang].addressLabel)}</span><span class="card-detail-text">${mapsUrl ? `<a class="card-map-link" href="${escapeAttr(mapsUrl)}" target="_blank" rel="noopener" aria-label="${escapeAttr(`${T[lang].mapLabel}: ${address}`)}">${highlightMatch(address, query)}</a>` : highlightMatch(address, query)}</span></span></div>` : ''}
         ${hours   ? `<div class="card-detail"><span class="icon"></span><span class="card-detail-content"><span class="card-detail-label">${escapeHTML(T[lang].hoursLabel)}</span><span class="card-detail-text">${highlightMatch(hours, query)}</span></span></div>` : ''}
         ${notes   ? `<div class="card-detail"><span class="icon"></span><span class="card-detail-content"><span class="card-detail-label">${escapeHTML(T[lang].notesLabel)}</span><span class="card-detail-text ${hasLongNotes && !notesExpanded ? 'compact' : ''}">${highlightMatch(notes, query)}</span>${hasLongNotes ? `<button class="card-more" type="button" data-toggle-section="notes" data-resource-name="${escapeAttr(encodedName)}">${escapeHTML(notesExpanded ? T[lang].showLess : T[lang].showMore)}</button>` : ''}</span></div>` : ''}
       </div>
