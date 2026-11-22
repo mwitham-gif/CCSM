@@ -243,6 +243,10 @@ async function browserChecks() {
   {
     const { context, page, problems } = await openWith('tests/fixtures/sample.csv');
     check('the directory loads', (await page.locator('.card').count()) > 0);
+    const mapLinks = await page.evaluate(() => Array.from(document.querySelectorAll('.card-map-link')).map(el => el.getAttribute('href')));
+    check('street addresses link to Google Maps', mapLinks.length > 0 && mapLinks.every(href => href.startsWith('https://www.google.com/maps/search/?api=1&query=')), mapLinks.join(' | '));
+    const mapText = await page.evaluate(() => Array.from(document.querySelectorAll('.card-map-link')).map(el => el.textContent));
+    check('"Online" and county-wide notes do not get a map link', !mapText.some(text => /^Online$|phone only/.test(text)), mapText.join(' | '));
     await page.fill('#search', 'groceries');
     await page.waitForTimeout(200);
     check('food searches start with the Pantry Locator', /Pantry Locator/.test(await page.locator('.card-name').first().innerText()));
