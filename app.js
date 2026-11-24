@@ -227,6 +227,37 @@ Gracias por mantener este recurso actualizado!`,
   }
 };
 
+// Online job boards shown under Employment. They live here rather than in the
+// sheet so they always appear; a sheet row with the same website replaces them.
+const JOB_BOARDS = [
+  { name: 'Indeed', name_es: 'Indeed', category: 'Employment',
+    description: 'Search and apply for jobs near you, and post a resume.',
+    description_es: 'Busque y solicite empleos cerca de usted, y publique su currículum.',
+    address: 'Online', address_es: 'En línea', website: 'https://www.indeed.com',
+    hours: 'Online 24/7', hours_es: 'En línea 24/7', tags: 'Online|Free', tags_es: 'En línea|Gratis' },
+  { name: 'ZipRecruiter', name_es: 'ZipRecruiter', category: 'Employment',
+    description: 'Job search site that matches you with openings and lets you apply in one tap.',
+    description_es: 'Sitio de búsqueda de empleo que le muestra vacantes y le permite aplicar fácilmente.',
+    address: 'Online', address_es: 'En línea', website: 'https://www.ziprecruiter.com',
+    hours: 'Online 24/7', hours_es: 'En línea 24/7', tags: 'Online|Free', tags_es: 'En línea|Gratis' },
+  { name: 'LinkedIn Jobs', name_es: 'LinkedIn Empleos', category: 'Employment',
+    description: 'Find jobs and connect with employers and professional contacts.',
+    description_es: 'Encuentre empleos y conecte con empleadores y contactos profesionales.',
+    address: 'Online', address_es: 'En línea', website: 'https://www.linkedin.com/jobs',
+    hours: 'Online 24/7', hours_es: 'En línea 24/7', tags: 'Online|Free', tags_es: 'En línea|Gratis' },
+  { name: 'Craigslist Jobs (Los Angeles)', name_es: 'Craigslist Empleos (Los Ángeles)', category: 'Employment',
+    description: 'Local job listings in the Los Angeles area. Be careful: never pay money to get a job.',
+    description_es: 'Ofertas de empleo locales en el área de Los Ángeles. Tenga cuidado: nunca pague dinero para obtener un empleo.',
+    address: 'Online', address_es: 'En línea', website: 'https://losangeles.craigslist.org/search/jjj',
+    hours: 'Online 24/7', hours_es: 'En línea 24/7', tags: 'Online|Free', tags_es: 'En línea|Gratis' },
+];
+
+function withJobBoards(list) {
+  const clean = url => String(url || '').replace(/\/+$/, '').toLowerCase();
+  const sites = new Set(list.map(r => clean(getField(r, 'website'))));
+  return list.concat(JOB_BOARDS.filter(b => !sites.has(clean(b.website))).map(normalizeResource));
+}
+
 let resources = [];
 let filtered_cache = [];
 let lang = 'en';
@@ -1331,6 +1362,7 @@ async function loadData() {
     if (csv.length > MAX_CSV_BYTES) throw new Error('Sheet response is too large');
     resources = parseCSV(csv);
     if (!resources.length) throw new Error('No resources found in sheet');
+    resources = withJobBoards(resources);
     hasLoadError = false;
     updateStatusNotice(false);
     buildFilters(); renderCards();
