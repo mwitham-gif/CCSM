@@ -147,7 +147,7 @@ async function browserChecks() {
   {
     const { context, page, problems } = await openWith('tests/fixtures/hostile.csv');
     const cards = await page.locator('.card').count();
-    check('hostile rows still show as plain listings (repeated header row skipped; 4 built-in job boards added)', cards === 6 + 4, `cards: ${cards}`);
+    check('hostile rows still show as plain listings (repeated header row skipped)', cards === 6, `cards: ${cards}`);
 
     // Hover and click over every card to trigger any handler that slipped in.
     for (const card of await page.locator('.card').all()) {
